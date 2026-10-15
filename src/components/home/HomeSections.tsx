@@ -5,7 +5,7 @@ import { CopyButton } from "@/components/ui/CopyButton";
 import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 import { OWNER_WHATSAPP } from "@/components/layout/Navbar";
 
-const sampleRequest = `curl "https://your-domain.vercel.app/api/v1/s/youtube?query=lathi"`;
+const sampleRequest = `curl "https://rest-api-nu-virid.vercel.app/api/v1/s/youtube?query=lathi"`;
 
 const sampleResponse = `{
   "success": true,

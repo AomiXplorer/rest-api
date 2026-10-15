@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, DM_Sans, JetBrains_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, DM_Sans, JetBrains_Mono, Caveat } from "next/font/google";
+import { AppShell } from "@/components/layout/AppShell";
 import "./globals.css";
 
-const bricolage = Bricolage_Grotesque({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-bricolage",
+  variable: "--font-jakarta",
 });
 
 const dmSans = DM_Sans({
@@ -20,6 +21,12 @@ const jetbrains = JetBrains_Mono({
   variable: "--font-jetbrains",
 });
 
+const caveat = Caveat({
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  variable: "--font-caveat",
+});
+
 export const metadata: Metadata = {
   title: {
     default: "Aomi Still Learning — REST API",
@@ -31,8 +38,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={`${bricolage.variable} ${dmSans.variable} ${jetbrains.variable}`}>
-      <body>{children}</body>
+    <html lang="id" className={`${jakarta.variable} ${dmSans.variable} ${jetbrains.variable} ${caveat.variable}`}>
+      <body className="paper-lines">
+        <AppShell>{children}</AppShell>
+      </body>
     </html>
   );
 }

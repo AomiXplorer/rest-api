@@ -16,16 +16,16 @@ function tokenize(line: string): { text: string; cls: string }[] {
   while ((m = re.exec(line))) {
     if (m.index > last) out.push({ text: line.slice(last, m.index), cls: "" });
     if (m[1] && m[2]) {
-      out.push({ text: m[1], cls: "text-mint" });
-      out.push({ text: m[2], cls: "text-ink-faint" });
+      out.push({ text: m[1], cls: "text-[#7fd4c4]" });
+      out.push({ text: m[2], cls: "text-[#7f8fa0]" });
     } else if (m[1]) {
-      out.push({ text: m[1], cls: "text-lemon" });
+      out.push({ text: m[1], cls: "text-[#ffd98a]" });
     } else if (m[3]) {
-      out.push({ text: m[3], cls: "text-primary-soft" });
+      out.push({ text: m[3], cls: "text-[#9cc3e8]" });
     } else if (m[4]) {
-      out.push({ text: m[4], cls: "text-primary-soft" });
+      out.push({ text: m[4], cls: "text-[#9cc3e8]" });
     } else {
-      out.push({ text: m[5] ?? "", cls: "text-ink-faint" });
+      out.push({ text: m[5] ?? "", cls: "text-[#7f8fa0]" });
     }
     last = re.lastIndex;
   }
@@ -47,7 +47,7 @@ export function JsonViewer({ value, maxChars = 40000 }: { value: unknown; maxCha
   const shown = truncated ? text.slice(0, maxChars) : text;
 
   return (
-    <pre className="overflow-auto rounded-md border-2 border-line bg-[#120e24] p-4 font-code text-[13px] leading-relaxed text-ink-muted">
+    <pre className="overflow-auto bg-code p-4 font-code text-[13px] leading-relaxed text-code-text">
       {shown.split("\n").map((line, i) => (
         <div key={i} className="whitespace-pre">
           {tokenize(line).map((t, j) => (

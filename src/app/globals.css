@@ -1,25 +1,33 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #0e0b19;
-  --color-surface: #171229;
-  --color-card: #1e1838;
-  --color-card-soft: #1a1530;
-  --color-line: #322a52;
-  --color-line-strong: #4a3e78;
-  --color-ink: #f2eeff;
-  --color-ink-muted: #a89fd0;
-  --color-ink-faint: #6f6795;
-  --color-primary: #f26a1b;
-  --color-primary-soft: #ff8a4a;
-  --color-lemon: #ffd84d;
-  --color-mint: #2fd9a6;
-  --color-danger: #ff6b81;
-  --color-get: #2fd9a6;
-  --color-wa: #25d366;
+  /* Notebook / stationery light theme — inspired by api-faa.my.id */
+  --color-bg: #f3f6f8;
+  --color-surface: #e7eef3;
+  --color-card: #ffffff;
+  --color-card-soft: #f8fbfc;
+  --color-line: #cfdae2;
+  --color-line-strong: #25333f;
+  --color-ink: #1c2833;
+  --color-ink-muted: #4f5f6e;
+  --color-ink-faint: #8aa0af;
+  --color-primary: #1e6a75;
+  --color-primary-soft: #35828e;
+  --color-lemon: #8a5f00;
+  --color-mint: #1f7a55;
+  --color-danger: #c04545;
+  --color-get: #1e6a75;
+  --color-wa: #1d9e52;
+  --color-sticky: #fdf3a4;
+  --color-sky: #d9e9f4;
+  --color-lav: #e8dff5;
+  --color-mintp: #d9f0dd;
+  --color-code: #232b38;
+  --color-code-text: #dbe4ec;
 
-  --font-display: var(--font-bricolage), system-ui, sans-serif;
+  --font-display: var(--font-jakarta), system-ui, sans-serif;
   --font-body: var(--font-dmsans), system-ui, sans-serif;
+  --font-hand: var(--font-caveat), cursive;
   --font-code: var(--font-jetbrains), ui-monospace, monospace;
 }
 
@@ -34,38 +42,90 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Subtle dot grid used sparingly in hero — not a loud gradient banner */
-.bg-grid {
-  background-image: radial-gradient(var(--color-line) 1px, transparent 1px);
-  background-size: 26px 26px;
+/* Ruled-paper lines on the page background */
+.paper-lines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 31px,
+    rgba(94, 122, 142, 0.14) 31px,
+    rgba(94, 122, 142, 0.14) 32px
+  );
 }
 
-/* Neo-brutalist hard shadow tokens (inspired by the reference design) */
+/* Red margin line on the left of the content area (desktop only) */
+.content-margin {
+  position: relative;
+}
+.content-margin::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 2.75rem;
+  width: 1.5px;
+  background: rgba(224, 109, 109, 0.45);
+  pointer-events: none;
+}
+@media (max-width: 1023px) {
+  .content-margin::before {
+    display: none;
+  }
+}
+
+/* Binder holes strip (sidebar) */
+.binder {
+  background-image: radial-gradient(
+    circle at 50% 50%,
+    #f3f6f8 3.5px,
+    rgba(37, 51, 63, 0.25) 4px,
+    rgba(37, 51, 63, 0.25) 4.8px,
+    transparent 5.4px
+  );
+  background-size: 100% 26px;
+}
+
+/* Soft notebook card shadow */
+.shadow-note {
+  box-shadow: 0 1px 0 rgba(28, 40, 51, 0.06), 0 10px 24px -14px rgba(28, 40, 51, 0.28);
+}
+
+/* Ink-stamp shadows for sticker-like elements */
 .shadow-hard {
-  box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.55);
+  box-shadow: 4px 4px 0 0 rgba(28, 40, 51, 0.85);
 }
 .shadow-hard-sm {
-  box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.55);
-}
-.shadow-hard-primary {
-  box-shadow: 4px 4px 0 0 var(--color-primary);
+  box-shadow: 2px 2px 0 0 rgba(28, 40, 51, 0.85);
 }
 
 .press {
   transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 .press:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.55);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 0 rgba(28, 40, 51, 0.85);
 }
 .press:active {
-  transform: translate(2px, 2px);
-  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.55);
+  transform: translate(1px, 1px);
+  box-shadow: 0 0 0 0 rgba(28, 40, 51, 0.85);
+}
+
+/* Marquee */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 36s linear infinite;
 }
 
 ::selection {
   background: var(--color-primary);
-  color: #140f00;
+  color: #ffffff;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -81,14 +141,14 @@ body {
 /* Scrollbars */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--color-line-strong) transparent;
+  scrollbar-color: var(--color-line) transparent;
 }
 *::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 *::-webkit-scrollbar-thumb {
-  background: var(--color-line-strong);
+  background: var(--color-line);
   border-radius: 4px;
 }
 *::-webkit-scrollbar-track {

@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { Navbar, Footer } from "@/components/layout/Navbar";
 import { DocsClient } from "@/components/docs/DocsClient";
 
 export const metadata = {
@@ -14,12 +13,8 @@ export default async function DocsPage({
 }) {
   const { cat, e } = await searchParams;
   return (
-    <>
-      <Navbar active="docs" />
-      <Suspense fallback={<div className="p-6 text-ink-muted">Memuat dokumentasi…</div>}>
-        <DocsClient initialCategory={cat} initialEndpointId={e} />
-      </Suspense>
-      <Footer />
-    </>
+    <Suspense fallback={<div className="p-6 text-ink-muted">Memuat dokumentasi…</div>}>
+      <DocsClient initialCategory={cat} initialEndpointId={e} />
+    </Suspense>
   );
 }

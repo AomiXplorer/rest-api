@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0e0b19;
+  --color-surface: #171229;
+  --color-card: #1e1838;
+  --color-card-soft: #1a1530;
+  --color-line: #322a52;
+  --color-line-strong: #4a3e78;
+  --color-ink: #f2eeff;
+  --color-ink-muted: #a89fd0;
+  --color-ink-faint: #6f6795;
+  --color-primary: #f26a1b;
+  --color-primary-soft: #ff8a4a;
+  --color-lemon: #ffd84d;
+  --color-mint: #2fd9a6;
+  --color-danger: #ff6b81;
+  --color-get: #2fd9a6;
+  --color-wa: #25d366;
+
+  --font-display: var(--font-bricolage), system-ui, sans-serif;
+  --font-body: var(--font-dmsans), system-ui, sans-serif;
+  --font-code: var(--font-jetbrains), ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Subtle dot grid used sparingly in hero — not a loud gradient banner */
+.bg-grid {
+  background-image: radial-gradient(var(--color-line) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+
+/* Neo-brutalist hard shadow tokens (inspired by the reference design) */
+.shadow-hard {
+  box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.55);
+}
+.shadow-hard-sm {
+  box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.55);
+}
+.shadow-hard-primary {
+  box-shadow: 4px 4px 0 0 var(--color-primary);
+}
+
+.press {
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.press:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.55);
+}
+.press:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.55);
+}
+
+::selection {
+  background: var(--color-primary);
+  color: #140f00;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line-strong) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--color-line-strong);
+  border-radius: 4px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}

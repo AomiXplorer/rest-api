@@ -70,7 +70,7 @@ export function Hero() {
             href={OWNER_WHATSAPP}
             target="_blank"
             rel="noopener noreferrer"
-            className="press inline-flex items-center gap-2 rounded-lg border-2 border-line-strong bg-sticky px-4 py-2.5 font-display text-sm font-bold text-[#3d3520] shadow-hard-sm"
+            className="press inline-flex items-center gap-2 rounded-lg border-2 border-line-strong bg-sticky px-4 py-2.5 font-display text-sm font-bold text-sticky-ink shadow-hard-sm"
           >
             <MessageCircle size={15} /> Saluran WhatsApp
           </a>
@@ -78,8 +78,8 @@ export function Hero() {
 
         <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <div className="rounded-xl border-2 border-line-strong bg-sticky p-4 shadow-note">
-            <p className="font-display text-2xl font-extrabold text-ink">GET</p>
-            <p className="mt-1 font-code text-xs text-ink-muted">Method</p>
+            <p className="font-display text-2xl font-extrabold text-sticky-ink">GET</p>
+            <p className="mt-1 font-code text-xs text-sticky-ink/70">Method</p>
           </div>
           <div className="rounded-xl border-2 border-line-strong bg-sky p-4 shadow-note">
             <p className="font-display text-2xl font-extrabold text-ink">{total}</p>
@@ -254,8 +254,8 @@ export function ContactNote() {
   return (
     <section className="px-5 pb-14 pt-4 sm:px-8 lg:px-12">
       <div className="mx-auto max-w-5xl">
-        <div className="mx-auto w-full max-w-md -rotate-1 rounded-sm border-2 border-[#3d3520]/15 bg-sticky p-5 shadow-note">
-          <p className="font-hand text-2xl leading-snug text-[#3d3520]">
+        <div className="mx-auto w-full max-w-md -rotate-1 rounded-sm border-2 border-sticky-ink/20 bg-sticky p-5 shadow-note">
+          <p className="font-hand text-2xl leading-snug text-sticky-ink">
             Ada pertanyaan atau request endpoint? Chat owner langsung ↓
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-2">

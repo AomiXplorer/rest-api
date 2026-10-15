@@ -111,10 +111,10 @@ export function EndpointDetail({ endpoint, verified }: { endpoint: EndpointDefin
         {/* Header band — sticky-note yellow */}
         <header className="relative bg-sticky p-4 pr-12 sm:p-5 sm:pr-12">
           <div className="flex flex-wrap items-center gap-2.5">
-            <span className="rounded border-2 border-primary px-1.5 py-0.5 font-code text-[11px] font-bold text-primary">
+            <span className="rounded border-2 border-sticky-ink px-1.5 py-0.5 font-code text-[11px] font-bold text-sticky-ink">
               {endpoint.method}
             </span>
-            <h1 className="font-display text-xl font-extrabold text-ink md:text-2xl">{endpoint.name}</h1>
+            <h1 className="font-display text-xl font-extrabold text-sticky-ink md:text-2xl">{endpoint.name}</h1>
             {verified ? (
               <span className="inline-flex items-center gap-1 rounded-full border border-mint/50 bg-mint/10 px-2 py-0.5 font-code text-[11px] font-semibold text-mint">
                 <CheckCircle2 size={11} /> Terverifikasi
@@ -125,7 +125,7 @@ export function EndpointDetail({ endpoint, verified }: { endpoint: EndpointDefin
               </span>
             )}
           </div>
-          <p className="mt-2 max-w-3xl leading-relaxed text-ink-muted">{endpoint.description}</p>
+          <p className="mt-2 max-w-3xl leading-relaxed text-sticky-ink/80">{endpoint.description}</p>
         </header>
 
         <div className="p-4 sm:p-6">

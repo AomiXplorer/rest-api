@@ -36,10 +36,14 @@ export const metadata: Metadata = {
     "Koleksi REST API publik: AI, downloader, search, anime, primbon, canvas, dan tools lainnya. Tanpa API key, tanpa login.",
 };
 
+// Default mode gelap; preferensi tersimpan di localStorage ("light" memaksa mode terang).
+const themeScript = `(function(){try{var t=localStorage.getItem("theme");if(t==="light"){document.documentElement.classList.remove("dark")}else{document.documentElement.classList.add("dark")}}catch(e){document.documentElement.classList.add("dark")}})();`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={`${jakarta.variable} ${dmSans.variable} ${jetbrains.variable} ${caveat.variable}`}>
+    <html lang="id" suppressHydrationWarning className={`${jakarta.variable} ${dmSans.variable} ${jetbrains.variable} ${caveat.variable}`}>
       <body className="paper-lines">
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <AppShell>{children}</AppShell>
       </body>
     </html>

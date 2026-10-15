@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Home, Code2, Menu, X, MessageCircle, ArrowUp, Bot } from "lucide-react";
 import { APP_NAME, OWNER_NUMBER, OWNER_WHATSAPP } from "@/lib/constants";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 function useServiceStatus() {
   const [status, setStatus] = useState<"checking" | "ok" | "down">("checking");
@@ -77,8 +78,11 @@ function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
       </nav>
 
       <div className="mt-auto flex flex-col gap-3">
-        <div className="-rotate-2 rounded-sm border-2 border-[#3d3520]/15 bg-sticky p-3 shadow-note">
-          <p className="font-hand text-xl leading-snug text-[#3d3520]">
+        <div className="flex justify-end">
+          <ThemeToggle />
+        </div>
+        <div className="-rotate-2 rounded-sm border-2 border-sticky-ink/20 bg-sticky p-3 shadow-note">
+          <p className="font-hand text-xl leading-snug text-sticky-ink">
             API gratis, kok pakek API key? ✎
           </p>
         </div>
@@ -130,6 +134,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </Link>
         <div className="ml-auto flex items-center gap-2">
           <StatusPill />
+          <ThemeToggle />
           <a
             href={OWNER_WHATSAPP}
             target="_blank"

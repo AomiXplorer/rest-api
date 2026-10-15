@@ -244,7 +244,8 @@ export function DocsClient({
       {drawerOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-ink/40" onClick={() => setDrawerOpen(false)} />
-          <aside className="binder absolute inset-y-0 left-0 flex w-[85%] max-w-xs flex-col border-r-2 border-line bg-card pl-5">
+          <aside className="absolute inset-y-0 left-0 flex w-[85%] max-w-xs flex-col border-r-2 border-line bg-card pl-6">
+            <div className="binder absolute inset-y-0 left-0 w-5" />
             <div className="flex items-center justify-between border-b-2 border-line py-2 pl-4 pr-3">
               <span className="font-display text-sm font-bold text-ink">Navigasi Endpoint</span>
               <button
@@ -290,12 +291,16 @@ export function DocsClient({
                 </code>{" "}
                 milik website ini.
               </p>
-              <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
                 {CATEGORIES.map((c) => (
                   <button
                     key={c.key}
-                    onClick={() => setCategory(c.key)}
-                    className={`rounded-xl border-2 p-4 text-left shadow-note transition-colors ${
+                    onClick={() => {
+                      setCategory(c.key);
+                      setCollapsed(new Set(CATEGORIES.filter((x) => x.key !== c.key).map((x) => x.key)));
+                      if (window.innerWidth < 1024) setDrawerOpen(true);
+                    }}
+                    className={`press rounded-xl border-2 p-4 text-left shadow-note transition-colors ${
                       category === c.key
                         ? "border-primary bg-primary/5"
                         : "border-line-strong bg-card hover:bg-card-soft"

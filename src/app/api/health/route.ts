@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { UPSTREAM_BASE_URL } from "@/config/endpoints";
+import { SIPUTZX_BASE_URL } from "@/lib/server/upstream";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -23,7 +23,7 @@ export async function GET(req: Request) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 5000);
     const started = Date.now();
-    const res = await fetch(`${UPSTREAM_BASE_URL}/api/r/quotesanime`, {
+    const res = await fetch(`${SIPUTZX_BASE_URL}/api/r/quotesanime`, {
       signal: controller.signal,
       cache: "no-store",
     });

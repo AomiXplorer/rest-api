@@ -1,4 +1,5 @@
-import { UPSTREAM_BASE_URL } from "@/config/endpoints";
+import "server-only";
+import { SIPUTZX_BASE_URL, UPSTREAM_MAX_BYTES } from "@/lib/server/upstream";
 import type { EndpointDefinition } from "@/types/api";
 
 export interface UpstreamResult {
@@ -11,6 +12,8 @@ export interface UpstreamResult {
   /** Raw bytes when content is binary (image etc.), else null */
   bytes: Uint8Array | null;
   timeMs: number;
+  /** true ketika response upstream melebihi batas ukuran dan tidak diproses */
+  tooLarge?: boolean;
 }
 
 const JSON_CT = /^\s*(application\/json|text\/plain)/i;
@@ -18,17 +21,29 @@ const JSON_CT = /^\s*(application\/json|text\/plain)/i;
 /**
  * Forward a validated request to the siputzx upstream API.
  * The upstream answers JSON ({status, data} / {status, error, code}) or binary images.
+ *
+ * Resource control:
+ * - timeout per endpoint (AbortController)
+ * - redirect mengikuti upstream (host sudah fixed lewat konfigurasi server)
+ * - ukuran response dibatasi UPSTREAM_MAX_BYTES (default 4 MB)
  */
 export async function callUpstream(
   endpoint: EndpointDefinition,
   values: Record<string, string>,
 ): Promise<UpstreamResult> {
-  const url = new URL(UPSTREAM_BASE_URL + endpoint.upstreamPath);
+  const url = new URL(SIPUTZX_BASE_URL + endpoint.upstreamPath);
   for (const [k, v] of Object.entries(values)) url.searchParams.set(k, v);
 
+  const started = Date.now();
+  const elapsed = () => Date.now() - started;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), endpoint.timeoutMs);
-  const started = Date.now();
+
+  const tooLarge = (): UpstreamResult => ({
+    ok: false, status: 502, contentType: "", text: null, bytes: null,
+    timeMs: elapsed(), tooLarge: true,
+  });
+
   try {
     const res = await fetch(url, {
       method: "GET",
@@ -37,18 +52,24 @@ export async function callUpstream(
       headers: { accept: "application/json, image/*" },
       cache: "no-store",
     });
+
+    // Tolak sejak awal bila content-length diketahui melebihi batas.
+    const declaredLength = Number(res.headers.get("content-length") ?? 0);
+    if (declaredLength > UPSTREAM_MAX_BYTES) return tooLarge();
+
     const contentType = res.headers.get("content-type") ?? "application/octet-stream";
-    const elapsed = Date.now() - started;
 
     if (JSON_CT.test(contentType)) {
       const text = await res.text();
-      return { ok: res.ok, status: res.status, contentType, text, bytes: null, timeMs: elapsed };
+      if (text.length > UPSTREAM_MAX_BYTES) return tooLarge();
+      return { ok: res.ok, status: res.status, contentType, text, bytes: null, timeMs: elapsed() };
     }
+
     const buf = new Uint8Array(await res.arrayBuffer());
-    return { ok: res.ok, status: res.status, contentType, text: null, bytes: buf, timeMs: elapsed };
+    if (buf.byteLength > UPSTREAM_MAX_BYTES) return tooLarge();
+    return { ok: res.ok, status: res.status, contentType, text: null, bytes: buf, timeMs: elapsed() };
   } catch {
-    const elapsed = Date.now() - started;
-    return { ok: false, status: 504, contentType: "", text: null, bytes: null, timeMs: elapsed };
+    return { ok: false, status: 504, contentType: "", text: null, bytes: null, timeMs: elapsed() };
   } finally {
     clearTimeout(timer);
   }

@@ -5,3 +5,6 @@ out/
 *.tsbuildinfo
 next-env.d.ts
 .vercel
+# Environment variables — jangan pernah commit
+.env
+.env*

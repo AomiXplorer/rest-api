@@ -1,8 +1,7 @@
-// AUTO-GENERATED from https://api.siputzx.my.id/api/openapi.json (2026-10-15)
-// Regenerate with: python3 tools/generate-endpoints.py
+// AUTO-GENERATED dari inventaris endpoint sumber (2026-10-15).
+// Konfigurasi host upstream TIDAK ada di sini — modul ini diimpor frontend.
+// Lihat src/lib/server/upstream.ts (server-only) + environment variable.
 import type { EndpointCategory, EndpointDefinition } from "@/types/api";
-
-export const UPSTREAM_BASE_URL = process.env.UPSTREAM_BASE_URL ?? "https://api.siputzx.my.id";
 
 export const CATEGORIES: EndpointCategory[] = [
   { key: "canvas", title: "Canvas & Effects", description: "Endpoints pengolahan gambar dan generator kartu profil, welcome, dan efek visual. Response berupa gambar binary." },
@@ -747,7 +746,7 @@ export const ENDPOINTS: EndpointDefinition[] = [
         required: true,
         type: "string",
         description: "The search term",
-        example: "siputzx",
+        example: "aomi",
       },
     ],
     tags: ["Search", "Image", "Google"],
@@ -1550,7 +1549,7 @@ export const ENDPOINTS: EndpointDefinition[] = [
         required: true,
         type: "string",
         description: "URL GitHub yang valid",
-        example: "https://gist.github.com/siputzx/966268a3aa3c14695e80cc9f30da8e9f",
+        example: "https://gist.github.com/aomi/da38093f1c",
       },
     ],
     tags: ["DOWNLOADER", "GitHub", "Repository", "File"],
@@ -1816,7 +1815,7 @@ export const ENDPOINTS: EndpointDefinition[] = [
         required: true,
         type: "string",
         description: "Instagram URL or Username",
-        example: "siputzx_",
+        example: "aomi_dev",
       },
     ],
     tags: ["DOWNLOADER", "INSTAGRAM"],
@@ -2130,7 +2129,7 @@ export const ENDPOINTS: EndpointDefinition[] = [
         required: true,
         type: "string",
         description: "Domain to search",
-        example: "siputzx.my.id",
+        example: "example.com",
       },
     ],
     tags: ["TOOLS", "Subdomain", "Security"],
@@ -2389,7 +2388,7 @@ export const ENDPOINTS: EndpointDefinition[] = [
         required: true,
         type: "string",
         description: "User name",
-        example: "siputzx",
+        example: "aomi",
       },
     ],
     tags: ["Canvas", "Profile"],
@@ -3573,7 +3572,7 @@ export const ENDPOINTS: EndpointDefinition[] = [
         required: true,
         type: "string",
         description: "First text input",
-        example: "siputzx",
+        example: "aomi",
       },
       {
         name: "text2",
@@ -4402,7 +4401,7 @@ export const ENDPOINTS: EndpointDefinition[] = [
         required: true,
         type: "string",
         description: "The Twitter (X) username",
-        example: "siputzx",
+        example: "aomi",
       },
     ],
     tags: ["Stalker", "Twitter", "X", "User"],
@@ -4440,7 +4439,7 @@ export const ENDPOINTS: EndpointDefinition[] = [
         required: true,
         type: "string",
         description: "The YouTube channel username",
-        example: "siputzx",
+        example: "aomi",
       },
     ],
     tags: ["Stalker", "YouTube", "Channel", "Videos"],

@@ -1,6 +1,5 @@
 import {
   Hero,
-  Marquee,
   SampleCode,
   CategoryGrid,
   Faq,
@@ -13,14 +12,13 @@ export default function HomePage() {
   return (
     <main>
       <Hero />
-      <Marquee />
       <SampleCode />
       <CategoryGrid />
       <Faq />
       <CtaCard />
       <ContactNote />
       {/* ruang untuk footer marquee yang menempel di bawah */}
-      <div className="h-9" />
+      <div className="h-11" />
       <StickyFooter />
     </main>
   );

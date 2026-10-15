@@ -165,10 +165,10 @@ body {
 
 /* Soft notebook card shadow */
 .shadow-note {
-  box-shadow: 0 1px 0 rgba(28, 40, 51, 0.06), 0 10px 24px -14px rgba(28, 40, 51, 0.28);
+  box-shadow: 0 1px 0 rgba(28, 40, 51, 0.06), 0 5px 12px -8px rgba(28, 40, 51, 0.25);
 }
 .dark .shadow-note {
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3), 0 10px 24px -14px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3), 0 5px 12px -8px rgba(0, 0, 0, 0.6);
 }
 
 /* Ink-stamp shadows for sticker-like elements */

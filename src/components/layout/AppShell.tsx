@@ -6,18 +6,15 @@ import { useEffect, useState } from "react";
 import { Home, Code2, Menu, X, MessageCircle, ArrowUp, Bot, Search, Bell } from "lucide-react";
 import { APP_NAME, OWNER_NUMBER, OWNER_WHATSAPP } from "@/lib/constants";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { getHealth } from "@/lib/health";
 
 function useServiceStatus() {
   const [status, setStatus] = useState<"checking" | "ok" | "down">("checking");
   useEffect(() => {
     let alive = true;
-    fetch("/api/health")
-      .then((r) => {
-        if (alive) setStatus(r.ok ? "ok" : "down");
-      })
-      .catch(() => {
-        if (alive) setStatus("down");
-      });
+    getHealth().then((h) => {
+      if (alive) setStatus(h.ok ? "ok" : "down");
+    });
     return () => {
       alive = false;
     };
@@ -55,9 +52,9 @@ function BellButton() {
       <button
         onClick={() => setOpen((o) => !o)}
         aria-label="Notifikasi"
-        className="press rounded-lg border-2 border-line-strong bg-card p-1.5 text-ink"
+        className="press shrink-0 rounded-lg border-2 border-line-strong bg-card p-1.5 text-ink"
       >
-        <Bell size={16} />
+        <Bell size={15} />
         <span className={`absolute right-1.5 top-1.5 h-2 w-2 rounded-full ${dot}`} />
       </button>
       {open && (
@@ -152,7 +149,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Mobile top bar */}
-      <header className="sticky top-0 z-40 flex h-14 items-center gap-2 border-b-2 border-line bg-card/95 px-3 backdrop-blur lg:hidden">
+      <header className="sticky top-0 z-40 flex h-12 items-center gap-2 border-b-2 border-line bg-card px-2.5 lg:hidden">
         <button
           onClick={() => setOpen(true)}
           aria-label="Buka menu"
@@ -160,11 +157,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         >
           <Menu size={18} />
         </button>
-        <Link href="/" className="shrink-0" aria-label="Beranda">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md border-2 border-line-strong bg-primary font-display text-sm font-extrabold text-white">
-            A
-          </div>
-        </Link>
         <div className="relative min-w-0 flex-1">
           <Search
             size={14}
@@ -181,7 +173,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 router.push("/docs?focus=1");
               }
             }}
-            className="w-full rounded-lg border-2 border-line-strong bg-card py-1.5 pl-8 pr-2 text-xs text-ink placeholder:text-ink-faint focus:border-primary focus:outline-none"
+            className="w-full rounded-lg border-2 border-line-strong bg-bg py-1.5 pl-8 pr-2 text-xs text-ink placeholder:text-ink-faint focus:border-primary focus:outline-none"
           />
         </div>
         <BellButton />

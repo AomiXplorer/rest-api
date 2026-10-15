@@ -32,7 +32,9 @@ export function DocsClient({
   const [category, setCategory] = useState<string>(initialCategory ?? "all");
   const [selectedId, setSelectedId] = useState<string | null>(initialEndpointId ?? null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
+  const [collapsed, setCollapsed] = useState<Set<string>>(
+    () => new Set(CATEGORIES.map((c) => c.key))
+  );
   const searchRef = useRef<HTMLInputElement>(null);
 
   const verified = useMemo(() => new Set(VERIFIED_IDS), []);
@@ -161,7 +163,11 @@ export function DocsClient({
                   }`}
                 >
                   <button
-                    onClick={() => setCategory(catSelected ? "all" : c.key)}
+                    onClick={() => {
+                      setCategory(catSelected ? "all" : c.key);
+                      if (!catSelected) setCollapsed(new Set(CATEGORIES.filter((x) => x.key !== c.key).map((x) => x.key)));
+                      else setCollapsed(new Set(CATEGORIES.map((x) => x.key)));
+                    }}
                     className="flex flex-1 items-center justify-between text-left text-sm font-medium"
                   >
                     {c.title}
@@ -183,7 +189,7 @@ export function DocsClient({
                   </button>
                 </div>
 
-                {!isCollapsed &&
+                {(!isCollapsed || catSelected || query) &&
                   list.slice(0, catSelected || query ? list.length : 6).map((e) => (
                     <button
                       key={e.id}
@@ -228,7 +234,7 @@ export function DocsClient({
   );
 
   return (
-    <div className="flex min-h-[calc(100vh-56px)] lg:min-h-screen">
+    <div className="flex min-h-[calc(100vh-48px)] lg:min-h-screen">
       {/* Desktop sidebar */}
       <aside className="sticky top-0 hidden h-screen w-72 shrink-0 border-r-2 border-line bg-card lg:block">
         {sidebar}
@@ -256,7 +262,7 @@ export function DocsClient({
 
       {/* Main content */}
       <main className="min-w-0 flex-1">
-        <div className="sticky top-14 z-30 flex items-center gap-2 border-b-2 border-line bg-bg/95 px-4 py-2.5 backdrop-blur lg:hidden">
+        <div className="sticky top-12 z-30 flex items-center gap-2 border-b-2 border-line bg-bg px-4 py-2 lg:hidden">
           <button
             onClick={() => setDrawerOpen(true)}
             className="press inline-flex items-center gap-2 rounded-lg border-2 border-line-strong bg-card px-3 py-2 font-display text-sm font-bold text-ink shadow-hard-sm"
@@ -277,7 +283,7 @@ export function DocsClient({
                 Dokumentasi API
               </h1>
               <p className="mt-2 max-w-2xl leading-relaxed text-ink-muted">
-                Pilih endpoint di sidebar untuk melihat detail parameter dan mencobanya langsung.
+                Pilih endpoint di daftar untuk melihat detail parameter dan mencobanya langsung.
                 Semua request Try API dikirim nyata ke backend{" "}
                 <code className="rounded bg-sky px-1 py-0.5 font-code text-[13px] font-semibold text-ink">
                   /api/v1

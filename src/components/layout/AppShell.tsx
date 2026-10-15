@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Home, Code2, Menu, X, MessageCircle, ArrowUp, Bot } from "lucide-react";
+import { Home, Code2, Menu, X, MessageCircle, ArrowUp, Bot, Search, Bell } from "lucide-react";
 import { APP_NAME, OWNER_NUMBER, OWNER_WHATSAPP } from "@/lib/constants";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
@@ -42,6 +42,39 @@ function StatusPill() {
       />
       {s === "ok" ? "Online!" : s === "down" ? "Offline" : "Cek…"}
     </span>
+  );
+}
+
+
+function BellButton() {
+  const s = useServiceStatus();
+  const [open, setOpen] = useState(false);
+  const dot = s === "ok" ? "bg-mint" : s === "down" ? "bg-danger" : "bg-ink-faint";
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        aria-label="Notifikasi"
+        className="press rounded-lg border-2 border-line-strong bg-card p-1.5 text-ink"
+      >
+        <Bell size={16} />
+        <span className={`absolute right-1.5 top-1.5 h-2 w-2 rounded-full ${dot}`} />
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div className="absolute right-0 top-10 z-50 w-52 rounded-xl border-2 border-line-strong bg-card p-3 shadow-note">
+            <p className="font-display text-xs font-bold text-ink">Notifikasi</p>
+            <p className="mt-1.5 flex items-center gap-1.5 font-code text-[11px] text-ink-muted">
+              <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
+              {s === "ok" ? "Semua layanan online" : s === "down" ? "Layanan sedang gangguan" : "Memeriksa layanan…"}
+            </p>
+            <p className="mt-1 font-code text-[11px] text-ink-muted">197 endpoint siap dipakai</p>
+            <p className="mt-1 font-code text-[11px] text-ink-faint">Tanpa API key, tanpa login</p>
+          </div>
+        </>
+      )}
+    </div>
   );
 }
 
@@ -101,6 +134,7 @@ function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -122,29 +156,36 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <button
           onClick={() => setOpen(true)}
           aria-label="Buka menu"
-          className="press rounded-lg border-2 border-line-strong bg-card p-1.5 text-ink"
+          className="press shrink-0 rounded-lg border-2 border-line-strong bg-card p-1.5 text-ink"
         >
           <Menu size={18} />
         </button>
-        <Link href="/" className="flex min-w-0 items-center gap-2">
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border-2 border-line-strong bg-primary font-display text-sm font-extrabold text-white">
+        <Link href="/" className="shrink-0" aria-label="Beranda">
+          <div className="flex h-8 w-8 items-center justify-center rounded-md border-2 border-line-strong bg-primary font-display text-sm font-extrabold text-white">
             A
           </div>
-          <span className="truncate font-display text-sm font-extrabold text-ink">{APP_NAME}</span>
         </Link>
-        <div className="ml-auto flex items-center gap-2">
-          <StatusPill />
-          <ThemeToggle />
-          <a
-            href={OWNER_WHATSAPP}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Chat Owner via WhatsApp"
-            className="press rounded-lg border-2 border-wa/60 bg-wa/10 p-1.5"
-          >
-            <MessageCircle size={16} className="text-wa" />
-          </a>
+        <div className="relative min-w-0 flex-1">
+          <Search
+            size={14}
+            className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-faint"
+          />
+          <input
+            placeholder="Cari API… (tekan /)"
+            aria-label="Cari API"
+            onClick={() => router.push("/docs?focus=1")}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") router.push("/docs?focus=1");
+              if (e.key === "/") {
+                e.preventDefault();
+                router.push("/docs?focus=1");
+              }
+            }}
+            className="w-full rounded-lg border-2 border-line-strong bg-card py-1.5 pl-8 pr-2 text-xs text-ink placeholder:text-ink-faint focus:border-primary focus:outline-none"
+          />
         </div>
+        <BellButton />
+        <ThemeToggle />
       </header>
 
       {/* Mobile drawer */}

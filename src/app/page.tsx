@@ -7,6 +7,7 @@ import {
   CtaCard,
   ContactNote,
 } from "@/components/home/HomeSections";
+import { StickyFooter } from "@/components/home/StickyFooter";
 
 export default function HomePage() {
   return (
@@ -18,6 +19,9 @@ export default function HomePage() {
       <Faq />
       <CtaCard />
       <ContactNote />
+      {/* ruang untuk footer marquee yang menempel di bawah */}
+      <div className="h-9" />
+      <StickyFooter />
     </main>
   );
 }

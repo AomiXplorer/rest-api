@@ -1,11 +1,19 @@
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Check, MessageCircle, Plus, Star } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check, KeyRound, MessageCircle, Plus, Star } from "lucide-react";
 import { CATEGORIES, ENDPOINTS } from "@/config/endpoints";
 import { VERIFIED_IDS } from "@/config/verification";
 import { CopyButton } from "@/components/ui/CopyButton";
 import { JsonViewer } from "@/components/ui/JsonViewer";
-import { StatusWidget } from "@/components/home/StatusWidget";
+import { StatusWidget, LiveStatusTile } from "@/components/home/StatusWidget";
 import { OWNER_NUMBER, OWNER_WHATSAPP, SITE_URL } from "@/lib/constants";
+
+function WhatsAppLogo({ size = 16 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor" aria-hidden="true">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.299.298.15.446.299 1.04.149 1.19-.15.149-.447.298-.597.149-.149-.149-.893-.893-1.04-1.04-.149-.15-.299-.15-.447 0-.15.149-.596.596-.745.745-.149.149-.299.149-.447.05-.149-.1-.893-.328-1.638-1.04-.597-.596-.943-1.19-1.04-1.34-.15-.297 0-.446.05-.595.149-.15.596-.597.745-.746.149-.149.15-.298.05-.447-.05-.15-.745-1.788-1.04-2.385-.149-.347-.299-.298-.447-.298h-.447c-.149 0-.447.05-.596.298-.15.249-.893 1.19-.893 2.534 0 1.344.943 2.635 1.04 2.784.149.149 1.937 3.129 4.72 4.323 2.783 1.193 2.783.795 3.28.745.446-.05 1.489-.596 1.638-1.193.149-.596.149-1.093.05-1.193-.05-.149-.299-.249-.596-.398zM12.05 21.785h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zM20.463 3.488A11.776 11.776 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+    </svg>
+  );
+}
 
 const sampleRequest = `curl "${SITE_URL}/api/v1/s/youtube?query=lathi"`;
 
@@ -24,75 +32,81 @@ const sampleResponse = {
 
 export function Hero() {
   const total = ENDPOINTS.length;
-  const cats = CATEGORIES.length;
-  const verified = VERIFIED_IDS.length;
 
   return (
-    <section className="px-5 pb-12 pt-10 sm:px-8 lg:px-12 lg:pt-14">
+    <section className="px-5 pb-12 pt-8 sm:px-8 lg:px-12 lg:pt-12">
       <div className="mx-auto max-w-5xl">
         <p className="flex items-center gap-2 font-code text-xs font-semibold text-primary">
           <span className="h-1.5 w-1.5 rounded-full bg-primary" />
           catatan API · gratis · tanpa login
         </p>
 
-        <h1 className="mt-3 font-display text-4xl font-extrabold leading-tight text-ink sm:text-5xl">
-          <span className="-rotate-1 inline-block rounded-lg bg-sky px-2">Aomi</span> Still Learning
-        </h1>
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          <h1 className="font-display text-4xl font-extrabold leading-tight text-ink sm:text-5xl">
+            <span className="-rotate-1 inline-block rounded-lg bg-sky px-2">Aomi</span> Still
+            Learning
+          </h1>
+          <span className="-rotate-2 rounded-md border-2 border-dashed border-line-strong px-2 py-0.5 font-hand text-xl leading-none text-ink">
+            GRATIS
+          </span>
+        </div>
 
-        <p className="mt-4 font-display text-lg font-bold text-ink sm:text-xl">
-          API gratis, kok pakek{" "}
-          <span className="-rotate-1 inline-block rounded-md border-2 border-dashed border-line-strong bg-lav px-2 py-0.5">
-            API key?
+        <p className="mt-4 flex flex-wrap items-center gap-2 font-display text-lg font-bold text-ink sm:text-xl">
+          API gratis, kok pakek
+          <span className="inline-flex -rotate-1 items-center gap-1.5 rounded-md border-2 border-dashed border-line-strong bg-lav px-2 py-0.5">
+            <KeyRound size={14} /> API key?
+          </span>
+          <span className="inline-flex items-center gap-1.5 rounded-md border-2 border-primary bg-card px-2 py-0.5 font-code text-xs font-bold text-primary">
+            <Check size={13} /> NO API KEY
           </span>
         </p>
 
         <p className="mt-3 max-w-2xl leading-relaxed text-ink-muted">
-          Koleksi {total} endpoint publik dalam {cats} kategori — AI, downloader media, search
-          engine, anime, primbon, sampai tools harian. Semua lewat proxy yang tervalidasi, dengan
-          error handling dan rate limiting.
+          Koleksi {total} endpoint publik dalam {CATEGORIES.length} kategori — AI, downloader
+          media, search engine, anime, primbon, sampai tools harian. Semua lewat proxy yang
+          tervalidasi, dengan error handling dan rate limiting.
         </p>
 
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-md border-2 border-primary px-2.5 py-1 font-code text-xs font-bold text-primary">
-            <Check size={13} /> NO API KEY
-          </span>
-          <StatusWidget />
-        </div>
-
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Link
-            href="/docs"
-            className="press inline-flex items-center gap-2 rounded-lg border-2 border-line-strong bg-primary px-4 py-2.5 font-display text-sm font-bold text-white shadow-hard-sm"
-          >
-            Buka Dokumentasi <ArrowRight size={15} />
-          </Link>
+        <div className="mt-6 flex flex-wrap items-center gap-3">
           <a
             href={OWNER_WHATSAPP}
             target="_blank"
             rel="noopener noreferrer"
-            className="press inline-flex items-center gap-2 rounded-lg border-2 border-line-strong bg-sticky px-4 py-2.5 font-display text-sm font-bold text-sticky-ink shadow-hard-sm"
+            className="press inline-flex items-center gap-2.5 rounded-xl border-2 border-line-strong bg-ink px-5 py-3 font-display text-sm font-bold text-bg shadow-hard-sm"
           >
-            <MessageCircle size={15} /> Saluran WhatsApp
+            <WhatsAppLogo size={17} /> Saluran WhatsApp
           </a>
+          <Link
+            href="/docs"
+            className="press inline-flex items-center gap-2 rounded-xl border-2 border-line-strong bg-card px-4 py-3 font-display text-sm font-bold text-ink shadow-hard-sm"
+          >
+            Buka Dokumentasi <ArrowRight size={15} />
+          </Link>
         </div>
 
-        <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div className="rounded-xl border-2 border-line-strong bg-sticky p-4 shadow-note">
-            <p className="font-display text-2xl font-extrabold text-sticky-ink">GET</p>
-            <p className="mt-1 font-code text-xs text-sticky-ink/70">Method</p>
+        {/* Sticky-note stats dengan selotip */}
+        <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
+          <div className="relative rounded-xl border-2 border-line-strong bg-sticky p-4 pt-5 shadow-note">
+            <div className="tape" />
+            <p className="font-hand text-3xl font-semibold leading-none text-sticky-ink">GET</p>
+            <p className="mt-1.5 font-code text-xs text-sticky-ink/70">Method</p>
           </div>
-          <div className="rounded-xl border-2 border-line-strong bg-sky p-4 shadow-note">
-            <p className="font-display text-2xl font-extrabold text-ink">{total}</p>
-            <p className="mt-1 font-code text-xs text-ink-muted">Endpoints</p>
+          <LiveStatusTile />
+          <div className="relative rounded-xl border-2 border-line-strong bg-lav p-4 shadow-note">
+            <div className="tape" />
+            <p className="font-hand text-3xl font-semibold leading-none text-ink">&lt;/s</p>
+            <p className="mt-1.5 font-code text-xs text-ink-muted">Response</p>
           </div>
-          <div className="rounded-xl border-2 border-line-strong bg-lav p-4 shadow-note">
-            <p className="font-display text-2xl font-extrabold text-ink">{cats}</p>
-            <p className="mt-1 font-code text-xs text-ink-muted">Kategori</p>
+          <div className="relative rounded-xl border-2 border-line-strong bg-mintp p-4 shadow-note">
+            <div className="tape" />
+            <p className="font-hand text-3xl font-semibold leading-none text-ink">{total}</p>
+            <p className="mt-1.5 font-code text-xs text-ink-muted">Endpoints</p>
           </div>
-          <div className="rounded-xl border-2 border-line-strong bg-mintp p-4 shadow-note">
-            <p className="font-display text-2xl font-extrabold text-ink">{verified}</p>
-            <p className="mt-1 font-code text-xs text-ink-muted">Terverifikasi</p>
-          </div>
+        </div>
+
+        {/* Kartu status ala catatan */}
+        <div className="mt-5">
+          <StatusWidget />
         </div>
       </div>
     </section>

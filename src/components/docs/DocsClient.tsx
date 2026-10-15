@@ -84,6 +84,16 @@ export function DocsClient({
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // Prefill ?q= dan fokus pencarian saat datang dari topbar (?focus=1)
+  useEffect(() => {
+    const sp = new URLSearchParams(window.location.search);
+    const q = sp.get("q");
+    if (q) setQuery(q);
+    if (q || sp.get("focus")) {
+      requestAnimationFrame(() => searchRef.current?.focus());
+    }
+  }, []);
+
   function selectEndpoint(id: string) {
     setSelectedId(id);
     setDrawerOpen(false);

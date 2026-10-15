@@ -5,11 +5,16 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const checkUpstream = searchParams.get("check") === "upstream";
 
+  const fwd = req.headers.get("x-forwarded-for");
+  const ip =
+    (fwd ? (fwd.split(",")[0] ?? "").trim() : req.headers.get("x-real-ip")) || null;
+
   const base = {
     success: true,
     service: "aomi-rest-api",
     status: "ok",
     time: new Date().toISOString(),
+    ip,
   };
 
   if (!checkUpstream) return NextResponse.json(base);

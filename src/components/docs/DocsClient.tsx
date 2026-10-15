@@ -94,6 +94,17 @@ export function DocsClient({
     }
   }, []);
 
+  // Saat datang dari beranda (klik kategori / search topbar), langsung
+  // tampilkan daftar endpoint di mobile tanpa perlu tekan tombol Endpoint
+  useEffect(() => {
+    const sp = new URLSearchParams(window.location.search);
+    const hasIntent = Boolean(initialCategory || initialEndpointId || sp.get("q") || sp.get("focus"));
+    if (hasIntent && window.innerWidth < 1024) {
+      setDrawerOpen(true);
+      requestAnimationFrame(() => searchRef.current?.focus());
+    }
+  }, [initialCategory, initialEndpointId]);
+
   function selectEndpoint(id: string) {
     setSelectedId(id);
     setDrawerOpen(false);

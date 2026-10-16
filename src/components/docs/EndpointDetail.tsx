@@ -53,6 +53,7 @@ export function EndpointDetail({
     return v;
   });
   const [loading, setLoading] = useState(false);
+  const [postMode, setPostMode] = useState(false);
   const [response, setResponse] = useState<ResponseState | null>(null);
 
   // URL lengkap dengan domain web (bukan cuma path), mengikuti nilai input terkini
@@ -86,7 +87,14 @@ export function EndpointDetail({
     const started = performance.now();
     try {
       const url = buildUrl(endpoint, values);
-      const res = await fetch(url, { method: "GET" });
+      const opts: RequestInit = postMode
+        ? {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(Object.fromEntries(Object.entries(values).filter(([, v]) => v !== ""))),
+          }
+        : { method: "GET" };
+      const res = await fetch(url, opts);
       const contentType = res.headers.get("content-type") ?? "";
       const timeMs = Math.round(performance.now() - started);
 
@@ -324,12 +332,21 @@ export function EndpointDetail({
 
             <div className="mt-4 flex flex-wrap items-center gap-2.5">
               <button
+                type="button"
+                onClick={() => setPostMode((m) => !m)}
+                title="Ganti metode kirim: GET (query) atau POST (body JSON)"
+                className="press inline-flex items-center gap-1.5 rounded-lg border-2 border-line-strong bg-card px-3 py-2.5 font-code text-[11px] font-bold text-ink-muted"
+              >
+                {postMode ? "POST" : "GET"}
+                <span className="text-ink-faint">↔</span>
+              </button>
+              <button
                 onClick={() => send()}
                 disabled={loading}
                 className="press inline-flex items-center gap-2 rounded-lg border-2 border-line-strong bg-primary px-4 py-2.5 font-display text-sm font-bold text-onprimary shadow-hard-sm disabled:cursor-not-allowed disabled:opacity-55"
               >
                 {loading ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
-                {loading ? "Mengirim…" : "Kirim"}
+                {loading ? "Mengirim…" : postMode ? "Kirim (POST)" : "Kirim (GET)"}
               </button>
               {response && (
                 <button

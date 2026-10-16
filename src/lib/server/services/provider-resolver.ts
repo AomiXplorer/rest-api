@@ -157,7 +157,7 @@ export async function resolveProvider(
   // ---- tahap 0: sumber lokal NSFW (data JSON self-hosted owner) ----
   // Dipanggang di bundle, tidak bisa gagal karena jaringan upstream.
   if (endpoint.nsfwLocal) {
-    const picked = nsfwPick(values.category ?? null);
+    const picked = nsfwPick(endpoint.nsfwLocal);
     if (picked) {
       return {
         kind: "success", provider: "scrapr",

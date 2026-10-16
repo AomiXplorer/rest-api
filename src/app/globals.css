@@ -5,63 +5,66 @@
    Light "Paper" (default) + Dark "Midnight Sketchbook"
    ============================================ */
 :root {
-  --c-bg: #fff8e8; /* paper cream */
-  --c-surface: #fbf0d7; /* paper dalam, lebih dalam */
-  --c-card: #fffdf6; /* kertas kartu */
-  --c-card-soft: #fdf6e4;
-  --c-line: #eadbb6; /* garis samar */
-  --c-line-strong: #d9c69b; /* border tegas */
-  --c-ink: #243247; /* ink navy */
-  --c-ink-muted: #5b6473;
-  --c-ink-faint: #9d927a;
-  --c-primary: #277c82; /* pencil teal */
-  --c-primary-soft: #3d9ba1;
+  --c-bg: #fff9ed; /* kertas ivory bersih */
+  --c-surface: #f6eedd; /* paper dalam, sedikit lebih dalam dari bg */
+  --c-card: #fffcf5; /* kertas kartu */
+  --c-card-soft: #fff6e8;
+  --c-line: #ede5d4; /* garis buku lembut */
+  --c-line-strong: #d8cba8; /* border tegas */
+  --c-ink: #202b40; /* ink navy */
+  --c-ink-muted: #64666c;
+  --c-ink-faint: #7d7a74;
+  --c-primary: #287f80; /* pencil teal */
+  --c-primary-soft: #57b9b8;
   --c-onprimary: #ffffff;
   --c-lemon: #b8860b;
   --c-mint: #2e7d5b;
   --c-danger: #c0563f;
-  --c-get: #277c82;
+  --c-get: #287f80;
   --c-wa: #1fa855;
-  --c-sticky: #f6df83; /* sticky note kuning */
+  --c-sticky: #f6df83; /* sticky note kuning — terukur, tidak berlebihan */
   --c-sticky-ink: #3a3222;
   --c-sky: #cde5f2; /* stiker biru */
   --c-lav: #e4d9f3; /* stiker lavender */
   --c-mintp: #d5ebd9; /* stiker mint */
-  --c-code: #243247; /* panel teknis navy */
-  --c-code-text: #f2ebd9;
+  --c-code: #202b40; /* panel teknis navy */
+  --c-code-text: #f4ebdd;
   --c-tape: rgba(205, 229, 242, 0.75); /* selotip */
-  --c-rule: rgba(36, 50, 71, 0.055); /* garis buku */
+  --c-rule: rgba(32, 43, 64, 0.05); /* garis buku */
+  --c-shadow: rgba(32, 43, 64, 0.16); /* bayangan kertas */
   color-scheme: light;
 }
 
 .dark {
-  /* Midnight Sketchbook: kertas gelap, garis kontras rendah, aksen teal */
-  --c-bg: #12161f;
-  --c-surface: #171c28;
-  --c-card: #1a2030;
-  --c-card-soft: #1f2637;
-  --c-line: #2a3140;
-  --c-line-strong: #3d4657;
-  --c-ink: #eae3d2;
-  --c-ink-muted: #a5a99b;
-  --c-ink-faint: #6d7585;
-  --c-primary: #4ec5c4;
-  --c-primary-soft: #7ad8d6;
-  --c-onprimary: #10201f;
+  /* Midnight Sketchbook: navy gelap nyaman, teks krem, teal terbaca,
+     garis buku & surface redup — struktur visual sama dengan mode terang */
+  --c-bg: #151923;
+  --c-surface: #1c2230;
+  --c-card: #1e2532;
+  --c-card-soft: #242c3c;
+  --c-line: #252b36;
+  --c-line-strong: #394253;
+  --c-ink: #f4ebdd;
+  --c-ink-muted: #b5b6bd;
+  --c-ink-faint: #8b8e96;
+  --c-primary: #57c5c4;
+  --c-primary-soft: #69d2ce;
+  --c-onprimary: #15252d;
   --c-lemon: #f0d060;
   --c-mint: #57b489;
   --c-danger: #e5735d;
-  --c-get: #4ec5c4;
+  --c-get: #57c5c4;
   --c-wa: #3bc56e;
   --c-sticky: #e8c95c;
   --c-sticky-ink: #2e2410;
   --c-sky: #24455a;
   --c-lav: #33294d;
   --c-mintp: #1e3a2c;
-  --c-code: #0d1117;
-  --c-code-text: #d9e2ee;
+  --c-code: #10151e;
+  --c-code-text: #dce3ee;
   --c-tape: rgba(120, 160, 185, 0.4);
-  --c-rule: rgba(234, 227, 210, 0.045);
+  --c-rule: rgba(244, 235, 221, 0.04);
+  --c-shadow: rgba(0, 0, 0, 0.24);
   color-scheme: dark;
 }
 
@@ -158,22 +161,22 @@ main::before {
 
 /* Bayangan kertas — lembut, tidak besar */
 .shadow-note {
-  box-shadow: 0 1px 2px rgba(60, 45, 20, 0.08), 0 8px 20px -12px rgba(60, 45, 20, 0.22);
+  box-shadow: 0 1px 2px var(--c-shadow), 0 8px 20px -12px var(--c-shadow);
 }
 .dark .shadow-note {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 24px -14px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 1px 2px var(--c-shadow), 0 10px 24px -14px var(--c-shadow);
 }
 .shadow-hard {
-  box-shadow: 3px 3px 0 rgba(36, 50, 71, 0.9);
+  box-shadow: 3px 3px 0 rgba(32, 43, 64, 0.7);
 }
 .dark .shadow-hard {
-  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.85);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.66);
 }
 .shadow-hard-sm {
-  box-shadow: 2px 2px 0 rgba(36, 50, 71, 0.9);
+  box-shadow: 2px 2px 0 rgba(32, 43, 64, 0.7);
 }
 .dark .shadow-hard-sm {
-  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.85);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.66);
 }
 
 .press {
@@ -227,6 +230,27 @@ main::before {
 ::selection {
   background: var(--color-primary);
   color: var(--color-onprimary);
+}
+
+/* Fokus keyboard terlihat di semua tema — ring ganda, tidak hanya warna */
+:focus-visible {
+  outline: 2px solid var(--c-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+input:focus-visible {
+  outline-offset: 0;
+}
+
+/* Disabled state standar */
+button:disabled,
+a:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+button:disabled:hover {
+  transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

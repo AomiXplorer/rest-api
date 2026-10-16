@@ -1,108 +1,145 @@
-# Aomi Still Learning — REST API Website & Proxy
+<div align="center">
 
-Website REST API "Aomi Still Learning" dengan backend proxy yang benar-benar memproses request. Sumber endpoint: [api.siputzx.my.id](https://api.siputzx.my.id) (public, tanpa API key). Desain terinspirasi struktur landing page dan halaman docs `apiii-xrina.my.id` (neo-brutalist dark theme, bukan clone visual).
+<img src="public/brand/og-banner.jpg" alt="Aomi REST API" width="100%" />
 
-- **197 endpoint** GET dalam **14 kategori**, diinventarisasi dari OpenAPI spec resmi sumber (lihat `docs/endpoint-inventory.md`).
-- **148 endpoint terverifikasi** end-to-end melalui backend lokal saat pengujian (lihat `docs/testing-report.md`); 49 lainnya gagal karena node sumber sedang down (503/504) atau route-nya tidak ada (404) — tetap terimplementasi dan terdokumentasi dengan badge jujur.
-- Fitur: landing page, dokumentasi interaktif dengan pencarian, navigasi kategori, **Try API** (request nyata), response viewer (status/waktu/ukuran, syntax highlight, preview gambar), validasi Zod, SSRF guard, rate limiting, health check.
+# Aomi REST API
 
-## Stack
+**197 endpoint publik gratis — tanpa API key, tanpa login, tinggal panggil.**
 
-Next.js 15 (App Router) · TypeScript strict · Tailwind CSS v4 · Zod · Lucide React. Tanpa dependensi native, tanpa browser automation — kompatibel untuk Vercel.
+*Aomi: "Selamat datang di buku catatan API-ku! Semua endpoint di sini sudah kucatat rapi, tinggal buka dan pakai ya~"*
 
-## Struktur
+[![API](https://img.shields.io/badge/endpoint-197-teal?style=flat-square)](https://cyronime.my.id/docs)
+[![Kategori](https://img.shields.io/badge/kategori-14-navy?style=flat-square&color=%232c3e50)](https://cyronime.my.id/docs)
+[![Author](https://img.shields.io/badge/author-RendyZ-teal?style=flat-square)](https://github.com/Rendyzzx)
+[![Response](https://img.shields.io/badge/watermark-in_every_response-navy?style=flat-square&color=%234c5760)](#format-response)
+
+**Docs** · [cyronime.my.id/docs](https://cyronime.my.id/docs)
+
+</div>
+
+---
+
+## 📖 Tentang
+
+**Aomi REST API** adalah koleksi REST API publik gratis yang dibuat dan dirawat oleh [RendyZ](https://github.com/Rendyzzx), dengan Aomi si maskot buku catatan sebagai pemandu dokumentasinya. Semua endpoint bisa dipakai langsung — cukup `GET`, tanpa registrasi, tanpa API key, tanpa limit harian.
+
+Berjalan di [cyronime.my.id](https://cyronime.my.id), dilengkapi website dokumentasi bergaya *hand-drawn developer notebook* (dengan dark mode "Midnight Sketchbook") yang dilengkapi fitur **Try API** — coba request langsung dari halaman docs.
+
+## 🚀 Mulai Cepat
+
+Base URL:
 
 ```
-src/
-├── app/
-│   ├── page.tsx                 # landing page
-│   ├── docs/page.tsx            # halaman dokumentasi
-│   ├── api/
-│   │   ├── health/route.ts      # health check lokal
-│   │   └── v1/[...path]/route.ts# semua endpoint /api/v1/*
-│   └── globals.css
-├── components/
-│   ├── layout/  home/  docs/  ui/
-├── config/
-│   ├── endpoints.ts             # konfigurasi terpusat (197 endpoint) — AUTO-GENERATED
-│   └── verification.ts          # id endpoint yang lolos pengujian nyata
-├── lib/
-│   ├── api-clients/upstream-client.ts   # adapter sumber (timeout, error, binary)
-│   ├── security/  rate-limit.ts, ssrf-guard.ts
-│   ├── validation/validate-params.ts    # validasi Zod per endpoint
-│   └── utils/response.ts                # format response konsisten
-├── types/api.ts
-tools/generate-endpoints.py      # regenerasi config dari OpenAPI spec sumber
-docs/endpoint-inventory.md       # hasil audit sumber
-docs/testing-report.md           # hasil pengujian nyata
+https://cyronime.my.id/api/v1
 ```
 
-## Environment Variables
+Semua endpoint memakai `GET` dengan query parameter:
 
-| Variabel | Default | Keterangan |
-|---|---|---|
-| `UPSTREAM_BASE_URL` | `https://api.siputzx.my.id` | Base URL sumber yang di-proxy |
-| `RATE_LIMIT_PER_MINUTE` | `40` | Batas request per menit per IP untuk `/api/v1/*` |
+```bash
+# Search YouTube
+curl "https://cyronime.my.id/api/v1/s/youtube?query=lathi"
 
-Tidak ada API key yang dibutuhkan. Salin `.env.example` ke `.env.local` untuk konfigurasi lokal.
+# Arti nama (primbon)
+curl "https://cyronime.my.id/api/v1/primbon/artinama?nama=putu"
 
-## Menjalankan Lokal
+# Downloader TikTok
+curl "https://cyronime.my.id/api/v1/d/tiktok?url=https://www.tiktok.com/@tiktok/video/7106594312292453126"
+
+# AI chat
+curl "https://cyronime.my.id/api/v1/ai/gpt?text=halo"
+
+# Info gempa terkini (BMKG)
+curl "https://cyronime.my.id/api/v1/info/gempa"
+```
+
+## 🗂️ Kategori Endpoint
+
+| Kategori | Isi | Jumlah |
+|---|---|:---:|
+| **Canvas & Effects** | Kartu profil, welcome, efek visual — response gambar | 34 |
+| **Games & Quiz** | Family100, caklontong, tebak gambar, dan kuis lain | 27 |
+| **Anime** | Info anime & manga, Otakudesu, Samehadaku, Anichin | 26 |
+| **Search** | YouTube, Pinterest, Spotify, Google, KBBI, dll. | 22 |
+| **Downloader** | TikTok, Instagram, Facebook, Twitter/X, YouTube, Spotify, dll. | 21 |
+| **Random** | Quote anime, neko, waifu, cecan | 13 |
+| **AI & Chat** | GPT, DeepSeek, Qwen, GLM, Gemini, Meta AI, DuckAI | 11 |
+| **Primbon** | Arti nama, ramalan jodoh, zodiak, tafsir mimpi, weton | 10 |
+| **Berita & News** | CNN Indonesia, Liputan6, sumber nasional lain | 10 |
+| **Stalker** | Profil publik GitHub, Instagram, TikTok, Twitter/X, YouTube | 8 |
+| **Tools** | Translate, screenshot web, kode pos, subdomain, VCC | 6 |
+| **Info** | Cuaca, gempa BMKG, jadwal TV, event Indonesia | 4 |
+| **Maker** | photoOxy, ephoto360, textpro, brat | 4 |
+| **Sticker** | Stiker Telegram (combot) | 1 |
+
+Daftar lengkap parameter tiap endpoint tersedia di **[cyronime.my.id/docs](https://cyronime.my.id/docs)**.
+
+## 📦 Format Response
+
+Setiap response JSON membawa watermark **author RendyZ**.
+
+```jsonc
+// sukses
+{
+  "success": true,
+  "author": "RendyZ",
+  "data": { /* ... */ },
+  "message": "Request berhasil",
+  "meta": { "path": "/api/v1/s/youtube", "upstream_status": 200, "time_ms": 812 }
+}
+
+// error
+{
+  "success": false,
+  "author": "RendyZ",
+  "error": { "code": "VALIDATION_ERROR", "message": "...", "details": { } }
+}
+```
+
+Kode error: `VALIDATION_ERROR` (400) · `URL_REJECTED` (400) · `ENDPOINT_NOT_FOUND` (404) · `METHOD_NOT_ALLOWED` (405) · `RATE_LIMITED` (429) · `UPSTREAM_ERROR` (502/503) · `UPSTREAM_TIMEOUT` (504).
+
+Endpoint gambar (canvas, maker, sebagian random) mengembalikan binary asli dengan content-type aslinya.
+
+## 🛡️ Keandalan & Keamanan
+
+- **Fallback downloader bertingkat** — jika sebuah layanan sedang tidak bisa dihubungi, proxy otomatis mencoba jalur alternatif sebelum menyerah; response via fallback ditandai di `meta.fallback`.
+- **Validasi input Zod** — tipe, wajib, enum, min/max; parameter di luar definisi diabaikan (allowlist).
+- **SSRF guard** — hanya `http/https`, blokir IP loopback/private/link-local, verifikasi ulang setelah resolusi DNS.
+- **Rate limiting** per IP (`RATE_LIMIT_PER_MINUTE`, default 40/menit) dan timeout per kategori request.
+- **Read-only** — hanya `GET` yang dilayani; `POST/PUT/PATCH/DELETE` ditolak.
+
+## 🧰 Stack
+
+Next.js 15 (App Router) · TypeScript strict · Tailwind CSS v4 · Zod · Lucide React · Vercel.
+
+## 💻 Menjalankan Lokal
 
 ```bash
 npm install
 npm run dev        # http://localhost:3000
-```
 
-Produksi:
-
-```bash
+# produksi
 npm run build && npm start
 ```
 
-## Pengujian
+Konfigurasi opsional via `.env.local` (lihat `.env.example`):
+
+| Variabel | Default | Keterangan |
+|---|---|---|
+| `RATE_LIMIT_PER_MINUTE` | `40` | Batas request per menit per IP untuk `/api/v1/*` |
+| `UPSTREAM_MAX_BYTES` | `4194304` | Batas ukuran response upstream yang diproses |
+
+## 🩺 Health Check
 
 ```bash
-npx tsc --noEmit                 # type check
-npm run build                    # build production
-curl http://localhost:3000/api/health
-# contoh endpoint:
-curl "http://localhost:3000/api/v1/s/youtube?query=lathi"
-curl "http://localhost:3000/api/v1/primbon/artinama?nama=putu"
+curl https://cyronime.my.id/api/health
 ```
 
-Menguji ulang seluruh endpoint secara massal: jalankan server produksi lalu kirim request contoh ke `/api/v1/*` per baris inventaris (`docs/endpoint-inventory.md`). Perbarui `src/config/verification.ts` hanya berdasarkan hasil nyata.
+---
 
-## Regenerasi Konfigurasi Endpoint
+<div align="center">
 
-```bash
-python3 tools/generate-endpoints.py
-```
+**Dibuat dengan 📓 oleh [RendyZ](https://github.com/Rendyzzx)**
 
-Mengambil OpenAPI spec resmi sumber dan menulis ulang `src/config/endpoints.ts` (197 endpoint, parameter, contoh, timeout per kategori).
+*Aomi: "Kalau ada endpoint yang error atau ide fitur baru, catat ke pembuatku ya! Sampai jumpa di halaman berikutnya~ ✦"*
 
-## Deployment ke Vercel
-
-```bash
-npx vercel        # atau: push ke GitHub → import di vercel.com
-```
-
-Semua backend memakai Route Handlers serverless tanpa state persisten dan tanpa dependensi native, sehingga kompatibel dengan lingkungan Vercel. `RATE_LIMIT_PER_MINUTE` bisa diatur di dashboard Vercel (Project → Settings → Environment Variables). Catatan: rate limiter bersifat per-instance; untuk traffic tinggi gunakan penyimpanan terpusat (mis. Upstash Redis).
-
-## Format Response Lokal
-
-```jsonc
-// sukses
-{ "success": true, "data": { /* data asli sumber, tidak diubah */ }, "message": "Request berhasil", "meta": { "upstream_status": 200, "time_ms": 812 } }
-
-// error
-{ "success": false, "error": { "code": "VALIDATION_ERROR", "message": "...", "details": { } } }
-```
-
-Kode error: `VALIDATION_ERROR` (400) · `URL_REJECTED` (400, SSRF) · `ENDPOINT_NOT_FOUND` (404) · `METHOD_NOT_ALLOWED` (405) · `RATE_LIMITED` (429) · `UPSTREAM_4xx/5xx` (502/503) · `TIMEOUT` (504). Endpoint gambar (canvas/maker/random tertentu) mengembalikan binary asli dengan content-type aslinya.
-
-## Keamanan
-
-- Validasi seluruh input via Zod (tipe, wajib, enum, min/max) — parameter di luar definisi diabaikan (allowlist).
-- SSRF guard: hanya `http/https`, blokir loopback/private/link-local/metadata service, cek ulang IP setelah resolusi DNS, redirect tidak diikuti.
-- Timeout per kategori, batas ukuran respons upstream (10 MB), rate limiting per IP, tanpa eksekusi input sebagai kode.
-- Hanya GET (read-only) yang diekspos; POST/PUT/PATCH/DELETE ditolak 405.
+</div>

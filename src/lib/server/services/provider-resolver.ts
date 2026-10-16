@@ -3,6 +3,7 @@ import { ENDPOINTS } from "@/config/endpoints";
 import { callUpstream, UPSTREAM_MAX_BYTES } from "@/lib/server/providers/primary";
 import { callSanka, isSankaConfigured, type SankaTransportResult } from "@/lib/api-clients/sanka-client";
 import { scrapeFallback } from "@/lib/server/scrapr-fallback";
+import { nsfwPick, NSFW_CATEGORY_KEYS } from "@/lib/server/providers/nsfw-local";
 import type { EndpointDefinition } from "@/types/api";
 
 /**
@@ -152,6 +153,26 @@ export async function resolveProvider(
   const sankaReady = isSankaConfigured() && Boolean(endpoint.sanka);
   const explicitSanka = requested === "sanka" && sankaReady;
   const sankaFirst = endpoint.sankaOnly === true || explicitSanka;
+
+  // ---- tahap 0: sumber lokal NSFW (data JSON self-hosted owner) ----
+  // Dipanggang di bundle, tidak bisa gagal karena jaringan upstream.
+  if (endpoint.nsfwLocal) {
+    const picked = nsfwPick(values.category ?? null);
+    if (picked) {
+      return {
+        kind: "success", provider: "scrapr",
+        data: { category: picked.category, label: picked.label, url: picked.url, total: picked.total },
+        timeMs: Date.now() - startedAt,
+        meta: { path: pathLabel, upstream_status: 200, time_ms: Date.now() - startedAt },
+      };
+    }
+    return {
+      kind: "error", provider: "primary", status: 400, code: "VALIDATION_ERROR",
+      message: `Kategori tidak dikenal. Pilihan valid: ${NSFW_CATEGORY_KEYS.join(", ")}.`,
+      timeMs: Date.now() - startedAt,
+      meta: { path: pathLabel, time_ms: Date.now() - startedAt },
+    };
+  }
 
   // ---- kandidat primary (dilewati bila Sanka jadi satu-satunya sumber) ----
   const primaryCandidates: EndpointDefinition[] = [];

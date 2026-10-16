@@ -4920,16 +4920,26 @@ export const ENDPOINTS: EndpointDefinition[] = [
   {
     id: "r-nsfw",
     name: "random nsfw",
-    description: "Foto random konten dewasa (18+). Tidak untuk anak di bawah umur — gunakan dengan tanggung jawab. (Sumber sedang bermasalah; akan aktif otomatis saat pulih.)",
+    description: "Gambar random konten dewasa 18+ anime dari 8 kategori, dilayani dari koleksi lokal (self-hosted, tanpa dependensi API pihak ketiga). Tanpa param category = acak dari semua kategori. Tidak untuk anak di bawah umur — gunakan dengan tanggung jawab.",
     category: "r",
     method: "GET",
     timeoutMs: 30000,
     upstreamPath: "/api/r/nsfw",
     sankaOnly: true,
+    nsfwLocal: true,
     sanka: {
       path: "/random/nsfw"
     },
-    params: [],
+    params: [
+      {
+        name: "category",
+        required: false,
+        type: "enum",
+        enum: ["ass", "bdsm", "cum", "gangbang", "hentai", "kasedaiki", "manstrubation", "opaianime"],
+        description: "Kategori gambar: ass, bdsm, cum, gangbang, hentai, kasedaiki, manstrubation, opaianime. Kosong = acak semua.",
+        example: "hentai",
+      },
+    ],
     tags: ["Random", "18+", "Dewasa"],
   },
   {

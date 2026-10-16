@@ -44,6 +44,8 @@ export interface EndpointDefinition {
    * primary). Resolver akan memakai Sanka sebagai sumber utamanya.
    */
   sankaOnly?: boolean;
+  /** Sumber NSFW lokal self-hosted (data JSON di dalam repo, server-only). */
+  nsfwLocal?: boolean;
 }
 
 export interface EndpointCategory {

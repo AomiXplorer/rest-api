@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Home, Code2, ListOrdered, Menu, X, MessageCircle, ArrowUp, Search } from "lucide-react";
 import { APP_NAME, OWNER_NUMBER, OWNER_WHATSAPP } from "@/lib/constants";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
-import { AomiLogo, AomiMark } from "@/components/brand/AomiLogo";
+import { CyronimeLogo, CyronimeMark } from "@/components/brand/CyronimeLogo";
 
 function SearchBox({ className = "" }: { className?: string }) {
   const router = useRouter();
@@ -64,8 +64,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen">
       {/* ===== Navbar desktop ===== */}
       <header className="sticky top-0 z-40 hidden h-16 items-center gap-3 border-b-2 border-line-strong bg-card px-6 lg:flex">
-        <Link href="/" aria-label="Aomi API — Beranda">
-          <AomiLogo />
+        <Link href="/" aria-label="Cyronime — Beranda">
+          <CyronimeLogo />
         </Link>
         <nav className="ml-2 flex items-center gap-1" aria-label="Navigasi utama">
           {NAV.map((n) => (
@@ -83,11 +83,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* ===== Navbar mobile ===== */}
       <header className="sticky top-0 z-40 border-b-2 border-line-strong bg-card lg:hidden">
         <div className="flex h-12 items-center gap-2 px-2.5">
-          <Link href="/" aria-label="Aomi API — Beranda" className="shrink-0">
-            <AomiMark size={26} className="text-ink" />
+          <Link href="/" aria-label="Cyronime — Beranda" className="shrink-0">
+            <CyronimeMark size={26} className="text-ink" />
           </Link>
           <span className="min-w-0 flex-1 truncate font-display text-sm font-extrabold text-ink">
-            Aomi<span className="text-primary">API</span>
+            Cyronime<span className="text-primary">API</span>
           </span>
           <button
             onClick={() => setOpen(true)}
@@ -109,7 +109,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="absolute inset-0 bg-ink/40" onClick={() => setOpen(false)} />
           <aside className="absolute inset-y-0 left-0 flex w-72 flex-col border-r-2 border-line-strong bg-surface p-4 animate-pop">
             <div className="flex items-center justify-between">
-              <AomiLogo size={28} />
+              <CyronimeLogo size={28} />
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Tutup menu"
@@ -157,7 +157,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <footer className="border-t-2 border-dashed border-line-strong px-5 py-6 sm:px-8 lg:px-10">
           <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <AomiMark size={22} className="text-ink" />
+              <CyronimeMark size={22} className="text-ink" />
               <p className="font-code text-xs text-ink-faint">
                 © 2026 {APP_NAME} — buku catatan API-mu.
               </p>

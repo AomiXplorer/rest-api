@@ -53,7 +53,7 @@ function guardUrlParams(
   return null;
 }
 
-/** Panggil upstream dan terjemahkan response-nya ke format Aomi — sama untuk GET/POST. */
+/** Panggil upstream dan terjemahkan response-nya ke format Cyronime — sama untuk GET/POST. */
 async function respondWithUpstream(
   endpoint: EndpointDefinition,
   values: Record<string, string>,

@@ -12,7 +12,7 @@ import { CATEGORIES, ENDPOINTS } from "@/config/endpoints";
 import { CopyButton } from "@/components/ui/CopyButton";
 import { JsonViewer } from "@/components/ui/JsonViewer";
 import { StatusWidget, LiveStatusTile } from "@/components/home/StatusWidget";
-import { AomiMark } from "@/components/brand/AomiLogo";
+import { CyronimeMark } from "@/components/brand/CyronimeLogo";
 import { OWNER_NUMBER, OWNER_WHATSAPP, SITE_URL } from "@/lib/constants";
 
 const sampleRequest = `curl "${SITE_URL}/api/v1/s/youtube?query=lathi"`;
@@ -199,7 +199,7 @@ export function SampleCode() {
     <section className="relative z-10 px-5 py-10 sm:px-8 lg:px-12">
       <div className="mx-auto max-w-5xl">
         <h2 className="flex items-center gap-2 font-display text-2xl font-extrabold text-ink sm:text-3xl">
-          <AomiMark size={26} className="text-ink" /> Contoh halaman buku
+          <CyronimeMark size={26} className="text-ink" /> Contoh halaman buku
         </h2>
         <p className="mt-1.5 text-sm text-ink-muted">
           Satu request sederhana, response JSON langsung jadi — beginilah isi catatannya.

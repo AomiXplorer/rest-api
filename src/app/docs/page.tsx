@@ -3,7 +3,7 @@ import { DocsClient } from "@/components/docs/DocsClient";
 
 export const metadata = {
   title: "Dokumentasi",
-  description: "Dokumentasi lengkap seluruh endpoint Aomi Still Learning: parameter, contoh, dan fitur Try API.",
+  description: "Dokumentasi lengkap seluruh endpoint Cyronime: parameter, contoh, dan fitur Try API.",
 };
 
 export default async function DocsPage({

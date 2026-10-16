@@ -24,7 +24,8 @@ function Card({
   iconText?: string;
 }) {
   return (
-    <div className="relative rounded-2xl border-2 border-line bg-card p-3 shadow-note">
+    <div className="relative rounded-xl border-2 border-line-strong bg-card p-3 pt-4 shadow-note">
+      <div className="tape-left" />
       <div className="flex items-center gap-3">
         <div
           className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-line-strong ${chipCls} ${iconText}`}
@@ -113,9 +114,9 @@ export function LiveStatusTile() {
     getHealth().then((h) => setCode(String(h.status)));
   }, []);
   return (
-    <div className="relative rounded-2xl border-2 border-line bg-sky p-4 shadow-note">
-      <p className="font-display text-3xl font-extrabold leading-none text-ink">{code}</p>
-      <p className="mt-1.5 font-code text-xs text-ink-muted">Status</p>
-    </div>
+    <>
+      <p className="font-hand text-4xl font-semibold leading-none text-ink">{code}</p>
+      <p className="mt-1.5 font-code text-xs font-semibold text-ink/70">Status API</p>
+    </>
   );
 }

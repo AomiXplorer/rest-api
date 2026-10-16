@@ -141,7 +141,7 @@ export function EndpointDetail({
             <button
               onClick={onClose}
               aria-label="Tutup"
-              className="press absolute right-3 top-3 z-10 rounded-lg border-2 border-sticky-ink/30 bg-sticky p-1.5 text-sticky-ink hover:bg-sticky-soft"
+              className="press absolute right-3 top-3 z-10 rounded-lg border-2 border-sticky-ink/30 bg-sticky p-1.5 text-sticky-ink hover:bg-sticky/80"
             >
               <X size={16} />
             </button>

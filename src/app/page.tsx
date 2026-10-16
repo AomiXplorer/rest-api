@@ -1,5 +1,6 @@
 import {
   Hero,
+  Marquee,
   SampleCode,
   CategoryGrid,
   Faq,
@@ -12,6 +13,7 @@ export default function HomePage() {
   return (
     <main>
       <Hero />
+      <Marquee />
       <SampleCode />
       <CategoryGrid />
       <Faq />

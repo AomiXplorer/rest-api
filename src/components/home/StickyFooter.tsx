@@ -10,7 +10,7 @@ function FooterMarqueeRow() {
       {FOOTER_MARQUEE.map((t) => (
         <span
           key={t}
-          className="mx-5 flex items-center gap-2 whitespace-nowrap font-code text-xs font-semibold text-ink-muted"
+          className="mx-5 flex items-center gap-2 whitespace-nowrap font-hand text-lg text-ink-muted"
         >
           {t} <span className="h-1 w-1 rounded-full bg-primary" />
         </span>
@@ -29,7 +29,7 @@ export function StickyFooter() {
       >
         <ArrowUp size={16} />
       </button>
-      <div className="fixed inset-x-0 bottom-0 z-30 overflow-hidden border-t-2 border-line bg-card/90 backdrop-blur-sm">
+      <div className="fixed inset-x-0 bottom-0 z-30 overflow-hidden border-t-2 border-dashed border-line-strong bg-card">
         <div className="animate-marquee flex w-max py-1.5">
           <FooterMarqueeRow />
           <FooterMarqueeRow />

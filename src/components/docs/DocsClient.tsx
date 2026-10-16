@@ -126,7 +126,7 @@ export function DocsClient({
   return (
     <main className="min-h-[calc(100vh-48px)] flex-1 lg:min-h-screen">
       {/* Bar pencarian + filter kategori */}
-      <div className="sticky top-12 z-30 border-b-2 border-line bg-bg lg:top-0">
+      <div className="sticky top-[90px] z-30 border-b-2 border-dashed border-line-strong bg-bg lg:top-16">
         <div className="mx-auto max-w-4xl px-5 py-4 sm:px-8">
           <div className="relative">
             <Search

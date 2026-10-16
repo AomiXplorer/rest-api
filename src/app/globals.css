@@ -1,61 +1,67 @@
 @import "tailwindcss";
 
-/* Runtime-switchable semantic palette.
-   .dark = gaya baru default (navy pekat + aksen cyan, ala referensi).
-   :root = varian terang untuk toggle. */
+/* ============================================
+   AOMI API — CARTOON BOOK DESIGN SYSTEM
+   Light "Paper" (default) + Dark "Midnight Sketchbook"
+   ============================================ */
 :root {
-  --c-bg: #f4f7fa;
-  --c-surface: #e9eef4;
-  --c-card: #ffffff;
-  --c-card-soft: #f0f4f8;
-  --c-line: #dde5ec;
-  --c-line-strong: #c3cfda;
-  --c-ink: #0d1520;
-  --c-ink-muted: #46586b;
-  --c-ink-faint: #7c8da0;
-  --c-primary: #0e7490;
-  --c-primary-soft: #0891b2;
+  --c-bg: #fff8e8; /* paper cream */
+  --c-surface: #fbf0d7; /* paper dalam, lebih dalam */
+  --c-card: #fffdf6; /* kertas kartu */
+  --c-card-soft: #fdf6e4;
+  --c-line: #eadbb6; /* garis samar */
+  --c-line-strong: #d9c69b; /* border tegas */
+  --c-ink: #243247; /* ink navy */
+  --c-ink-muted: #5b6473;
+  --c-ink-faint: #9d927a;
+  --c-primary: #277c82; /* pencil teal */
+  --c-primary-soft: #3d9ba1;
   --c-onprimary: #ffffff;
-  --c-lemon: #a16207;
-  --c-mint: #047857;
-  --c-danger: #dc2626;
-  --c-get: #0e7490;
-  --c-wa: #16a34a;
-  --c-sticky: #e6f7fa;
-  --c-sticky-ink: #0b3b46;
-  --c-sky: #e3eefa;
-  --c-lav: #e9e8fa;
-  --c-mintp: #dcf5ea;
-  --c-code: #0f1a26;
-  --c-code-text: #d7e2ee;
+  --c-lemon: #b8860b;
+  --c-mint: #2e7d5b;
+  --c-danger: #c0563f;
+  --c-get: #277c82;
+  --c-wa: #1fa855;
+  --c-sticky: #f6df83; /* sticky note kuning */
+  --c-sticky-ink: #3a3222;
+  --c-sky: #cde5f2; /* stiker biru */
+  --c-lav: #e4d9f3; /* stiker lavender */
+  --c-mintp: #d5ebd9; /* stiker mint */
+  --c-code: #243247; /* panel teknis navy */
+  --c-code-text: #f2ebd9;
+  --c-tape: rgba(205, 229, 242, 0.75); /* selotip */
+  --c-rule: rgba(36, 50, 71, 0.055); /* garis buku */
   color-scheme: light;
 }
 
 .dark {
-  --c-bg: #05080f;
-  --c-surface: #0a0e17;
-  --c-card: #0d111d;
-  --c-card-soft: #111826;
-  --c-line: #1e2535;
-  --c-line-strong: #2b3648;
-  --c-ink: #ffffff;
-  --c-ink-muted: #a0aab8;
-  --c-ink-faint: #5c6a7e;
-  --c-primary: #22d3ee;
-  --c-primary-soft: #7de7f5;
-  --c-onprimary: #04222b;
-  --c-lemon: #fbbf24;
-  --c-mint: #34d399;
-  --c-danger: #f87171;
-  --c-get: #22d3ee;
-  --c-wa: #25d366;
-  --c-sticky: #0e2333;
-  --c-sticky-ink: #d7f3fa;
-  --c-sky: #12202e;
-  --c-lav: #171a2e;
-  --c-mintp: #0f2320;
-  --c-code: #0a0e16;
-  --c-code-text: #d7e2ee;
+  /* Midnight Sketchbook: kertas gelap, garis kontras rendah, aksen teal */
+  --c-bg: #12161f;
+  --c-surface: #171c28;
+  --c-card: #1a2030;
+  --c-card-soft: #1f2637;
+  --c-line: #2a3140;
+  --c-line-strong: #3d4657;
+  --c-ink: #eae3d2;
+  --c-ink-muted: #a5a99b;
+  --c-ink-faint: #6d7585;
+  --c-primary: #4ec5c4;
+  --c-primary-soft: #7ad8d6;
+  --c-onprimary: #10201f;
+  --c-lemon: #f0d060;
+  --c-mint: #57b489;
+  --c-danger: #e5735d;
+  --c-get: #4ec5c4;
+  --c-wa: #3bc56e;
+  --c-sticky: #e8c95c;
+  --c-sticky-ink: #2e2410;
+  --c-sky: #24455a;
+  --c-lav: #33294d;
+  --c-mintp: #1e3a2c;
+  --c-code: #0d1117;
+  --c-code-text: #d9e2ee;
+  --c-tape: rgba(120, 160, 185, 0.4);
+  --c-rule: rgba(234, 227, 210, 0.045);
   color-scheme: dark;
 }
 
@@ -84,10 +90,11 @@
   --color-mintp: var(--c-mintp);
   --color-code: var(--c-code);
   --color-code-text: var(--c-code-text);
+  --color-tape: var(--c-tape);
 
   --font-display: var(--font-jakarta), system-ui, sans-serif;
   --font-body: var(--font-dmsans), system-ui, sans-serif;
-  --font-hand: var(--font-dmsans), system-ui, sans-serif;
+  --font-hand: var(--font-caveat), "Segoe Print", cursive;
   --font-code: var(--font-jetbrains), ui-monospace, monospace;
 
   --animate-pop: pop 0.18s ease-out;
@@ -104,14 +111,37 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Glow aksen halus di atas halaman (mode gelap) */
-.dark body {
-  background-image: radial-gradient(
-    900px 420px at 50% -80px,
-    rgba(34, 211, 238, 0.08),
-    transparent 70%
+/* Kertas bergaris — satu background CSS, nol elemen DOM tambahan */
+body {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 35px,
+    var(--c-rule) 35px,
+    var(--c-rule) 36px
   );
-  background-repeat: no-repeat;
+  background-attachment: local;
+}
+
+/* Garis margin vertikal khas buku */
+main {
+  position: relative;
+}
+main::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: clamp(0.5rem, 3vw, 3rem);
+  width: 1.5px;
+  background: color-mix(in srgb, var(--c-danger) 22%, transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+@media (max-width: 640px) {
+  main::before {
+    display: none;
+  }
 }
 
 /* Modal pop-in */
@@ -126,25 +156,24 @@ body {
   }
 }
 
-/* Kartu */
+/* Bayangan kertas — lembut, tidak besar */
 .shadow-note {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 12px 32px -16px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 2px rgba(60, 45, 20, 0.08), 0 8px 20px -12px rgba(60, 45, 20, 0.22);
 }
 .dark .shadow-note {
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.02), 0 14px 36px -18px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 24px -14px rgba(0, 0, 0, 0.8);
 }
-
 .shadow-hard {
-  box-shadow: 0 8px 24px -10px rgba(0, 0, 0, 0.35);
+  box-shadow: 3px 3px 0 rgba(36, 50, 71, 0.9);
 }
 .dark .shadow-hard {
-  box-shadow: 0 8px 24px -10px rgba(0, 0, 0, 0.8);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.85);
 }
 .shadow-hard-sm {
-  box-shadow: 0 4px 14px -6px rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 2px 0 rgba(36, 50, 71, 0.9);
 }
 .dark .shadow-hard-sm {
-  box-shadow: 0 4px 14px -6px rgba(0, 0, 0, 0.75);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.85);
 }
 
 .press {
@@ -155,7 +184,31 @@ body {
   transform: translateY(-1px);
 }
 .press:active {
-  transform: translateY(0);
+  transform: translateY(1px);
+}
+
+/* Selotip untuk sticky note */
+.tape {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 64px;
+  height: 18px;
+  background: var(--c-tape);
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+.tape-left {
+  position: absolute;
+  top: -9px;
+  left: 14px;
+  transform: rotate(-4deg);
+  width: 58px;
+  height: 18px;
+  background: var(--c-tape);
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
 }
 
 /* Marquee */

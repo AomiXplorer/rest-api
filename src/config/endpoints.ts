@@ -4918,6 +4918,21 @@ export const ENDPOINTS: EndpointDefinition[] = [
     tags: ["Random", "Quotes", "Motivasi"],
   },
   {
+    id: "r-nsfw",
+    name: "random nsfw",
+    description: "Foto random konten dewasa (18+). Tidak untuk anak di bawah umur — gunakan dengan tanggung jawab. (Sumber sedang bermasalah; akan aktif otomatis saat pulih.)",
+    category: "r",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/r/nsfw",
+    sankaOnly: true,
+    sanka: {
+      path: "/random/nsfw"
+    },
+    params: [],
+    tags: ["Random", "18+", "Dewasa"],
+  },
+  {
     id: "r-justina",
     name: "random justina",
     description: "Foto random Justina Xie buat wallpaper atau referensi foto estetik.",

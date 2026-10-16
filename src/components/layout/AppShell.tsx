@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Home, Code2, Menu, X, MessageCircle, ArrowUp, Bot, Search, Bell } from "lucide-react";
+import { Home, Code2, MessageCircle, ArrowUp, Bot, Search, Bell } from "lucide-react";
 import { APP_NAME, OWNER_NUMBER, OWNER_WHATSAPP } from "@/lib/constants";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { getHealth } from "@/lib/health";
@@ -75,7 +75,7 @@ function BellButton() {
   );
 }
 
-function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
+function SidebarBody() {
   const pathname = usePathname();
   const navCls = (active: boolean) =>
     `press flex items-center gap-2.5 rounded-lg border-2 border-line-strong px-3 py-2 font-display text-sm font-bold ${
@@ -99,10 +99,10 @@ function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
       </div>
 
       <nav className="flex flex-col gap-2">
-        <Link href="/" onClick={onNavigate} className={navCls(pathname === "/")}>
+        <Link href="/" className={navCls(pathname === "/")}>
           <Home size={16} /> Beranda
         </Link>
-        <Link href="/docs" onClick={onNavigate} className={navCls(pathname.startsWith("/docs"))}>
+        <Link href="/docs" className={navCls(pathname.startsWith("/docs"))}>
           <Code2 size={16} /> Daftar API
         </Link>
       </nav>
@@ -132,11 +132,6 @@ function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
 
   return (
     <div className="min-h-screen">
@@ -150,13 +145,24 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Mobile top bar */}
       <header className="sticky top-0 z-40 flex h-12 items-center gap-2 border-b-2 border-line bg-card px-2.5 lg:hidden">
-        <button
-          onClick={() => setOpen(true)}
-          aria-label="Buka menu"
-          className="press shrink-0 rounded-lg border-2 border-line-strong bg-card p-1.5 text-ink"
-        >
-          <Menu size={18} />
-        </button>
+        <nav className="flex shrink-0 items-center gap-1.5" aria-label="Navigasi utama">
+          <Link
+            href="/"
+            className={`press rounded-lg border-2 px-2 py-1.5 font-display text-[11px] font-bold ${
+              pathname === "/" ? "border-primary bg-primary text-white" : "border-line-strong bg-card text-ink"
+            }`}
+          >
+            Beranda
+          </Link>
+          <Link
+            href="/docs"
+            className={`press rounded-lg border-2 px-2 py-1.5 font-display text-[11px] font-bold ${
+              pathname.startsWith("/docs") ? "border-primary bg-primary text-white" : "border-line-strong bg-card text-ink"
+            }`}
+          >
+            API
+          </Link>
+        </nav>
         <div className="relative min-w-0 flex-1">
           <Search
             size={14}
@@ -179,29 +185,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <BellButton />
         <ThemeToggle />
       </header>
-
-      {/* Mobile drawer */}
-      {open && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-ink/40" onClick={() => setOpen(false)} />
-          <aside className="absolute inset-y-0 left-0 flex w-[280px] flex-col border-r-2 border-line bg-surface">
-            <div className="binder absolute inset-y-0 left-0 w-5" />
-            <div className="flex items-center justify-between border-b-2 border-line py-3 pl-9 pr-3">
-              <span className="font-display text-sm font-bold text-ink">Menu</span>
-              <button
-                onClick={() => setOpen(false)}
-                aria-label="Tutup menu"
-                className="rounded-lg p-1 text-ink-muted hover:bg-card"
-              >
-                <X size={18} />
-              </button>
-            </div>
-            <div className="flex h-[calc(100%-49px)] flex-col gap-4 overflow-y-auto p-4 pl-9">
-              <SidebarBody onNavigate={() => setOpen(false)} />
-            </div>
-          </aside>
-        </div>
-      )}
 
       {/* Main content */}
       <div className="content-margin min-h-screen lg:pl-[240px]">

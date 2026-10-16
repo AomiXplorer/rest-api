@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { RotateCcw, Loader2, AlertTriangle, CheckCircle2, CircleDashed, Clock, HardDrive, Send, Link2, SlidersHorizontal } from "lucide-react";
+import { RotateCcw, Loader2, AlertTriangle, CheckCircle2, CircleDashed, Clock, HardDrive, Send, Link2, SlidersHorizontal, X } from "lucide-react";
 import type { EndpointDefinition, ApiResponse } from "@/types/api";
 import { CopyButton } from "@/components/ui/CopyButton";
 import { JsonViewer } from "@/components/ui/JsonViewer";
@@ -29,7 +29,17 @@ function buildUrl(e: EndpointDefinition, values: Record<string, string>) {
   return u.toString();
 }
 
-export function EndpointDetail({ endpoint, verified }: { endpoint: EndpointDefinition; verified: boolean }) {
+export function EndpointDetail({
+  endpoint,
+  verified,
+  variant = "page",
+  onClose,
+}: {
+  endpoint: EndpointDefinition;
+  verified: boolean;
+  variant?: "page" | "modal";
+  onClose?: () => void;
+}) {
   const [values, setValues] = useState<Record<string, string>>(() => {
     const v: Record<string, string> = {};
     for (const p of endpoint.params) v[p.name] = p.example;
@@ -105,11 +115,28 @@ export function EndpointDetail({ endpoint, verified }: { endpoint: EndpointDefin
     }
   }
 
+  const modal = variant === "modal";
+
   return (
-    <article className="px-4 py-5 sm:px-6 lg:px-10">
-      <div className="mx-auto max-w-4xl overflow-hidden rounded-2xl border-2 border-line-strong bg-card shadow-note">
+    <article className={modal ? "" : "px-4 py-5 sm:px-6 lg:px-10"}>
+      <div
+        className={
+          modal
+            ? "overflow-hidden rounded-2xl border-2 border-line-strong bg-card shadow-note"
+            : "mx-auto max-w-4xl overflow-hidden rounded-2xl border-2 border-line-strong bg-card shadow-note"
+        }
+      >
         {/* Header band — sticky-note yellow */}
         <header className="relative bg-sticky p-4 pr-12 sm:p-5 sm:pr-12">
+          {modal && onClose && (
+            <button
+              onClick={onClose}
+              aria-label="Tutup"
+              className="press absolute right-3 top-3 z-10 rounded-lg border-2 border-sticky-ink/30 bg-sticky p-1.5 text-sticky-ink hover:bg-sticky-soft"
+            >
+              <X size={16} />
+            </button>
+          )}
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="rounded border-2 border-sticky-ink px-1.5 py-0.5 font-code text-[11px] font-bold text-sticky-ink">
               {endpoint.method}

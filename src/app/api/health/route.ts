@@ -11,6 +11,7 @@ export async function GET(req: Request) {
 
   const base = {
     success: true,
+    author: "RendyZ",
     service: "aomi-rest-api",
     status: "ok",
     time: new Date().toISOString(),

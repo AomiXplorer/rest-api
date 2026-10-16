@@ -42,6 +42,8 @@ export interface ApiEnvelopeMeta {
 
 export interface ApiSuccess<T = unknown> {
   success: true;
+  /** Watermark author — branding pada setiap response API. */
+  author: string;
   data: T;
   message: string;
   meta: ApiEnvelopeMeta;
@@ -49,6 +51,8 @@ export interface ApiSuccess<T = unknown> {
 
 export interface ApiError {
   success: false;
+  /** Watermark author — branding pada setiap response API. */
+  author: string;
   error: {
     code: string;
     message: string;

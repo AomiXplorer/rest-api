@@ -18,6 +18,7 @@ interface ResponseState {
 
 const sampleResponse = {
   success: true,
+  author: "RendyZ",
   data: { result: "…isi hasil sesuai endpoint…" },
   message: "Request berhasil",
   meta: { upstream_status: 200, time_ms: 750 },

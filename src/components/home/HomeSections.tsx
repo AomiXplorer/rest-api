@@ -19,6 +19,7 @@ const sampleRequest = `curl "${SITE_URL}/api/v1/s/youtube?query=lathi"`;
 
 const sampleResponse = {
   success: true,
+  author: "RendyZ",
   data: [
     {
       title: "Weird Genius - Lathi (ft. Sara Fajira) ...",

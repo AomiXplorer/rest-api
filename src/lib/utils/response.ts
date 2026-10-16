@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 import type { ApiError, ApiSuccess, ApiEnvelopeMeta } from "@/types/api";
 
+/** Watermark author yang tertanam di semua response API. */
+export const API_AUTHOR = "RendyZ";
+
 export function jsonOk<T>(data: T, message: string, meta: ApiEnvelopeMeta, status = 200) {
-  const body: ApiSuccess<T> = { success: true, data, message, meta };
+  const body: ApiSuccess<T> = { success: true, author: API_AUTHOR, data, message, meta };
   return NextResponse.json(body, {
     status,
     headers: meta.time_ms != null ? { "x-time-ms": String(meta.time_ms) } : undefined,
@@ -16,7 +19,7 @@ export function jsonErr(
   details?: Record<string, string>,
   meta?: ApiEnvelopeMeta,
 ) {
-  const body: ApiError = { success: false, error: { code, message, ...(details ? { details } : {}) }, meta };
+  const body: ApiError = { success: false, author: API_AUTHOR, error: { code, message, ...(details ? { details } : {}) }, meta };
   return NextResponse.json(body, { status, headers: meta?.time_ms != null ? { "x-time-ms": String(meta.time_ms) } : undefined });
 }
 

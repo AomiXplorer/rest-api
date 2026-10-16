@@ -4,6 +4,7 @@ import { callUpstream, UPSTREAM_MAX_BYTES } from "@/lib/server/providers/primary
 import { callSanka, isSankaConfigured, type SankaTransportResult } from "@/lib/api-clients/sanka-client";
 import { scrapeFallback } from "@/lib/server/scrapr-fallback";
 import { nsfwPick, NSFW_CATEGORY_KEYS } from "@/lib/server/providers/nsfw-local";
+import { fetchSfmRandom } from "@/lib/server/providers/sfm-scrape";
 import type { EndpointDefinition } from "@/types/api";
 
 /**
@@ -171,6 +172,25 @@ export async function resolveProvider(
       message: `Kategori tidak dikenal. Pilihan valid: ${NSFW_CATEGORY_KEYS.join(", ")}.`,
       timeMs: Date.now() - startedAt,
       meta: { path: pathLabel, time_ms: Date.now() - startedAt },
+    };
+  }
+
+  // ---- tahap 0b: scrape mandiri video 18+ (sfm) ----
+  if (endpoint.sfmScrape) {
+    const vid = await fetchSfmRandom();
+    const elapsed = Date.now() - startedAt;
+    if (vid) {
+      return {
+        kind: "success", provider: "scrapr", data: vid,
+        timeMs: elapsed,
+        meta: { path: pathLabel, upstream_status: 200, time_ms: elapsed },
+      };
+    }
+    return {
+      kind: "error", provider: "primary", status: 502, code: "PROVIDER_ERROR",
+      message: "Sumber video sedang tidak bisa diakses atau tidak mengembalikan hasil. Coba lagi beberapa saat.",
+      timeMs: elapsed,
+      meta: { path: pathLabel, time_ms: elapsed },
     };
   }
 

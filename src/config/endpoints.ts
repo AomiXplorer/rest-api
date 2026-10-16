@@ -5015,6 +5015,18 @@ export const ENDPOINTS: EndpointDefinition[] = [
     tags: ["NSFW", "18+", "Dewasa", "Anime"],
   },
   {
+    id: "nsfw-hentaivid",
+    name: "hentai video",
+    description: "Video random konten dewasa 18+ (3D/SFM) hasil scrape mandiri dari sumber publik — judul, kategori, views, shares, link asli, dan URL video langsung (mp4/webm). Tidak untuk anak di bawah umur — gunakan dengan tanggung jawab.",
+    category: "nsfw",
+    method: "GET",
+    timeoutMs: 45000,
+    upstreamPath: "/api/nsfw/hentaivid",
+    sfmScrape: true,
+    params: [],
+    tags: ["NSFW", "18+", "Video", "Scrape"],
+  },
+  {
     id: "r-justina",
     name: "random justina",
     description: "Foto random Justina Xie buat wallpaper atau referensi foto estetik.",

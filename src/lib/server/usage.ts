@@ -67,6 +67,7 @@ export async function recordUsage(rec: UsageRecord): Promise<void> {
       ["expire", `aomi:win:${win}`, 1800],
     ];
     if (rec.maintenance) {
+      cmds.push(["hincrby", day, "maint", 1]);
       cmds.push(["hincrby", `aomi:win:${win}`, "maint", 1]);
     }
     const res = await redisTry(cmds);

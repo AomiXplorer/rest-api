@@ -25,6 +25,12 @@ function localPath(e: EndpointDefinition) {
   return `/api/v1${e.upstreamPath.replace(/^\/api/, "")}`;
 }
 
+/* Nama fitur saja: segmen terakhir path, tanpa prefix /api/v1/<kategori> */
+function featureName(e: EndpointDefinition) {
+  const segs = e.upstreamPath.split("/").filter(Boolean);
+  return segs[segs.length - 1] ?? e.upstreamPath;
+}
+
 export function DocsClient({
   initialCategory,
   initialEndpointId,
@@ -207,7 +213,7 @@ export function DocsClient({
                         <div className="flex items-center gap-2.5">
                           <MethodBadge method={e.method} />
                           <code className="min-w-0 flex-1 truncate font-code text-sm font-semibold text-ink">
-                            {localPath(e)}
+                            {featureName(e)}
                           </code>
                           {verified.has(e.id) ? (
                             <CheckCircle2

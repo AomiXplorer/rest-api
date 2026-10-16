@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { UPSTREAM_BASE_URL } from "@/lib/server/upstream";
+import { getMaintenance } from "@/lib/server/maintenance";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -9,6 +10,7 @@ export async function GET(req: Request) {
   const ip =
     (fwd ? (fwd.split(",")[0] ?? "").trim() : req.headers.get("x-real-ip")) || null;
 
+  const maintenance = await getMaintenance();
   const base = {
     success: true,
     author: "RendyZ",
@@ -16,6 +18,10 @@ export async function GET(req: Request) {
     status: "ok",
     time: new Date().toISOString(),
     ip,
+    maintenance: {
+      active: maintenance.enabled,
+      estimatedEndAt: maintenance.estimatedEndAt,
+    },
   };
 
   if (!checkUpstream) return NextResponse.json(base);

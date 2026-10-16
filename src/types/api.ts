@@ -86,6 +86,11 @@ export interface ApiError {
     message: string;
     details?: Record<string, string>;
   };
+  /** Hanya ada saat maintenance aktif (HTTP 503 MAINTENANCE_MODE). */
+  maintenance?: {
+    active: boolean;
+    estimatedEndAt: string | null;
+  };
   meta?: ApiEnvelopeMeta;
 }
 

@@ -4,7 +4,10 @@ import { resolveProvider, type RequestedProvider } from "@/lib/server/services/p
 import { assertSafeUrl } from "@/lib/security/url-guard";
 import { checkRateLimit, getClientId } from "@/lib/security/rate-limit";
 import { validateParams } from "@/lib/validation/validate-params";
-import { jsonErr, jsonOk, ERR } from "@/lib/utils/response";
+import { after } from "next/server";
+import { jsonErr, jsonOk, ERR, API_AUTHOR } from "@/lib/utils/response";
+import { getMaintenance } from "@/lib/server/maintenance";
+import { recordUsage, classifySource } from "@/lib/server/usage";
 import type { EndpointDefinition } from "@/types/api";
 
 /**
@@ -29,6 +32,22 @@ const URLISH = /^(url|link|.*_?url.*|image.*|avatar.*|background.*|.*photo.*|gui
 
 /** Batas ukuran body JSON untuk POST — cukup untuk parameter, bukan file. */
 const MAX_BODY_BYTES = 16 * 1024;
+
+/** Response 503 standar saat maintenance aktif — JSON, bukan HTML. */
+function maintenanceResponse(pathLabel: string, message: string, estimatedEndAt: string | null): NextResponse {
+  const res = NextResponse.json(
+    {
+      success: false,
+      author: API_AUTHOR,
+      error: { code: "MAINTENANCE_MODE", message },
+      maintenance: { active: true, estimatedEndAt },
+      meta: { path: pathLabel, time_ms: 0 },
+    },
+    { status: 503 },
+  );
+  res.headers.set("retry-after", "60");
+  return withCors(res);
+}
 
 /** Parameter kontrol untuk memilih sumber data (provider resolver). */
 const PROVIDER_PARAM = "provider";
@@ -104,8 +123,64 @@ function respondWithOutcome(
   );
 }
 
-export async function GET(req: Request, { params }: { params: Promise<{ path: string[] }> }) {
-  const { path } = await params;
+/**
+ * GET — dibungkus maintenance gate + pencatatan penggunaan.
+ * Gate server-side: saat maintenance aktif, TIDAK ada request yang
+ * diteruskan ke resolver/provider eksternal. Pencatatan usage berjalan
+ * setelah response terkirim (next/server `after`) dan tidak pernah
+ * menggagalkan request.
+ */
+export async function GET(req: Request, ctx: { params: Promise<{ path: string[] }> }) {
+  const seg = (await ctx.params).path;
+  const pathLabel = `/api/v1/${seg.join("/")}`;
+  const started = Date.now();
+
+  const maint = await getMaintenance();
+  if (maint.enabled) {
+    after(() =>
+      recordUsage({
+        id: crypto.randomUUID(),
+        ts: new Date().toISOString(),
+        method: "GET",
+        path: pathLabel,
+        status: 503,
+        durationMs: Date.now() - started,
+        source: classifySource(req),
+        maintenance: true,
+        errorCode: "MAINTENANCE_MODE",
+      }),
+    );
+    return maintenanceResponse(pathLabel, maint.message, maint.estimatedEndAt);
+  }
+
+  const res = await handleGet(req, seg);
+  const cloned = res.clone();
+  after(async () => {
+    let code: string | undefined;
+    if (res.status >= 400) {
+      try {
+        const body = (await cloned.json()) as { error?: { code?: string } };
+        code = body.error?.code;
+      } catch {
+        /* binary/HTML body tanpa kode */
+      }
+    }
+    await recordUsage({
+      id: crypto.randomUUID(),
+      ts: new Date().toISOString(),
+      method: "GET",
+      path: pathLabel,
+      status: res.status,
+      durationMs: Date.now() - started,
+      source: classifySource(req),
+      maintenance: false,
+      errorCode: code,
+    });
+  });
+  return res;
+}
+
+async function handleGet(req: Request, path: string[]) {
   const started = Date.now();
 
   // --- rate limiting ---
@@ -147,8 +222,58 @@ export async function GET(req: Request, { params }: { params: Promise<{ path: st
  * yang sama seperti GET (termasuk guard SSRF, rate limit, timeout, dan
  * batas ukuran response).
  */
-export async function POST(req: Request, { params }: { params: Promise<{ path: string[] }> }) {
-  const { path } = await params;
+/** POST — dibungkus gate + pencatatan yang sama seperti GET. */
+export async function POST(req: Request, ctx: { params: Promise<{ path: string[] }> }) {
+  const seg = (await ctx.params).path;
+  const pathLabel = `/api/v1/${seg.join("/")}`;
+  const started = Date.now();
+
+  const maint = await getMaintenance();
+  if (maint.enabled) {
+    after(() =>
+      recordUsage({
+        id: crypto.randomUUID(),
+        ts: new Date().toISOString(),
+        method: "POST",
+        path: pathLabel,
+        status: 503,
+        durationMs: Date.now() - started,
+        source: classifySource(req),
+        maintenance: true,
+        errorCode: "MAINTENANCE_MODE",
+      }),
+    );
+    return maintenanceResponse(pathLabel, maint.message, maint.estimatedEndAt);
+  }
+
+  const res = await handlePost(req, seg);
+  const cloned = res.clone();
+  after(async () => {
+    let code: string | undefined;
+    if (res.status >= 400) {
+      try {
+        const body = (await cloned.json()) as { error?: { code?: string } };
+        code = body.error?.code;
+      } catch {
+        /* binary/HTML body tanpa kode */
+      }
+    }
+    await recordUsage({
+      id: crypto.randomUUID(),
+      ts: new Date().toISOString(),
+      method: "POST",
+      path: pathLabel,
+      status: res.status,
+      durationMs: Date.now() - started,
+      source: classifySource(req),
+      maintenance: false,
+      errorCode: code,
+    });
+  });
+  return res;
+}
+
+async function handlePost(req: Request, path: string[]) {
   const started = Date.now();
 
   // --- rate limiting ---

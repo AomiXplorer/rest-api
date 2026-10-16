@@ -59,6 +59,13 @@ export async function callUpstream(
     timeMs: elapsed(), tooLarge: true,
   });
 
+  /**
+   * Satu percobaan ulang ketika request upstream gagal karena jaringan/timeout
+   * (bukan error HTTP dari upstream). Endpoint upstream sifatnya baca-saja,
+   * jadi retry aman; total tetap dibatasi timeoutMs.
+   */
+  const ATTEMPTS = 2;
+  for (let attempt = 1; attempt <= ATTEMPTS; attempt++) {
   try {
     init.signal = controller.signal;
     const res = await fetch(url, init);
@@ -79,8 +86,15 @@ export async function callUpstream(
     if (buf.byteLength > UPSTREAM_MAX_BYTES) return tooLarge();
     return { ok: res.ok, status: res.status, contentType, text: null, bytes: buf, timeMs: elapsed() };
   } catch {
+    if (attempt < ATTEMPTS && elapsed() < endpoint.timeoutMs) {
+      await new Promise((r) => setTimeout(r, 400));
+      continue;
+    }
     return { ok: false, status: 504, contentType: "", text: null, bytes: null, timeMs: elapsed() };
   } finally {
-    clearTimeout(timer);
+    if (attempt === ATTEMPTS) clearTimeout(timer);
   }
+  }
+  // Unreachable secara praktis; menjaga tipe pengembalian tetap lengkap.
+  return { ok: false, status: 504, contentType: "", text: null, bytes: null, timeMs: elapsed() };
 }

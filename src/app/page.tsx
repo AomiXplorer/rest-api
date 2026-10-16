@@ -8,11 +8,13 @@ import {
   ContactNote,
 } from "@/components/home/HomeSections";
 import { StickyFooter } from "@/components/home/StickyFooter";
+import { ServerStats } from "@/components/home/ServerStats";
 
 export default function HomePage() {
   return (
     <main>
       <Hero />
+      <ServerStats />
       <Marquee />
       <SampleCode />
       <CategoryGrid />

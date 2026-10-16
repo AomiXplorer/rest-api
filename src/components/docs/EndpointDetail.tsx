@@ -65,6 +65,19 @@ export function EndpointDetail({
     return `${origin}${localPath(endpoint)}${qs ? `?${qs}` : ""}`;
   }, [endpoint, values]);
 
+  /* Body JSON untuk contoh POST: parameter terisi -> nilai, kosong -> contoh dari skema */
+  const postBody = useMemo(() => {
+    const body: Record<string, string> = {};
+    for (const p of endpoint.params) {
+      const v = values[p.name];
+      if (v) body[p.name] = v;
+      else if (p.example) body[p.name] = p.example;
+      else if (!p.required) continue;
+      else body[p.name] = "";
+    }
+    return JSON.stringify(body);
+  }, [endpoint, values]);
+
   async function send(resend = false) {
     if (loading) return;
     void resend;
@@ -243,11 +256,22 @@ export function EndpointDetail({
           <section className="mt-6 space-y-4">
             <div>
               <div className="flex items-center justify-between gap-2">
-                <span className="font-display text-sm font-bold text-ink">Contoh Request</span>
+                <span className="font-display text-sm font-bold text-ink">
+                  Contoh Request <span className="text-ink-faint">(GET)</span>
+                </span>
                 <CopyButton text={`curl "${requestUrl}"`} label="Salin" />
               </div>
               <pre className="mt-2 overflow-x-auto rounded-lg border-2 border-line bg-code px-3 py-2.5 font-code text-[12px] leading-relaxed text-code-text">
                 <code>{`curl "${requestUrl}"`}</code>
+              </pre>
+              <div className="mt-3 flex items-center justify-between gap-2">
+                <span className="font-display text-sm font-bold text-ink">
+                  Alternatif POST <span className="text-ink-faint">(body JSON)</span>
+                </span>
+                <CopyButton text={`curl -X POST -H "Content-Type: application/json" -d '${postBody}' "${requestUrl}"`} label="Salin" />
+              </div>
+              <pre className="mt-2 overflow-x-auto rounded-lg border-2 border-line bg-code px-3 py-2.5 font-code text-[12px] leading-relaxed text-code-text">
+                <code>{`curl -X POST -H "Content-Type: application/json" -d '${postBody}' "${requestUrl}"`}</code>
               </pre>
             </div>
             <div>

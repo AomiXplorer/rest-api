@@ -30,9 +30,24 @@ const JSON_CT = /^\s*(application\/json|text\/plain)/i;
 export async function callUpstream(
   endpoint: EndpointDefinition,
   values: Record<string, string>,
+  opts: { method?: "GET" | "POST" } = {},
 ): Promise<UpstreamResult> {
+  const method = opts.method ?? "GET";
   const url = new URL(SIPUTZX_BASE_URL + endpoint.upstreamPath);
-  for (const [k, v] of Object.entries(values)) url.searchParams.set(k, v);
+  if (method === "GET") {
+    for (const [k, v] of Object.entries(values)) url.searchParams.set(k, v);
+  }
+  const init: RequestInit = {
+    method,
+    signal: undefined,
+    redirect: "follow",
+    headers: { accept: "application/json, image/*" },
+    cache: "no-store",
+  };
+  if (method === "POST") {
+    init.headers = { accept: "application/json", "content-type": "application/json" };
+    init.body = JSON.stringify(values);
+  }
 
   const started = Date.now();
   const elapsed = () => Date.now() - started;
@@ -45,13 +60,8 @@ export async function callUpstream(
   });
 
   try {
-    const res = await fetch(url, {
-      method: "GET",
-      signal: controller.signal,
-      redirect: "follow",
-      headers: { accept: "application/json, image/*" },
-      cache: "no-store",
-    });
+    init.signal = controller.signal;
+    const res = await fetch(url, init);
 
     // Tolak sejak awal bila content-length diketahui melebihi batas.
     const declaredLength = Number(res.headers.get("content-length") ?? 0);

@@ -9,13 +9,13 @@ import type { EndpointDefinition } from "@/types/api";
 
 /**
  * CORS: API ini memang publik dan dipakai lintas origin oleh developer.
- * Kebijakan: semua endpoint GET boleh dipanggil dari origin mana pun,
+ * Kebijakan: GET dan POST boleh dipanggil dari origin mana pun,
  * tanpa credential (endpoint tidak membaca cookie), jadi "*" aman.
  * Ubah di sini jika suatu saat perlu dibatasi per-origin.
  */
 const CORS_HEADERS: Record<string, string> = {
   "access-control-allow-origin": "*",
-  "access-control-allow-methods": "GET, OPTIONS",
+  "access-control-allow-methods": "GET, POST, OPTIONS",
   "access-control-allow-headers": "content-type",
   "access-control-max-age": "86400",
 };
@@ -27,35 +27,19 @@ function withCors(res: NextResponse): NextResponse {
 /** Parameter names that carry a URL the upstream will fetch — SSRF-guarded. */
 const URLISH = /^(url|link|.*_?url.*|image.*|avatar.*|background.*|.*photo.*|guildicon)$/i;
 
+/** Batas ukuran body JSON untuk POST — cukup untuk parameter, bukan file. */
+const MAX_BODY_BYTES = 16 * 1024;
+
 function findEndpoint(segments: string[]): EndpointDefinition | undefined {
   const upstreamPath = `/api/${segments.join("/")}`;
   return ENDPOINTS.find((e) => e.upstreamPath === upstreamPath);
 }
 
-export async function GET(req: Request, { params }: { params: Promise<{ path: string[] }> }) {
-  const { path } = await params;
-  const started = Date.now();
-
-  // --- rate limiting ---
-  const rate = checkRateLimit(getClientId(req));
-  if (!rate.allowed) {
-    const res = jsonErr(429, ERR.RATE.code, ERR.RATE.message);
-    res.headers.set("retry-after", String(rate.retryAfterSeconds ?? 60));
-    return res;
-  }
-
-  // --- endpoint lookup ---
-  const endpoint = findEndpoint(path);
-  if (!endpoint) return withCors(jsonErr(ERR.NOT_FOUND.status, ERR.NOT_FOUND.code, ERR.NOT_FOUND.message));
-
-  // --- validation ---
-  const url = new URL(req.url);
-  const { values, errors } = validateParams(endpoint, url.searchParams);
-  if (Object.keys(errors).length > 0) {
-    return withCors(jsonErr(ERR.VALIDATION.status, ERR.VALIDATION.code, "Request tidak valid. Periksa parameter Anda.", errors));
-  }
-
-  // --- SSRF guard on URL-carrying params ---
+/** Guard SSRF pada parameter yang membawa URL — dipakai GET dan POST. */
+function guardUrlParams(
+  endpoint: EndpointDefinition,
+  values: Record<string, string>,
+): NextResponse | null {
   for (const p of endpoint.params) {
     const v = values[p.name];
     if (!v) continue;
@@ -66,14 +50,23 @@ export async function GET(req: Request, { params }: { params: Promise<{ path: st
       }
     }
   }
+  return null;
+}
 
-  // --- forward to upstream ---
-  const result = await callUpstream(endpoint, values);
+/** Panggil upstream dan terjemahkan response-nya ke format Aomi — sama untuk GET/POST. */
+async function respondWithUpstream(
+  endpoint: EndpointDefinition,
+  values: Record<string, string>,
+  method: "GET" | "POST",
+  pathLabel: string,
+  started: number,
+): Promise<NextResponse> {
+  const result = await callUpstream(endpoint, values, { method });
   if (result.tooLarge) {
-    return withCors(jsonErr(ERR.UPSTREAM.status, "UPSTREAM_TOO_LARGE", "Response sumber terlalu besar untuk diproses.", undefined, { path: `/api/v1/${path.join("/")}`, upstream_status: 502, time_ms: Date.now() - started }));
+    return withCors(jsonErr(ERR.UPSTREAM.status, "UPSTREAM_TOO_LARGE", "Response sumber terlalu besar untuk diproses.", undefined, { path: pathLabel, upstream_status: 502, time_ms: Date.now() - started }));
   }
   const timeMs = Date.now() - started;
-  const meta = { path: `/api/v1/${path.join("/")}`, upstream_status: result.status, time_ms: timeMs };
+  const meta = { path: pathLabel, upstream_status: result.status, time_ms: timeMs };
 
   // Binary (image) upstream response: pass bytes through as-is.
   if (result.bytes) {
@@ -118,11 +111,94 @@ export async function GET(req: Request, { params }: { params: Promise<{ path: st
   return withCors(jsonOk(data, "Request berhasil", { ...meta, size_bytes: result.text ? result.text.length : undefined }));
 }
 
-export async function POST() {
-  return withCors(jsonErr(ERR.METHOD.status, ERR.METHOD.code, ERR.METHOD.message));
+export async function GET(req: Request, { params }: { params: Promise<{ path: string[] }> }) {
+  const { path } = await params;
+  const started = Date.now();
+
+  // --- rate limiting ---
+  const rate = checkRateLimit(getClientId(req));
+  if (!rate.allowed) {
+    const res = jsonErr(429, ERR.RATE.code, ERR.RATE.message);
+    res.headers.set("retry-after", String(rate.retryAfterSeconds ?? 60));
+    return res;
+  }
+
+  // --- endpoint lookup ---
+  const endpoint = findEndpoint(path);
+  if (!endpoint) return withCors(jsonErr(ERR.NOT_FOUND.status, ERR.NOT_FOUND.code, ERR.NOT_FOUND.message));
+
+  // --- validation (query string) ---
+  const url = new URL(req.url);
+  const { values, errors } = validateParams(endpoint, url.searchParams);
+  if (Object.keys(errors).length > 0) {
+    return withCors(jsonErr(ERR.VALIDATION.status, ERR.VALIDATION.code, "Request tidak valid. Periksa parameter Anda.", errors));
+  }
+
+  // --- SSRF guard ---
+  const guard = guardUrlParams(endpoint, values);
+  if (guard) return guard;
+
+  return respondWithUpstream(endpoint, values, "GET", `/api/v1/${path.join("/")}`, started);
 }
 
-/** Preflight untuk pemanggil lintas origin dari browser. */
+/**
+ * POST: parameter dikirim sebagai JSON body, divalidasi dengan skema Zod
+ * yang sama seperti GET (termasuk guard SSRF, rate limit, timeout, dan
+ * batas ukuran response).
+ */
+export async function POST(req: Request, { params }: { params: Promise<{ path: string[] }> }) {
+  const { path } = await params;
+  const started = Date.now();
+
+  // --- rate limiting ---
+  const rate = checkRateLimit(getClientId(req));
+  if (!rate.allowed) {
+    const res = jsonErr(429, ERR.RATE.code, ERR.RATE.message);
+    res.headers.set("retry-after", String(rate.retryAfterSeconds ?? 60));
+    return res;
+  }
+
+  // --- endpoint lookup ---
+  const endpoint = findEndpoint(path);
+  if (!endpoint) return withCors(jsonErr(ERR.NOT_FOUND.status, ERR.NOT_FOUND.code, ERR.NOT_FOUND.message));
+
+  // --- body: wajib JSON object, dibatasi ukurannya ---
+  const raw = await req.text();
+  if (raw.length > MAX_BODY_BYTES) {
+    return withCors(jsonErr(ERR.VALIDATION.status, "BODY_TOO_LARGE", "Body request terlalu besar (maksimum 16 KB)."));
+  }
+  let parsed: Record<string, unknown>;
+  try {
+    const obj: unknown = JSON.parse(raw || "{}");
+    if (typeof obj !== "object" || obj === null || Array.isArray(obj)) {
+      return withCors(jsonErr(ERR.VALIDATION.status, ERR.VALIDATION.code, "Body harus berupa JSON object berisi parameter endpoint."));
+    }
+    parsed = obj as Record<string, unknown>;
+  } catch {
+    return withCors(jsonErr(ERR.VALIDATION.status, ERR.VALIDATION.code, "Body harus berupa JSON yang valid."));
+  }
+
+  // --- validation: nilai body diperlakukan sama seperti query string ---
+  const searchParams = new URLSearchParams();
+  for (const [k, v] of Object.entries(parsed)) {
+    if (typeof v !== "string" && typeof v !== "number" && typeof v !== "boolean") {
+      return withCors(jsonErr(ERR.VALIDATION.status, ERR.VALIDATION.code, `Nilai parameter '${k}' harus string, number, atau boolean.`));
+    }
+    searchParams.set(k, String(v));
+  }
+  const { values, errors } = validateParams(endpoint, searchParams);
+  if (Object.keys(errors).length > 0) {
+    return withCors(jsonErr(ERR.VALIDATION.status, ERR.VALIDATION.code, "Request tidak valid. Periksa parameter Anda.", errors));
+  }
+
+  // --- SSRF guard ---
+  const guard = guardUrlParams(endpoint, values);
+  if (guard) return guard;
+
+  return respondWithUpstream(endpoint, values, "POST", `/api/v1/${path.join("/")}`, started);
+}
+
+/** Preflight untuk pemanggilan lintas origin dari browser. */
 export async function OPTIONS() {
   return withCors(new NextResponse(null, { status: 204 }));
 }

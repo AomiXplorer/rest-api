@@ -4918,6 +4918,21 @@ export const ENDPOINTS: EndpointDefinition[] = [
     tags: ["Random", "Quotes", "Motivasi"],
   },
   {
+    id: "r-justina",
+    name: "random justina",
+    description: "Foto random Justina Xie buat wallpaper atau referensi foto estetik.",
+    category: "r",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/r/justina",
+    sankaOnly: true,
+    sanka: {
+      path: "/random/justina"
+    },
+    params: [],
+    tags: ["Random", "Foto", "Estetik"],
+  },
+  {
     id: "r-cek-nomor",
     name: "cek nomor indonesia",
     description: "Cek info nomor HP Indonesia: operator, wilayah, dan format internasionalnya.",
@@ -5216,6 +5231,36 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["Tools", "Zip", "Archive"],
+  },
+  {
+    id: "tools-create-qris",
+    name: "create qris static",
+    description: "Bikin QRIS static dengan nominal tertentu dari URL QRIS merchant. (Sumber sedang bermasalah; akan aktif otomatis saat pulih.)",
+    category: "tools",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/tools/create-qris",
+    sankaOnly: true,
+    sanka: {
+      path: "/orderkuota/createqris"
+    },
+    params: [
+      {
+        name: "amount",
+        required: true,
+        type: "string",
+        description: "Nominal pembayaran, contoh: 15000",
+        example: "15000",
+      },
+      {
+        name: "url",
+        required: true,
+        type: "string",
+        description: "URL konten QRIS merchant yang mau dipakai",
+        example: "https://cyronime.my.id",
+      },
+    ],
+    tags: ["QRIS", "Payment", "Tools"],
   },
   {
     id: "tools-traffic",

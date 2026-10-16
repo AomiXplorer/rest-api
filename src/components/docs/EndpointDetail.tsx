@@ -182,15 +182,6 @@ export function EndpointDetail({
                 <CircleDashed size={11} /> Belum terverifikasi
               </span>
             )}
-            {endpoint.sankaOnly ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-sky/60 bg-sky/20 px-2 py-0.5 font-code text-[11px] font-semibold text-ink">
-                <Link2 size={11} /> Sumber: Sanka
-              </span>
-            ) : endpoint.sanka ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-sky/40 bg-sky/10 px-2 py-0.5 font-code text-[11px] text-ink-faint">
-                <Link2 size={11} /> Alt: Sanka (tambah &provider=sanka)
-              </span>
-            ) : null}
           </div>
           <p className="mt-2 max-w-3xl leading-relaxed text-sticky-ink/80">{endpoint.description}</p>
         </header>

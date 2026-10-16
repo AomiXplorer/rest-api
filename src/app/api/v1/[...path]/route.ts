@@ -56,6 +56,16 @@ function guardUrlParams(
   return null;
 }
 
+/** Meta akhir tanpa menyinggung sumber provider mana pun. */
+function sanitizeMeta(
+  raw: Record<string, unknown> | undefined,
+  pathLabel: string,
+  started: number,
+): Record<string, unknown> {
+  const { provider: _hidden, ...rest } = raw ?? {};
+  return { ...rest, path: pathLabel, time_ms: Date.now() - started };
+}
+
 /** Bangun response final dari outcome provider resolver. */
 function respondWithOutcome(
   outcome: Awaited<ReturnType<typeof resolveProvider>>,
@@ -63,7 +73,7 @@ function respondWithOutcome(
   started: number,
 ): NextResponse {
   if (outcome.kind === "error") {
-    const meta = { ...outcome.meta, path: pathLabel, time_ms: Date.now() - started };
+    const meta = sanitizeMeta(outcome.meta, pathLabel, started);
     return withCors(jsonErr(outcome.status, outcome.code, outcome.message, undefined, meta));
   }
   if (outcome.binary) {
@@ -78,22 +88,17 @@ function respondWithOutcome(
           headers: {
             "content-type": outcome.binary.contentType,
             "cache-control": "public, max-age=3600",
-            "x-provider": outcome.provider,
             "x-time-ms": String(Date.now() - started),
           },
         },
       ),
     );
   }
-  const meta = { ...outcome.meta, path: pathLabel, time_ms: Date.now() - started };
+  const meta = sanitizeMeta(outcome.meta, pathLabel, started);
   return withCors(
     jsonOk(
       outcome.data,
-      outcome.provider === "sanka"
-        ? "Request berhasil via provider Sanka"
-        : outcome.provider === "scrapr"
-          ? "Request berhasil via scraper mandiri (fallback)"
-          : "Request berhasil",
+      "Request berhasil",
       meta,
     ),
   );

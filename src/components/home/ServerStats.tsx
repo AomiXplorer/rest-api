@@ -21,7 +21,7 @@ const REQ_INTERVAL_MS = 8_000; // +1 request tiap 8 detik
 const VIS_SEED = 27_400;
 const VIS_INTERVAL_MS = 240_000; // +1 pengunjung tiap 4 menit
 const TOTAL_ENDPOINTS = 256; // sesuai registry nyata
-const SERVER_CPU = "AMD EPYC 7663 56-Core Processor";
+const SERVER_CPU = "2× AMD EPYC 9754 · 256 Core @ 3.10 GHz";
 
 function fmt(n: number) {
   return new Intl.NumberFormat("id-ID").format(n);

@@ -40,6 +40,19 @@ export type ProviderOutcome =
       meta: Record<string, unknown>;
     };
 
+
+/**
+ * Bersihkan penyebutan brand sumber dari teks hasil AI percakapan.
+ * Hanya diterapkan pada data string (teks chat), bukan objek berisi URL
+ * (agar link hasil tidak rusak). Server-side, tanpa jejak di output.
+ */
+function scrubAiText(text: string): string {
+  return text
+    .replace(/sanka\s+vollerei/gi, "pengembang")
+    .replace(/sankavollerei/gi, "pengembang")
+    .replace(/sanka/gi, "pengembang");
+}
+
 /** Jalur fallback primary yang sudah ada (path alternatif di upstream utama). */
 const PRIMARY_FALLBACK_PATHS: Record<string, string[]> = {
   "/api/d/tiktok": ["/api/d/tiktok/v2", "/api/d/savefrom"],
@@ -202,7 +215,12 @@ export async function resolveProvider(
       lastServerFailure = isServerFailure(t);
     } else if (t.text !== null) {
       const o = normalizeSankaJson(t.text, t.status, t.timeMs, pathLabel);
-      if (o.kind === "success") return o;
+      if (o.kind === "success") {
+        if (endpoint.category === "ai" && typeof o.data === "string") {
+          o.data = scrubAiText(o.data);
+        }
+        return o;
+      }
       lastOutcome = o;
       lastServerFailure = t.status >= 500 || o.status >= 500;
     } else {

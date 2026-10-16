@@ -53,6 +53,22 @@ function guardUrlParams(
   return null;
 }
 
+/**
+ * Jalur upstream alternatif bila node utama sedang down (mis. 503 "All nodes failed").
+ * Parameter dikirim apa adanya ke path alternatif yang menerima format sama;
+ * fallback hanya dijalankan untuk kegagalan sisi server upstream (5xx/jaringan),
+ * bukan untuk error validasi dari sisi pengguna.
+ */
+const FALLBACK_PATHS: Record<string, string[]> = {
+  "/api/d/tiktok": ["/api/d/tiktok/v2", "/api/d/savefrom"],
+  "/api/d/douyin": ["/api/d/savefrom"],
+};
+
+/** Kegagalan upstream yang layak dicoba lewat jalur alternatif. */
+function isUpstreamServerFailure(result: Awaited<ReturnType<typeof callUpstream>>): boolean {
+  return !result.ok && !result.tooLarge && result.status >= 500;
+}
+
 /** Panggil upstream dan terjemahkan response-nya ke format Cyronime — sama untuk GET/POST. */
 async function respondWithUpstream(
   endpoint: EndpointDefinition,
@@ -61,7 +77,17 @@ async function respondWithUpstream(
   pathLabel: string,
   started: number,
 ): Promise<NextResponse> {
-  const result = await callUpstream(endpoint, values, { method });
+  // Jalur utama + jalur fallback (jika ada) — coba berurutan sampai ada yang berhasil.
+  const candidates: EndpointDefinition[] = [endpoint];
+  for (const alt of FALLBACK_PATHS[endpoint.upstreamPath] ?? []) {
+    const altEndpoint = ENDPOINTS.find((e) => e.upstreamPath === alt);
+    if (altEndpoint) candidates.push(altEndpoint);
+  }
+
+  let result: Awaited<ReturnType<typeof callUpstream>> = await callUpstream(endpoint, values, { method });
+  for (let i = 1; i < candidates.length && isUpstreamServerFailure(result); i++) {
+    result = await callUpstream(candidates[i] as EndpointDefinition, values, { method });
+  }
   if (result.tooLarge) {
     return withCors(jsonErr(ERR.UPSTREAM.status, "UPSTREAM_TOO_LARGE", "Response sumber terlalu besar untuk diproses.", undefined, { path: pathLabel, upstream_status: 502, time_ms: Date.now() - started }));
   }

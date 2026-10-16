@@ -196,10 +196,10 @@ export function EndpointDetail({
               <CopyButton text={requestUrl} label="Salin URL" />
             </div>
             <div className="mt-2 flex items-center gap-2 overflow-x-auto rounded-lg border-2 border-line-strong bg-code px-3 py-2.5">
-              <span className="shrink-0 rounded bg-mint/20 px-1.5 py-0.5 font-code text-xs font-bold text-[#7fd4c4]">
+              <span className="shrink-0 rounded bg-mint/20 px-1.5 py-0.5 font-code text-xs font-bold text-[var(--c-hl-key)]">
                 {endpoint.method}
               </span>
-              <code className="whitespace-nowrap font-code text-sm text-[#ffd98a]">
+              <code className="whitespace-nowrap font-code text-sm text-[var(--c-hl-str)]">
                 {localPath(endpoint)}
               </code>
             </div>
@@ -344,6 +344,7 @@ export function EndpointDetail({
               <button
                 onClick={() => send()}
                 disabled={loading}
+                aria-busy={loading}
                 className="press inline-flex items-center gap-2 rounded-lg border-2 border-line-strong bg-primary px-4 py-2.5 font-display text-sm font-bold text-onprimary shadow-hard-sm disabled:cursor-not-allowed disabled:opacity-55"
               >
                 {loading ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
@@ -361,7 +362,7 @@ export function EndpointDetail({
             </div>
 
             {response && (
-              <div className="mt-4">
+              <div className="mt-4" role="status" aria-live="polite">
                 <div className="flex flex-wrap items-center justify-between gap-2 rounded-t-xl border-2 border-b-0 border-line bg-card-soft px-4 py-2.5">
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-code text-xs">
                     <span
@@ -386,7 +387,7 @@ export function EndpointDetail({
 
                 <div className="rounded-b-xl border-2 border-line">
                   {response.error && (
-                    <div className="border-b-2 border-line bg-danger/10 px-4 py-2.5 font-code text-sm text-danger">
+                    <div role="alert" className="border-b-2 border-line bg-danger/10 px-4 py-2.5 font-code text-sm text-danger">
                       {response.error}
                     </div>
                   )}
@@ -398,6 +399,23 @@ export function EndpointDetail({
                         alt="Response gambar dari endpoint"
                         className="max-h-96 max-w-full rounded-lg border-2 border-line object-contain"
                       />
+                    </div>
+                  ) : response.contentType.startsWith("video/") && response.status < 300 ? (
+                    <div className="flex justify-center bg-code p-4">
+                      <video
+                        src={response.raw}
+                        controls
+                        preload="metadata"
+                        className="max-h-96 max-w-full rounded-lg border-2 border-line"
+                      >
+                        Browser Anda tidak mendukung pemutar video.
+                      </video>
+                    </div>
+                  ) : response.contentType.startsWith("audio/") && response.status < 300 ? (
+                    <div className="bg-code p-4">
+                      <audio src={response.raw} controls preload="metadata" className="w-full">
+                        Browser Anda tidak mendukung pemutar audio.
+                      </audio>
                     </div>
                   ) : (
                     <JsonViewer value={response.body} />

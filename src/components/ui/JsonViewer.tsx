@@ -16,16 +16,16 @@ function tokenize(line: string): { text: string; cls: string }[] {
   while ((m = re.exec(line))) {
     if (m.index > last) out.push({ text: line.slice(last, m.index), cls: "" });
     if (m[1] && m[2]) {
-      out.push({ text: m[1], cls: "text-[#7fd4c4]" });
-      out.push({ text: m[2], cls: "text-[#7f8fa0]" });
+      out.push({ text: m[1], cls: "text-[var(--c-hl-key)]" });
+      out.push({ text: m[2], cls: "text-[var(--c-hl-punct)]" });
     } else if (m[1]) {
-      out.push({ text: m[1], cls: "text-[#ffd98a]" });
+      out.push({ text: m[1], cls: "text-[var(--c-hl-str)]" });
     } else if (m[3]) {
-      out.push({ text: m[3], cls: "text-[#9cc3e8]" });
+      out.push({ text: m[3], cls: "text-[var(--c-hl-num)]" });
     } else if (m[4]) {
-      out.push({ text: m[4], cls: "text-[#9cc3e8]" });
+      out.push({ text: m[4], cls: "text-[var(--c-hl-num)]" });
     } else {
-      out.push({ text: m[5] ?? "", cls: "text-[#7f8fa0]" });
+      out.push({ text: m[5] ?? "", cls: "text-[var(--c-hl-punct)]" });
     }
     last = re.lastIndex;
   }
@@ -58,7 +58,11 @@ export function JsonViewer({ value, maxChars = 40000 }: { value: unknown; maxCha
   }, [hl]);
 
   return (
-    <pre className="overflow-auto bg-code p-4 font-code text-[13px] leading-relaxed text-code-text">
+    <pre
+      role="region"
+      aria-label="Response JSON"
+      className="overflow-auto bg-code p-4 font-code text-[13px] leading-relaxed text-code-text"
+    >
       {lines.map((line, i) => (
         <div key={i} className="whitespace-pre">
           {hl

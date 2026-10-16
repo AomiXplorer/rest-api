@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { ENDPOINTS } from "@/config/endpoints";
-import { callUpstream } from "@/lib/api-clients/siputzx-client";
+import { callUpstream } from "@/lib/api-clients/upstream-client";
 import { assertSafeUrl } from "@/lib/security/url-guard";
 import { checkRateLimit, getClientId } from "@/lib/security/rate-limit";
 import { validateParams } from "@/lib/validation/validate-params";

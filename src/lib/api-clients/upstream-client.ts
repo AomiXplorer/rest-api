@@ -1,5 +1,5 @@
 import "server-only";
-import { SIPUTZX_BASE_URL, UPSTREAM_MAX_BYTES } from "@/lib/server/upstream";
+import { UPSTREAM_BASE_URL, UPSTREAM_MAX_BYTES } from "@/lib/server/upstream";
 import type { EndpointDefinition } from "@/types/api";
 
 export interface UpstreamResult {
@@ -19,7 +19,7 @@ export interface UpstreamResult {
 const JSON_CT = /^\s*(application\/json|text\/plain)/i;
 
 /**
- * Forward a validated request to the siputzx upstream API.
+ * Forward a validated request ke upstream API utama.
  * The upstream answers JSON ({status, data} / {status, error, code}) or binary images.
  *
  * Resource control:
@@ -33,7 +33,7 @@ export async function callUpstream(
   opts: { method?: "GET" | "POST" } = {},
 ): Promise<UpstreamResult> {
   const method = opts.method ?? "GET";
-  const url = new URL(SIPUTZX_BASE_URL + endpoint.upstreamPath);
+  const url = new URL(UPSTREAM_BASE_URL + endpoint.upstreamPath);
   if (method === "GET") {
     for (const [k, v] of Object.entries(values)) url.searchParams.set(k, v);
   }

@@ -1,6 +1,6 @@
 import "server-only";
 // scrapr (@coflyn/scrapr, MIT) — scraper mandiri multi-provider.
-// Dipakai sebagai jalur terakhir ketika semua node upstream siputzx down (5xx),
+// Dipakai sebagai jalur terakhir ketika semua node upstream utama down (5xx),
 // sehingga endpoint downloader tetap bisa melayani lewat provider scrape publik.
 // Deep-import per provider — index root menarik provider berbasis browser
 // (savetik/snapinsta/fdown → puppeteer, optional dep yang tidak dipasang).
@@ -51,7 +51,7 @@ interface Provider {
   fn: (url: string) => Promise<{ status?: boolean; result?: unknown; message?: string }>;
 }
 
-/** Chain provider scrapr per jalur upstream siputzx. */
+/** Chain provider scrapr per jalur endpoint. */
 const SCRAPR_CHAINS: Record<string, Provider[]> = {
   "/api/d/tiktok": [
     { name: "snaptik", fn: snaptik },

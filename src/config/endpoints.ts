@@ -2652,7 +2652,7 @@ export const ENDPOINTS: EndpointDefinition[] = [
         required: true,
         type: "string",
         description: "",
-        example: "Siputzx Community",
+        example: "Aomi Community",
       },
       {
         name: "memberCount",
@@ -2805,7 +2805,7 @@ export const ENDPOINTS: EndpointDefinition[] = [
         required: true,
         type: "string",
         description: "Guild/server name",
-        example: "Siputzx Community",
+        example: "Aomi Community",
       },
       {
         name: "memberCount",
@@ -3197,7 +3197,7 @@ export const ENDPOINTS: EndpointDefinition[] = [
         required: true,
         type: "string",
         description: "",
-        example: "Siputzx Api",
+        example: "Aomi API",
       },
       {
         name: "memberCount",
@@ -3433,7 +3433,7 @@ export const ENDPOINTS: EndpointDefinition[] = [
         required: true,
         type: "string",
         description: "Server name",
-        example: "Siputzx Api",
+        example: "Aomi API",
       },
       {
         name: "memberCount",

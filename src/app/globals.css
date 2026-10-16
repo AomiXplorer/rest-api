@@ -1,59 +1,61 @@
 @import "tailwindcss";
 
 /* Runtime-switchable semantic palette.
-   Light = notebook paper (default terang), .dark = mode gelap.
-   @theme tokens point at --c-* variables so every utility flips at once. */
+   .dark = gaya baru default (navy pekat + aksen cyan, ala referensi).
+   :root = varian terang untuk toggle. */
 :root {
-  --c-bg: #f3f6f8;
-  --c-surface: #e7eef3;
+  --c-bg: #f4f7fa;
+  --c-surface: #e9eef4;
   --c-card: #ffffff;
-  --c-card-soft: #f8fbfc;
-  --c-line: #cfdae2;
-  --c-line-strong: #25333f;
-  --c-ink: #1c2833;
-  --c-ink-muted: #4f5f6e;
-  --c-ink-faint: #8aa0af;
-  --c-primary: #1e6a75;
-  --c-primary-soft: #35828e;
-  --c-lemon: #8a5f00;
-  --c-mint: #1f7a55;
-  --c-danger: #c04545;
-  --c-get: #1e6a75;
-  --c-wa: #1d9e52;
-  --c-sticky: #fdf3a4;
-  --c-sticky-ink: #3d3520;
-  --c-sky: #d9e9f4;
-  --c-lav: #e8dff5;
-  --c-mintp: #d9f0dd;
-  --c-code: #232b38;
-  --c-code-text: #dbe4ec;
+  --c-card-soft: #f0f4f8;
+  --c-line: #dde5ec;
+  --c-line-strong: #c3cfda;
+  --c-ink: #0d1520;
+  --c-ink-muted: #46586b;
+  --c-ink-faint: #7c8da0;
+  --c-primary: #0e7490;
+  --c-primary-soft: #0891b2;
+  --c-onprimary: #ffffff;
+  --c-lemon: #a16207;
+  --c-mint: #047857;
+  --c-danger: #dc2626;
+  --c-get: #0e7490;
+  --c-wa: #16a34a;
+  --c-sticky: #e6f7fa;
+  --c-sticky-ink: #0b3b46;
+  --c-sky: #e3eefa;
+  --c-lav: #e9e8fa;
+  --c-mintp: #dcf5ea;
+  --c-code: #0f1a26;
+  --c-code-text: #d7e2ee;
   color-scheme: light;
 }
 
 .dark {
-  --c-bg: #10151b;
-  --c-surface: #151d26;
-  --c-card: #1a2330;
-  --c-card-soft: #141b24;
-  --c-line: #2b3947;
-  --c-line-strong: #93a7b8;
-  --c-ink: #e6edf3;
-  --c-ink-muted: #9fb0bf;
-  --c-ink-faint: #63788c;
-  --c-primary: #4fb3c4;
-  --c-primary-soft: #7ac9d8;
-  --c-lemon: #e8c063;
-  --c-mint: #3fcf9a;
-  --c-danger: #f07d7d;
-  --c-get: #4fb3c4;
-  --c-wa: #34d16a;
-  --c-sticky: #d9c66a;
-  --c-sticky-ink: #241d08;
-  --c-sky: #2c4358;
-  --c-lav: #3a3352;
-  --c-mintp: #22463a;
-  --c-code: #141c26;
-  --c-code-text: #dbe4ec;
+  --c-bg: #05080f;
+  --c-surface: #0a0e17;
+  --c-card: #0d111d;
+  --c-card-soft: #111826;
+  --c-line: #1e2535;
+  --c-line-strong: #2b3648;
+  --c-ink: #ffffff;
+  --c-ink-muted: #a0aab8;
+  --c-ink-faint: #5c6a7e;
+  --c-primary: #22d3ee;
+  --c-primary-soft: #7de7f5;
+  --c-onprimary: #04222b;
+  --c-lemon: #fbbf24;
+  --c-mint: #34d399;
+  --c-danger: #f87171;
+  --c-get: #22d3ee;
+  --c-wa: #25d366;
+  --c-sticky: #0e2333;
+  --c-sticky-ink: #d7f3fa;
+  --c-sky: #12202e;
+  --c-lav: #171a2e;
+  --c-mintp: #0f2320;
+  --c-code: #0a0e16;
+  --c-code-text: #d7e2ee;
   color-scheme: dark;
 }
 
@@ -69,6 +71,7 @@
   --color-ink-faint: var(--c-ink-faint);
   --color-primary: var(--c-primary);
   --color-primary-soft: var(--c-primary-soft);
+  --color-onprimary: var(--c-onprimary);
   --color-lemon: var(--c-lemon);
   --color-mint: var(--c-mint);
   --color-danger: var(--c-danger);
@@ -84,7 +87,7 @@
 
   --font-display: var(--font-jakarta), system-ui, sans-serif;
   --font-body: var(--font-dmsans), system-ui, sans-serif;
-  --font-hand: var(--font-caveat), cursive;
+  --font-hand: var(--font-dmsans), system-ui, sans-serif;
   --font-code: var(--font-jetbrains), ui-monospace, monospace;
 
   --animate-pop: pop 0.18s ease-out;
@@ -101,105 +104,14 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Ruled-paper lines on the page background */
-.paper-lines {
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 31px,
-    rgba(94, 122, 142, 0.14) 31px,
-    rgba(94, 122, 142, 0.14) 32px
-  );
-}
-.dark .paper-lines {
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 31px,
-    rgba(140, 180, 210, 0.06) 31px,
-    rgba(140, 180, 210, 0.06) 32px
-  );
-}
-
-/* Red margin line on the left of the content area (desktop only) */
-.content-margin {
-  position: relative;
-}
-.content-margin::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 2.75rem;
-  width: 1.5px;
-  background: rgba(224, 109, 109, 0.45);
-  pointer-events: none;
-}
-.dark .content-margin::before {
-  background: rgba(224, 109, 109, 0.3);
-}
-@media (max-width: 1023px) {
-  .content-margin::before {
-    display: none;
-  }
-}
-
-/* Binder holes strip (sidebar) */
-.binder {
+/* Glow aksen halus di atas halaman (mode gelap) */
+.dark body {
   background-image: radial-gradient(
-    circle at 50% 50%,
-    #f3f6f8 3.5px,
-    rgba(37, 51, 63, 0.25) 4px,
-    rgba(37, 51, 63, 0.25) 4.8px,
-    transparent 5.4px
+    900px 420px at 50% -80px,
+    rgba(34, 211, 238, 0.08),
+    transparent 70%
   );
-  background-size: 100% 26px;
-}
-.dark .binder {
-  background-image: radial-gradient(
-    circle at 50% 50%,
-    #10151b 3.5px,
-    rgba(230, 237, 243, 0.22) 4px,
-    rgba(230, 237, 243, 0.22) 4.8px,
-    transparent 5.4px
-  );
-}
-
-/* Soft notebook card shadow */
-.shadow-note {
-  box-shadow: 0 1px 0 rgba(28, 40, 51, 0.06), 0 5px 12px -8px rgba(28, 40, 51, 0.25);
-}
-.dark .shadow-note {
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3), 0 5px 12px -8px rgba(0, 0, 0, 0.6);
-}
-
-/* Ink-stamp shadows for sticker-like elements */
-.shadow-hard {
-  box-shadow: 4px 4px 0 0 rgba(28, 40, 51, 0.85);
-}
-.shadow-hard-sm {
-  box-shadow: 2px 2px 0 0 rgba(28, 40, 51, 0.85);
-}
-.dark .shadow-hard {
-  box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.65);
-}
-.dark .shadow-hard-sm {
-  box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.65);
-}
-
-.press {
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
-}
-.press:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0 0 rgba(28, 40, 51, 0.85);
-}
-.press:active {
-  transform: translate(1px, 1px);
-  box-shadow: 0 0 0 0 rgba(28, 40, 51, 0.85);
-}
-.dark .press:hover {
-  box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.65);
+  background-repeat: no-repeat;
 }
 
 /* Modal pop-in */
@@ -212,6 +124,38 @@ body {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+}
+
+/* Kartu */
+.shadow-note {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 12px 32px -16px rgba(0, 0, 0, 0.25);
+}
+.dark .shadow-note {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.02), 0 14px 36px -18px rgba(0, 0, 0, 0.9);
+}
+
+.shadow-hard {
+  box-shadow: 0 8px 24px -10px rgba(0, 0, 0, 0.35);
+}
+.dark .shadow-hard {
+  box-shadow: 0 8px 24px -10px rgba(0, 0, 0, 0.8);
+}
+.shadow-hard-sm {
+  box-shadow: 0 4px 14px -6px rgba(0, 0, 0, 0.3);
+}
+.dark .shadow-hard-sm {
+  box-shadow: 0 4px 14px -6px rgba(0, 0, 0, 0.75);
+}
+
+.press {
+  transition: transform 0.14s ease, box-shadow 0.14s ease, background-color 0.14s ease,
+    border-color 0.14s ease;
+}
+.press:hover {
+  transform: translateY(-1px);
+}
+.press:active {
+  transform: translateY(0);
 }
 
 /* Marquee */
@@ -229,7 +173,7 @@ body {
 
 ::selection {
   background: var(--color-primary);
-  color: #ffffff;
+  color: var(--color-onprimary);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -257,48 +201,4 @@ body {
 }
 *::-webkit-scrollbar-track {
   background: transparent;
-}
-
-/* Selotip (tape) di atas kartu — ala sticky note */
-.tape {
-  position: absolute;
-  top: -7px;
-  left: 50%;
-  transform: translateX(-50%) rotate(-2deg);
-  width: 64px;
-  height: 15px;
-  border-radius: 2px;
-  background: linear-gradient(180deg, rgba(163, 193, 218, 0.92), rgba(163, 193, 218, 0.72));
-  box-shadow: 0 1px 2px rgba(28, 40, 51, 0.18);
-  pointer-events: none;
-}
-.tape-left {
-  position: absolute;
-  top: -6px;
-  left: -9px;
-  width: 52px;
-  height: 14px;
-  border-radius: 2px;
-  transform: rotate(-45deg);
-  background: linear-gradient(180deg, rgba(163, 193, 218, 0.92), rgba(163, 193, 218, 0.72));
-  box-shadow: 0 1px 2px rgba(28, 40, 51, 0.18);
-  pointer-events: none;
-}
-.dark .tape,
-.dark .tape-left {
-  background: linear-gradient(180deg, rgba(148, 190, 220, 0.55), rgba(148, 190, 220, 0.4));
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-}
-
-/* Hormati preferensi pengguna: kurangi gerakan yang tidak perlu */
-@media (prefers-reduced-motion: reduce) {
-  .animate-marquee {
-    animation: none;
-  }
-  .press,
-  .press:hover,
-  .press:active {
-    transition: none;
-    transform: none;
-  }
 }

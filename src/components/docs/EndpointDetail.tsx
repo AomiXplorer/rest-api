@@ -16,6 +16,13 @@ interface ResponseState {
   error?: string;
 }
 
+const sampleResponse = {
+  success: true,
+  data: { result: "…isi hasil sesuai endpoint…" },
+  message: "Request berhasil",
+  meta: { upstream_status: 200, time_ms: 750 },
+};
+
 function localPath(e: EndpointDefinition) {
   return `/api/v1${e.upstreamPath.replace(/^\/api/, "")}`;
 }
@@ -232,6 +239,25 @@ export function EndpointDetail({
             </section>
           )}
 
+          {/* Contoh request / response */}
+          <section className="mt-6 space-y-4">
+            <div>
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-display text-sm font-bold text-ink">Contoh Request</span>
+                <CopyButton text={`curl "${requestUrl}"`} label="Salin" />
+              </div>
+              <pre className="mt-2 overflow-x-auto rounded-lg border-2 border-line bg-code px-3 py-2.5 font-code text-[12px] leading-relaxed text-code-text">
+                <code>{`curl "${requestUrl}"`}</code>
+              </pre>
+            </div>
+            <div>
+              <span className="font-display text-sm font-bold text-ink">Contoh Response</span>
+              <div className="mt-2 overflow-hidden rounded-lg border-2 border-line">
+                <JsonViewer value={sampleResponse} />
+              </div>
+            </div>
+          </section>
+
           {/* Try API */}
           <section className="mt-6">
             <h2 className="font-display text-base font-bold text-ink">Try API</h2>
@@ -276,7 +302,7 @@ export function EndpointDetail({
               <button
                 onClick={() => send()}
                 disabled={loading}
-                className="press inline-flex items-center gap-2 rounded-lg border-2 border-line-strong bg-primary px-4 py-2.5 font-display text-sm font-bold text-white shadow-hard-sm disabled:cursor-not-allowed disabled:opacity-55"
+                className="press inline-flex items-center gap-2 rounded-lg border-2 border-line-strong bg-primary px-4 py-2.5 font-display text-sm font-bold text-onprimary shadow-hard-sm disabled:cursor-not-allowed disabled:opacity-55"
               >
                 {loading ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
                 {loading ? "Mengirim…" : "Kirim"}

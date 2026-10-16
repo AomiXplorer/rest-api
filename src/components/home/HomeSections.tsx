@@ -1,19 +1,20 @@
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Check, KeyRound, MessageCircle, Plus, Star } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Check,
+  Gift,
+  KeyRound,
+  MessageCircle,
+  Play,
+  Plus,
+  ShieldCheck,
+} from "lucide-react";
 import { CATEGORIES, ENDPOINTS } from "@/config/endpoints";
-import { VERIFIED_IDS } from "@/config/verification";
 import { CopyButton } from "@/components/ui/CopyButton";
 import { JsonViewer } from "@/components/ui/JsonViewer";
-import { StatusWidget, LiveStatusTile } from "@/components/home/StatusWidget";
+import { StatusWidget } from "@/components/home/StatusWidget";
 import { OWNER_NUMBER, OWNER_WHATSAPP, SITE_URL } from "@/lib/constants";
-
-function WhatsAppLogo({ size = 16, className = "" }: { size?: number; className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor" aria-hidden="true" className={className}>
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.299.298.15.446.299 1.04.149 1.19-.15.149-.447.298-.597.149-.149-.149-.893-.893-1.04-1.04-.149-.15-.299-.15-.447 0-.15.149-.596.596-.745.745-.149.149-.299.149-.447.05-.149-.1-.893-.328-1.638-1.04-.597-.596-.943-1.19-1.04-1.34-.15-.297 0-.446.05-.595.149-.15.596-.597.745-.746.149-.149.15-.298.05-.447-.05-.15-.745-1.788-1.04-2.385-.149-.347-.299-.298-.447-.298h-.447c-.149 0-.447.05-.596.298-.15.249-.893 1.19-.893 2.534 0 1.344.943 2.635 1.04 2.784.149.149 1.937 3.129 4.72 4.323 2.783 1.193 2.783.795 3.28.745.446-.05 1.489-.596 1.638-1.193.149-.596.149-1.093.05-1.193-.05-.149-.299-.249-.596-.398zM12.05 21.785h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zM20.463 3.488A11.776 11.776 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-    </svg>
-  );
-}
 
 const sampleRequest = `curl "${SITE_URL}/api/v1/s/youtube?query=lathi"`;
 
@@ -30,80 +31,78 @@ const sampleResponse = {
   meta: { upstream_status: 200, time_ms: 812 },
 };
 
+const FEATURES = [
+  { icon: ShieldCheck, label: "Tanpa Login" },
+  { icon: KeyRound, label: "Tanpa API Key" },
+  { icon: Gift, label: "Gratis 100%" },
+];
+
 export function Hero() {
   const total = ENDPOINTS.length;
 
+  const stats = [
+    { value: `${total}`, label: "Endpoints" },
+    { value: `${CATEGORIES.length}`, label: "Kategori" },
+    { value: "100%", label: "Gratis" },
+    { value: "24/7", label: "Akses" },
+  ];
+
   return (
-    <section className="px-5 pb-10 pt-6 sm:px-8 lg:px-12 lg:pt-10">
+    <section className="px-5 pb-10 pt-10 sm:px-8 lg:px-12 lg:pt-16">
       <div className="mx-auto max-w-5xl">
-        <p className="flex items-center gap-2 font-code text-xs font-semibold text-primary">
+        <p className="inline-flex items-center gap-2 rounded-full border-2 border-line bg-card px-3 py-1 font-code text-xs font-semibold text-primary">
           <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-          catatan API · gratis · tanpa login
+          Free &amp; Easy to Use
         </p>
 
-        <div className="mt-3 flex flex-wrap items-center gap-3">
-          <h1 className="font-display text-4xl font-extrabold leading-tight text-ink sm:text-5xl">
-            <span className="-rotate-1 inline-block rounded-lg bg-sky px-2">Aomi</span> Still
-            Learning
-          </h1>
-          <span className="-rotate-2 rounded-md border-2 border-dashed border-line-strong px-2 py-0.5 font-hand text-xl leading-none text-ink">
-            GRATIS
-          </span>
-        </div>
+        <h1 className="mt-4 font-display text-4xl font-extrabold leading-tight tracking-tight text-ink sm:text-5xl">
+          Aomi <span className="text-primary">API</span>
+          <br />
+          Free &amp; Easy to Use
+        </h1>
 
-        <p className="mt-4 flex flex-wrap items-center gap-2 font-display text-lg font-bold text-ink sm:text-xl">
-          API gratis, kok pakek
-          <span className="inline-flex -rotate-1 items-center gap-1.5 rounded-md border-2 border-dashed border-line-strong bg-lav px-2 py-0.5">
-            <KeyRound size={14} /> API key?
-          </span>
-          <span className="inline-flex items-center gap-1.5 rounded-md border-2 border-primary bg-card px-2 py-0.5 font-code text-xs font-bold text-primary">
-            <Check size={13} /> NO API KEY
-          </span>
-        </p>
-
-        <p className="mt-2.5 max-w-2xl text-sm leading-relaxed text-ink-muted sm:text-base">
+        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-muted sm:text-base">
           {total} endpoint publik dalam {CATEGORIES.length} kategori — AI, downloader, search,
-          anime, primbon, sampai tools harian. Tinggal panggil, tanpa registrasi.
+          anime, primbon, sampai tools harian. Tinggal panggil dari aplikasi kamu, tanpa
+          registrasi, tanpa API key.
         </p>
 
-        <div className="mt-5 flex flex-wrap items-center gap-2.5">
+        <div className="mt-6 flex flex-wrap items-center gap-2.5">
           <Link
             href="/docs"
-            className="press inline-flex items-center gap-2 rounded-xl border-2 border-line-strong bg-primary px-5 py-2.5 font-display text-sm font-bold text-white shadow-hard-sm"
+            className="press inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 font-display text-sm font-bold text-onprimary shadow-hard-sm"
           >
-            Buka Dokumentasi <ArrowRight size={15} />
+            Lihat Dokumentasi <ArrowRight size={15} />
           </Link>
-          <a
-            href={OWNER_WHATSAPP}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="press inline-flex items-center gap-2 rounded-xl border-2 border-line-strong bg-card px-4 py-2.5 font-display text-sm font-bold text-ink shadow-hard-sm"
+          <Link
+            href="/docs?focus=1"
+            className="press inline-flex items-center gap-2 rounded-xl border-2 border-line-strong bg-card px-4 py-2.5 font-display text-sm font-bold text-ink"
           >
-            <WhatsAppLogo size={15} className="text-wa" /> Saluran WhatsApp
-          </a>
+            <Play size={14} className="text-primary" /> Coba API
+          </Link>
         </div>
 
-        {/* Sticky-note stats dengan selotip */}
-        <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <div className="relative rounded-xl border-2 border-line-strong bg-sticky p-4 pt-5 shadow-note">
-            <div className="tape" />
-            <p className="font-hand text-3xl font-semibold leading-none text-sticky-ink">GET</p>
-            <p className="mt-1.5 font-code text-xs text-sticky-ink/70">Method</p>
-          </div>
-          <LiveStatusTile />
-          <div className="relative rounded-xl border-2 border-line-strong bg-lav p-4 shadow-note">
-            <div className="tape" />
-            <p className="font-hand text-3xl font-semibold leading-none text-ink">&lt;/s</p>
-            <p className="mt-1.5 font-code text-xs text-ink-muted">Response</p>
-          </div>
-          <div className="relative rounded-xl border-2 border-line-strong bg-mintp p-4 shadow-note">
-            <div className="tape" />
-            <p className="font-hand text-3xl font-semibold leading-none text-ink">{total}</p>
-            <p className="mt-1.5 font-code text-xs text-ink-muted">Endpoints</p>
-          </div>
+        <div className="mt-5 flex flex-wrap items-center gap-2">
+          {FEATURES.map((f) => (
+            <span
+              key={f.label}
+              className="inline-flex items-center gap-1.5 rounded-full border-2 border-line bg-card px-3 py-1 font-code text-xs font-semibold text-ink-muted"
+            >
+              <f.icon size={13} className="text-primary" /> {f.label}
+            </span>
+          ))}
         </div>
 
-        {/* Kartu status ala catatan */}
+        {/* Bar statistik */}
+        <div className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border-2 border-line bg-line lg:grid-cols-4">
+          {stats.map((s) => (
+            <div key={s.label} className="bg-card px-5 py-4">
+              <p className="font-display text-2xl font-extrabold text-ink">{s.value}</p>
+              <p className="mt-0.5 font-code text-xs text-ink-faint">{s.label}</p>
+            </div>
+          ))}
+        </div>
+
         <div className="mt-4">
           <StatusWidget />
         </div>
@@ -112,17 +111,16 @@ export function Hero() {
   );
 }
 
-const MARQUEE = ["Gratis", "No API Key", "Tanpa Login", "Tanpa Ribet", "Coba Langsung"];
-
 function MarqueeRow() {
+  const items = ["Gratis", "No API Key", "Tanpa Login", "Tanpa Ribet", "Coba Langsung"];
   return (
     <div className="flex shrink-0 items-center">
-      {MARQUEE.map((t) => (
+      {items.map((t) => (
         <span
           key={t}
-          className="mx-4 flex items-center gap-2 whitespace-nowrap font-display text-sm font-bold text-ink-muted"
+          className="mx-4 flex items-center gap-2 whitespace-nowrap font-code text-xs font-semibold text-ink-faint"
         >
-          <Star size={13} className="fill-lemon text-lemon" /> {t}
+          <span className="h-1 w-1 rounded-full bg-primary" /> {t}
         </span>
       ))}
     </div>
@@ -131,7 +129,7 @@ function MarqueeRow() {
 
 export function Marquee() {
   return (
-    <div className="overflow-hidden border-y-2 border-dashed border-line bg-surface/70 py-3">
+    <div className="overflow-hidden border-y-2 border-line bg-surface py-3">
       <div className="animate-marquee flex w-max">
         <MarqueeRow />
         <MarqueeRow />
@@ -144,15 +142,21 @@ export function SampleCode() {
   return (
     <section className="px-5 py-10 sm:px-8 lg:px-12">
       <div className="mx-auto max-w-5xl">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="font-code text-xs font-semibold text-ink-faint">contoh request</span>
+        <h2 className="font-display text-2xl font-extrabold text-ink sm:text-3xl">
+          Contoh Request
+        </h2>
+        <p className="mt-1.5 text-sm text-ink-muted">
+          Satu request sederhana, response JSON langsung jadi.
+        </p>
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-2">
+          <span className="font-code text-xs font-semibold text-ink-faint">request</span>
           <CopyButton text={sampleRequest} label="Salin" />
         </div>
-        <pre className="mt-2 overflow-x-auto rounded-xl border-2 border-line-strong bg-code p-4 font-code text-[13px] leading-relaxed text-code-text">
+        <pre className="mt-2 overflow-x-auto rounded-xl border-2 border-line bg-code p-4 font-code text-[13px] leading-relaxed text-code-text">
           {sampleRequest}
         </pre>
-        <p className="mt-5 font-code text-xs font-semibold text-ink-faint">contoh response</p>
-        <div className="mt-2 overflow-hidden rounded-xl border-2 border-line-strong">
+        <p className="mt-5 font-code text-xs font-semibold text-ink-faint">response</p>
+        <div className="mt-2 overflow-hidden rounded-xl border-2 border-line">
           <JsonViewer value={sampleResponse} />
         </div>
       </div>
@@ -170,20 +174,19 @@ export function CategoryGrid() {
         <h2 className="font-display text-2xl font-extrabold text-ink sm:text-3xl">
           API yang Tersedia
         </h2>
-        <p className="mt-1.5 max-w-2xl text-ink-muted">
-          Pilih kategori, buka endpoint, isi parameter, klik Kirim Request. Hasilnya langsung
-          muncul dari backend nyata.
+        <p className="mt-1.5 max-w-2xl text-sm text-ink-muted">
+          Pilih kategori, buka endpoint, isi parameter, tekan GET untuk mencoba langsung.
         </p>
         <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {CATEGORIES.map((c) => (
             <Link
               key={c.key}
               href={`/docs?cat=${c.key}`}
-              className="press group rounded-xl border-2 border-line-strong bg-card p-4 shadow-note hover:bg-card-soft"
+              className="press group rounded-2xl border-2 border-line bg-card p-4 shadow-note hover:border-primary/40 hover:bg-card-soft"
             >
               <div className="flex items-start justify-between gap-2">
                 <h3 className="font-display text-base font-bold text-ink">{c.title}</h3>
-                <span className="shrink-0 rounded-md bg-sky px-2 py-0.5 font-code text-xs font-bold text-ink">
+                <span className="shrink-0 rounded-md bg-sky px-2 py-0.5 font-code text-xs font-bold text-primary">
                   {counts.get(c.key) ?? 0}
                 </span>
               </div>
@@ -228,9 +231,9 @@ export function Faq() {
         <h2 className="font-display text-2xl font-extrabold text-ink sm:text-3xl">
           Sering ditanyakan
         </h2>
-        <div className="mt-5 overflow-hidden rounded-xl border-2 border-line-strong bg-card shadow-note">
+        <div className="mt-5 overflow-hidden rounded-2xl border-2 border-line bg-card shadow-note">
           {FAQS.map(([q, a], i) => (
-            <details key={q} className={`group px-5 ${i > 0 ? "border-t border-dashed border-line" : ""}`}>
+            <details key={q} className={`group px-5 ${i > 0 ? "border-t border-line" : ""}`}>
               <summary className="flex cursor-pointer list-none items-center justify-between gap-3 py-4 font-display text-sm font-bold text-ink [&::-webkit-details-marker]:hidden">
                 {q}
                 <Plus size={16} className="shrink-0 text-primary transition-transform group-open:rotate-45" />
@@ -247,14 +250,14 @@ export function Faq() {
 export function CtaCard() {
   return (
     <section className="px-5 py-10 sm:px-8 lg:px-12">
-      <div className="mx-auto max-w-5xl rounded-xl border-2 border-dashed border-line-strong bg-card-soft p-6 shadow-note sm:p-8">
+      <div className="mx-auto max-w-5xl rounded-2xl border-2 border-line bg-card p-6 shadow-note sm:p-8">
         <h2 className="font-display text-2xl font-extrabold text-ink sm:text-3xl">Tinggal coba.</h2>
-        <p className="mt-2 max-w-lg text-ink-muted">
+        <p className="mt-2 max-w-lg text-sm text-ink-muted">
           Pilih endpoint, isi parameter, klik Kirim Request. Selesai.
         </p>
         <Link
           href="/docs"
-          className="press mt-5 inline-flex items-center gap-2 rounded-lg border-2 border-line-strong bg-primary px-4 py-2.5 font-display text-sm font-bold text-white shadow-hard-sm"
+          className="press mt-5 inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 font-display text-sm font-bold text-onprimary shadow-hard-sm"
         >
           Ke daftar API <ArrowUpRight size={15} />
         </Link>
@@ -266,21 +269,23 @@ export function CtaCard() {
 export function ContactNote() {
   return (
     <section className="px-5 pb-14 pt-4 sm:px-8 lg:px-12">
-      <div className="mx-auto max-w-5xl">
-        <div className="mx-auto w-full max-w-md -rotate-1 rounded-sm border-2 border-sticky-ink/20 bg-sticky p-5 shadow-note">
-          <p className="font-hand text-2xl leading-snug text-sticky-ink">
-            Ada pertanyaan atau request endpoint? Chat owner langsung ↓
-          </p>
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            <a
-              href={OWNER_WHATSAPP}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="press inline-flex items-center gap-2 rounded-lg border-2 border-line-strong bg-wa px-3.5 py-2 font-display text-sm font-bold text-white shadow-hard-sm"
-            >
-              <MessageCircle size={15} /> {OWNER_NUMBER}
-            </a>
-          </div>
+      <div className="mx-auto max-w-5xl rounded-2xl border-2 border-line bg-card p-6 shadow-note sm:p-8">
+        <h2 className="font-display text-xl font-extrabold text-ink">
+          Ada pertanyaan atau request endpoint?
+        </h2>
+        <p className="mt-1.5 text-sm text-ink-muted">Chat owner langsung, biasanya fast respon.</p>
+        <div className="mt-4 flex flex-wrap items-center gap-2.5">
+          <a
+            href={OWNER_WHATSAPP}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="press inline-flex items-center gap-2 rounded-xl bg-wa px-3.5 py-2.5 font-display text-sm font-bold text-white shadow-hard-sm"
+          >
+            <MessageCircle size={15} /> {OWNER_NUMBER}
+          </a>
+          <span className="inline-flex items-center gap-1.5 font-code text-xs text-ink-faint">
+            <Check size={13} className="text-mint" /> gratis, tanpa syarat
+          </span>
         </div>
       </div>
     </section>

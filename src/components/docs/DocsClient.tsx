@@ -152,7 +152,7 @@ export function DocsClient({
                 onClick={() => setCategory(p.key)}
                 className={`press shrink-0 rounded-full border-2 px-3 py-1 font-code text-xs font-bold transition-colors ${
                   category === p.key
-                    ? "border-primary bg-primary text-white shadow-hard-sm"
+                    ? "border-primary bg-primary text-onprimary shadow-hard-sm"
                     : "border-line-strong bg-card text-ink-muted hover:text-ink"
                 }`}
               >
@@ -228,7 +228,7 @@ export function DocsClient({
                           <span className="font-code text-[11px] text-ink-faint">
                             {e.params.length > 0 ? `${e.params.length} parameter` : "tanpa parameter"}
                           </span>
-                          <span className="inline-flex items-center gap-1.5 rounded-lg border-2 border-line-strong bg-primary px-3 py-1.5 font-display text-xs font-bold text-white">
+                          <span className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 font-display text-xs font-bold text-onprimary">
                             <Play size={11} /> {e.method}
                           </span>
                         </div>

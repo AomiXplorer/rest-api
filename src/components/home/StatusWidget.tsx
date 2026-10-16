@@ -24,8 +24,7 @@ function Card({
   iconText?: string;
 }) {
   return (
-    <div className="relative rounded-xl border-2 border-line-strong bg-card p-3 shadow-note">
-      <div className="tape-left" />
+    <div className="relative rounded-2xl border-2 border-line bg-card p-3 shadow-note">
       <div className="flex items-center gap-3">
         <div
           className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-line-strong ${chipCls} ${iconText}`}
@@ -33,7 +32,7 @@ function Card({
           <Icon size={16} />
         </div>
         <div className="min-w-0">
-          <p className="font-hand text-lg leading-tight text-ink">{label}</p>
+          <p className="font-display text-sm font-bold leading-tight text-ink">{label}</p>
           <p className="truncate font-code text-[12px] font-semibold text-ink-muted">{value}</p>
         </div>
       </div>
@@ -114,9 +113,8 @@ export function LiveStatusTile() {
     getHealth().then((h) => setCode(String(h.status)));
   }, []);
   return (
-    <div className="relative rounded-xl border-2 border-line-strong bg-sky p-4 shadow-note">
-      <div className="tape" />
-      <p className="font-hand text-3xl font-semibold leading-none text-ink">{code}</p>
+    <div className="relative rounded-2xl border-2 border-line bg-sky p-4 shadow-note">
+      <p className="font-display text-3xl font-extrabold leading-none text-ink">{code}</p>
       <p className="mt-1.5 font-code text-xs text-ink-muted">Status</p>
     </div>
   );

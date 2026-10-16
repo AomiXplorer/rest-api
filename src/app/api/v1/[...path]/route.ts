@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
-import { ENDPOINTS } from "@/config/endpoints";
-import { callUpstream } from "@/lib/api-clients/upstream-client";
+import { findEndpoint } from "@/lib/server/services/registry";
+import { resolveProvider, type RequestedProvider } from "@/lib/server/services/provider-resolver";
 import { assertSafeUrl } from "@/lib/security/url-guard";
 import { checkRateLimit, getClientId } from "@/lib/security/rate-limit";
 import { validateParams } from "@/lib/validation/validate-params";
 import { jsonErr, jsonOk, ERR } from "@/lib/utils/response";
-import { scrapeFallback } from "@/lib/server/scrapr-fallback";
 import type { EndpointDefinition } from "@/types/api";
 
 /**
@@ -31,9 +30,12 @@ const URLISH = /^(url|link|.*_?url.*|image.*|avatar.*|background.*|.*photo.*|gui
 /** Batas ukuran body JSON untuk POST — cukup untuk parameter, bukan file. */
 const MAX_BODY_BYTES = 16 * 1024;
 
-function findEndpoint(segments: string[]): EndpointDefinition | undefined {
-  const upstreamPath = `/api/${segments.join("/")}`;
-  return ENDPOINTS.find((e) => e.upstreamPath === upstreamPath);
+/** Parameter kontrol untuk memilih sumber data (provider resolver). */
+const PROVIDER_PARAM = "provider";
+const VALID_PROVIDERS = new Set(["primary", "sanka"]);
+
+function parseRequestedProvider(raw: string | null | undefined): RequestedProvider {
+  return raw && VALID_PROVIDERS.has(raw) ? (raw as RequestedProvider) : undefined;
 }
 
 /** Guard SSRF pada parameter yang membawa URL — dipakai GET dan POST. */
@@ -54,105 +56,47 @@ function guardUrlParams(
   return null;
 }
 
-/**
- * Jalur upstream alternatif bila node utama sedang down (mis. 503 "All nodes failed").
- * Parameter dikirim apa adanya ke path alternatif yang menerima format sama;
- * fallback hanya dijalankan untuk kegagalan sisi server upstream (5xx/jaringan),
- * bukan untuk error validasi dari sisi pengguna.
- */
-const FALLBACK_PATHS: Record<string, string[]> = {
-  "/api/d/tiktok": ["/api/d/tiktok/v2", "/api/d/savefrom"],
-  "/api/d/douyin": ["/api/d/savefrom"],
-};
-
-/** Kegagalan upstream yang layak dicoba lewat jalur alternatif. */
-function isUpstreamServerFailure(result: Awaited<ReturnType<typeof callUpstream>>): boolean {
-  return !result.ok && !result.tooLarge && result.status >= 500;
-}
-
-/** Panggil upstream dan terjemahkan response-nya ke format Cyronime — sama untuk GET/POST. */
-async function respondWithUpstream(
-  endpoint: EndpointDefinition,
-  values: Record<string, string>,
-  method: "GET" | "POST",
+/** Bangun response final dari outcome provider resolver. */
+function respondWithOutcome(
+  outcome: Awaited<ReturnType<typeof resolveProvider>>,
   pathLabel: string,
   started: number,
-): Promise<NextResponse> {
-  // Jalur utama + jalur fallback (jika ada) — coba berurutan sampai ada yang berhasil.
-  const candidates: EndpointDefinition[] = [endpoint];
-  for (const alt of FALLBACK_PATHS[endpoint.upstreamPath] ?? []) {
-    const altEndpoint = ENDPOINTS.find((e) => e.upstreamPath === alt);
-    if (altEndpoint) candidates.push(altEndpoint);
+): NextResponse {
+  if (outcome.kind === "error") {
+    const meta = { ...outcome.meta, path: pathLabel, time_ms: Date.now() - started };
+    return withCors(jsonErr(outcome.status, outcome.code, outcome.message, undefined, meta));
   }
-
-  let result: Awaited<ReturnType<typeof callUpstream>> = await callUpstream(endpoint, values, { method });
-  for (let i = 1; i < candidates.length && isUpstreamServerFailure(result); i++) {
-    result = await callUpstream(candidates[i] as EndpointDefinition, values, { method });
+  if (outcome.binary) {
+    return withCors(
+      new NextResponse(
+        new Blob([outcome.binary.bytes.buffer.slice(
+          outcome.binary.bytes.byteOffset,
+          outcome.binary.bytes.byteOffset + outcome.binary.bytes.byteLength,
+        ) as ArrayBuffer]),
+        {
+          status: 200,
+          headers: {
+            "content-type": outcome.binary.contentType,
+            "cache-control": "public, max-age=3600",
+            "x-provider": outcome.provider,
+            "x-time-ms": String(Date.now() - started),
+          },
+        },
+      ),
+    );
   }
-
-  // Tahap terakhir: semua jalur upstream gagal 5xx → coba scraper mandiri (scrapr).
-  // Deadline 40s: sisakan margin respons sebelum maxDuration (60s).
-  if (isUpstreamServerFailure(result) && Date.now() - started < 40000) {
-    const scraped = await scrapeFallback(endpoint.upstreamPath, values, Math.min(started + 40000, Date.now() + 30000));
-    if (scraped && scraped.ok) {
-      return withCors(
-        jsonOk(scraped.data, `Request berhasil via scraper ${scraped.provider} (fallback)`, {
-          path: pathLabel,
-          upstream_status: result.status,
-          fallback: "scrapr:" + scraped.provider,
-          time_ms: Date.now() - started,
-        }),
-      );
-    }
-  }
-
-  if (result.tooLarge) {
-    return withCors(jsonErr(ERR.UPSTREAM.status, "UPSTREAM_TOO_LARGE", "Response sumber terlalu besar untuk diproses.", undefined, { path: pathLabel, upstream_status: 502, time_ms: Date.now() - started }));
-  }
-  const timeMs = Date.now() - started;
-  const meta = { path: pathLabel, upstream_status: result.status, time_ms: timeMs };
-
-  // Binary (image) upstream response: pass bytes through as-is.
-  if (result.bytes) {
-    if (!result.ok) return withCors(jsonErr(ERR.UPSTREAM.status, ERR.UPSTREAM.code, ERR.UPSTREAM.message, undefined, meta));
-    return new NextResponse(new Blob([result.bytes.buffer.slice(result.bytes.byteOffset, result.bytes.byteOffset + result.bytes.byteLength) as ArrayBuffer]), {
-      status: 200,
-      headers: {
-        "content-type": result.contentType,
-        "cache-control": "public, max-age=3600",
-        "x-upstream-status": String(result.status),
-        "x-time-ms": String(timeMs),
-      },
-    });
-  }
-
-  // JSON / text upstream response.
-  let body: unknown = null;
-  let parseFailed = false;
-  try {
-    body = result.text ? JSON.parse(result.text) : null;
-  } catch {
-    parseFailed = true;
-  }
-
-  const upstreamBody = body as { status?: boolean; error?: string; code?: number | string } | null;
-
-  if (!result.ok || parseFailed || (upstreamBody && upstreamBody.status === false)) {
-    const upstreamMessage =
-      parseFailed && result.ok
-        ? "Response sumber tidak valid"
-        : upstreamBody?.error ?? ERR.UPSTREAM.message;
-    const status = result.status >= 400 ? result.status : ERR.UPSTREAM.status;
-    const code = upstreamBody?.code ? `UPSTREAM_${upstreamBody.code}` : ERR.UPSTREAM.code;
-    return withCors(jsonErr(status, code, upstreamMessage ?? ERR.UPSTREAM.message, undefined, meta));
-  }
-
-  const data =
-    upstreamBody && typeof upstreamBody === "object" && "data" in (upstreamBody as Record<string, unknown>)
-      ? (upstreamBody as Record<string, unknown>).data
-      : body;
-
-  return withCors(jsonOk(data, "Request berhasil", { ...meta, size_bytes: result.text ? result.text.length : undefined }));
+  const meta = { ...outcome.meta, path: pathLabel, time_ms: Date.now() - started };
+  return withCors(
+    jsonOk(
+      outcome.data,
+      outcome.provider === "sanka"
+        ? "Request berhasil via provider Sanka"
+        : outcome.provider === "scrapr"
+          ? "Request berhasil via scraper mandiri (fallback)"
+          : "Request berhasil",
+      meta,
+    ),
+  );
 }
 
 export async function GET(req: Request, { params }: { params: Promise<{ path: string[] }> }) {
@@ -173,6 +117,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ path: st
 
   // --- validation (query string) ---
   const url = new URL(req.url);
+  const requested = parseRequestedProvider(url.searchParams.get(PROVIDER_PARAM));
+  url.searchParams.delete(PROVIDER_PARAM);
   const { values, errors } = validateParams(endpoint, url.searchParams);
   if (Object.keys(errors).length > 0) {
     return withCors(jsonErr(ERR.VALIDATION.status, ERR.VALIDATION.code, "Request tidak valid. Periksa parameter Anda.", errors));
@@ -182,7 +128,13 @@ export async function GET(req: Request, { params }: { params: Promise<{ path: st
   const guard = guardUrlParams(endpoint, values);
   if (guard) return guard;
 
-  return respondWithUpstream(endpoint, values, "GET", `/api/v1/${path.join("/")}`, started);
+  const outcome = await resolveProvider(endpoint, values, {
+    method: "GET",
+    requested,
+    pathLabel: `/api/v1/${path.join("/")}`,
+    startedAt: started,
+  });
+  return respondWithOutcome(outcome, `/api/v1/${path.join("/")}`, started);
 }
 
 /**
@@ -222,6 +174,10 @@ export async function POST(req: Request, { params }: { params: Promise<{ path: s
     return withCors(jsonErr(ERR.VALIDATION.status, ERR.VALIDATION.code, "Body harus berupa JSON yang valid."));
   }
 
+  // --- pilihan provider (param kontrol; tidak masuk validasi) ---
+  const requested = parseRequestedProvider(String(parsed[PROVIDER_PARAM] ?? ""));
+  delete parsed[PROVIDER_PARAM];
+
   // --- validation: nilai body diperlakukan sama seperti query string ---
   const searchParams = new URLSearchParams();
   for (const [k, v] of Object.entries(parsed)) {
@@ -239,7 +195,13 @@ export async function POST(req: Request, { params }: { params: Promise<{ path: s
   const guard = guardUrlParams(endpoint, values);
   if (guard) return guard;
 
-  return respondWithUpstream(endpoint, values, "POST", `/api/v1/${path.join("/")}`, started);
+  const outcome = await resolveProvider(endpoint, values, {
+    method: "POST",
+    requested,
+    pathLabel: `/api/v1/${path.join("/")}`,
+    startedAt: started,
+  });
+  return respondWithOutcome(outcome, `/api/v1/${path.join("/")}`, started);
 }
 
 /** Preflight untuk pemanggilan lintas origin dari browser. */

@@ -11,6 +11,20 @@ export interface EndpointParam {
   enum?: string[];
 }
 
+/**
+ * Konfigurasi provider alternatif "Sanka" untuk sebuah endpoint.
+ * Hanya berisi path & pemetaan parameter — TIDAK ada rahasia di sini
+ * (api key disimpan di environment variable sisi server).
+ */
+export interface SankaProviderConfig {
+  /** Path endpoint di API Sanka, tanpa query, mis. "/download/tiktok". */
+  path: string;
+  /** Pemetaan nama parameter lokal -> nama parameter Sanka. Tanpa entri = nama sama. */
+  paramMap?: Record<string, string>;
+  /** Nilai default yang selalu dikirim ke Sanka bila tidak diisi pengguna. */
+  fixedParams?: Record<string, string>;
+}
+
 export interface EndpointDefinition {
   id: string;
   name: string;
@@ -23,6 +37,13 @@ export interface EndpointDefinition {
   upstreamPath: string;
   params: EndpointParam[];
   tags: string[];
+  /** Provider alternatif Sanka: fallback otomatis + bisa dipilih via ?provider=sanka. */
+  sanka?: SankaProviderConfig;
+  /**
+   * true = endpoint baru yang SEPENUHNYA dilayani Sanka (tidak ada di upstream
+   * primary). Resolver akan memakai Sanka sebagai sumber utamanya.
+   */
+  sankaOnly?: boolean;
 }
 
 export interface EndpointCategory {
@@ -36,8 +57,10 @@ export interface ApiEnvelopeMeta {
   upstream_status?: number;
   time_ms?: number;
   size_bytes?: number;
-  /** Provider fallback yang dipakai bila upstream utama down, mis. "scrapr:snaptik". */
+  /** Provider yang benar-benar dipakai, mis. "primary", "sanka", atau "scrapr:snaptik" (fallback). */
   fallback?: string;
+  /** Provider sumber response ini (primary/sanka) bila relevan. */
+  provider?: string;
 }
 
 export interface ApiSuccess<T = unknown> {

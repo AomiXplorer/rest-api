@@ -395,6 +395,10 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["Info", "WEATHER", "LOCATION"],
+    sanka: {
+          path: "/tools/cekcuaca",
+          paramMap: { "q": "kota" },
+        },
   },
   {
     id: "info-event-indonesia",
@@ -417,6 +421,9 @@ export const ENDPOINTS: EndpointDefinition[] = [
     upstreamPath: "/api/info/bmkg",
     params: [],
     tags: ["Info", "BMKG", "Earthquake"],
+    sanka: {
+          path: "/tools/cekgempa",
+        },
   },
   {
     id: "info-jadwaltv",
@@ -500,6 +507,10 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["Search", "Spotify", "Music"],
+    sanka: {
+          path: "/search/spotify",
+          paramMap: { "query": "q" },
+        },
   },
   {
     id: "s-gitagram",
@@ -591,6 +602,10 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["Search", "Image", "Bing"],
+    sanka: {
+          path: "/search/bingimage",
+          paramMap: { "query": "q" },
+        },
   },
   {
     id: "s-musixmatch",
@@ -610,6 +625,10 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["Search", "Music", "Lyrics"],
+    sanka: {
+          path: "/search/lirik",
+          paramMap: { "query": "text" },
+        },
   },
   {
     id: "s-brave",
@@ -826,6 +845,10 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["Search", "YouTube", "Video", "Channel"],
+    sanka: {
+          path: "/search/youtube",
+          paramMap: { "query": "q" },
+        },
   },
   {
     id: "s-kbbi",
@@ -872,6 +895,10 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["Search", "Image", "Video", "GIF"],
+    sanka: {
+          path: "/search/pinterest",
+          paramMap: { "query": "q" },
+        },
   },
   {
     id: "s-soundcloud",
@@ -918,6 +945,10 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["Sticker", "Search", "Telegram"],
+    sanka: {
+          path: "/search/stickerly",
+          paramMap: { "q": "q" },
+        },
   },
   {
     id: "anime-auratail-search",
@@ -1370,6 +1401,9 @@ export const ENDPOINTS: EndpointDefinition[] = [
     upstreamPath: "/api/berita/cnn",
     params: [],
     tags: ["BERITA", "NEWS", "INDONESIA", "CURRENT EVENTS"],
+    sanka: {
+          path: "/berita/cnn",
+        },
   },
   {
     id: "berita-tribunnews",
@@ -1477,6 +1511,9 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["DOWNLOADER", "CapCut", "Video Metadata"],
+    sanka: {
+          path: "/download/capcut",
+        },
   },
   {
     id: "d-gdrive",
@@ -1515,6 +1552,9 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["DOWNLOADER", "Spotify", "Music", "Audio"],
+    sanka: {
+          path: "/download/spotify",
+        },
   },
   {
     id: "d-savefrom",
@@ -1553,6 +1593,9 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["DOWNLOADER", "GitHub", "Repository", "File"],
+    sanka: {
+          path: "/download/github",
+        },
   },
   {
     id: "d-douyin",
@@ -1572,6 +1615,9 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["DOWNLOADER", "VIDEO", "DOUYIN", "TIKTOK"],
+    sanka: {
+          path: "/download/douyin",
+        },
   },
   {
     id: "d-lahelu",
@@ -1629,6 +1675,9 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["DOWNLOADER", "Snack Video", "Video Scraper", "Social Media"],
+    sanka: {
+          path: "/download/snackvideo",
+        },
   },
   {
     id: "d-spotifyv2",
@@ -1667,6 +1716,9 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["DOWNLOADER", "TikTok", "Video", "Slideshow"],
+    sanka: {
+          path: "/download/tiktok",
+        },
   },
   {
     id: "d-fastdl",
@@ -1705,6 +1757,9 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["DOWNLOADER", "INSTAGRAM"],
+    sanka: {
+          path: "/download/instagram",
+        },
   },
   {
     id: "d-tiktok-v2",
@@ -1743,6 +1798,9 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["DOWNLOADER", "Twitter", "Video", "Social Media"],
+    sanka: {
+          path: "/download/twitter",
+        },
   },
   {
     id: "d-ssstwiter",
@@ -1781,6 +1839,9 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["DOWNLOADER", "Facebook", "Video"],
+    sanka: {
+          path: "/download/facebook",
+        },
   },
   {
     id: "d-ytpost",
@@ -1868,6 +1929,9 @@ export const ENDPOINTS: EndpointDefinition[] = [
     upstreamPath: "/api/r/quotesanime",
     params: [],
     tags: ["Random", "Anime", "Quotes", "Scraper"],
+    sanka: {
+          path: "/anime/quote",
+        },
   },
   {
     id: "r-lahelu",
@@ -1912,6 +1976,9 @@ export const ENDPOINTS: EndpointDefinition[] = [
     upstreamPath: "/api/r/blue-archive",
     params: [],
     tags: ["Random", "Image", "Blue Archive", "Anime"],
+    sanka: {
+          path: "/random/ba",
+        },
   },
   {
     id: "r-neko",
@@ -2000,6 +2067,9 @@ export const ENDPOINTS: EndpointDefinition[] = [
     upstreamPath: "/api/r/waifu",
     params: [],
     tags: ["Random", "Image", "Anime", "Waifu"],
+    sanka: {
+          path: "/random/waifu",
+        },
   },
   {
     id: "tools-ssweb",
@@ -2043,6 +2113,9 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["Tools", "Screenshot", "Web"],
+    sanka: {
+          path: "/tools/ssweb",
+        },
   },
   {
     id: "tools-kodepos",
@@ -2095,6 +2168,10 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["TOOLS", "Translate", "Language"],
+    sanka: {
+          path: "/tools/translate",
+          paramMap: { "text": "text", "target": "to" },
+        },
   },
   {
     id: "tools-countryinfo",
@@ -2133,6 +2210,10 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["TOOLS", "Subdomain", "Security"],
+    sanka: {
+          path: "/tools/subdo",
+          paramMap: { "domain": "url" },
+        },
   },
   {
     id: "tools-vcc-generator",
@@ -2162,6 +2243,10 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["TOOLS", "VCC", "GENERATOR"],
+    sanka: {
+          path: "/tools/vcc",
+          paramMap: { "type": "bin" },
+        },
   },
   {
     id: "canvas-welcomev1",
@@ -3618,6 +3703,9 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["Maker", "IMAGE", "GIF"],
+    sanka: {
+          path: "/imagecreator/brat",
+        },
   },
   {
     id: "m-textpro",
@@ -4348,6 +4436,10 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["Stalker", "GitHub", "User", "Profile"],
+    sanka: {
+          path: "/stalk/github",
+          paramMap: { "user": "username" },
+        },
   },
   {
     id: "stalk-instagram",
@@ -4367,6 +4459,10 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["Stalker", "Instagram", "Profile"],
+    sanka: {
+          path: "/stalk/instagram",
+          paramMap: { "username": "username" },
+        },
   },
   {
     id: "stalk-roblox",
@@ -4405,6 +4501,10 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["Stalker", "Twitter", "X", "User"],
+    sanka: {
+          path: "/stalk/twitter",
+          paramMap: { "user": "username" },
+        },
   },
   {
     id: "stalk-threads",
@@ -4481,5 +4581,1192 @@ export const ENDPOINTS: EndpointDefinition[] = [
       },
     ],
     tags: ["Stalker", "TikTok", "User", "Profile"],
+    sanka: {
+          path: "/stalk/tiktok",
+          paramMap: { "username": "username" },
+        },
   },
+  // ===== Endpoint baru via provider Sanka (2026-10-16) — sankaOnly =====
+  {
+    id: "ai-arona",
+    name: "arona ai",
+    description: "Chatbot AI dengan karakter Arona dari Blue Archive, cocok buat ngobrol santai.",
+    category: "ai",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/ai/arona",
+    sankaOnly: true,
+    sanka: {
+      path: "/ai/arona"
+    },
+    params: [
+      {
+        name: "text",
+        required: true,
+        type: "string",
+        description: "Pesan yang mau dikirim ke Arona",
+        example: "halo, siapa kamu?",
+      },
+    ],
+    tags: ["AI", "Chat", "Blue Archive", "Arona"],
+  },
+  {
+    id: "ai-realtime",
+    name: "ai realtime",
+    description: "Chat AI realtime multi-model (ChatGPT, Claude, Gemini, Grok, Mistral) tanpa perlu API key tambahan.",
+    category: "ai",
+    method: "GET",
+    timeoutMs: 60000,
+    upstreamPath: "/api/ai/realtime",
+    sankaOnly: true,
+    sanka: {
+      path: "/ai/realtime",
+        fixedParams: { "model": "claude" }
+    },
+    params: [
+      {
+        name: "text",
+        required: true,
+        type: "string",
+        description: "Pesan untuk AI-nya",
+        example: "jelaskan black hole dengan bahasa sederhana",
+      },
+      {
+        name: "model",
+        required: false,
+        type: "enum",
+        description: "Model AI yang dipakai",
+        example: "claude",
+        enum: ["chatgpt41mini", "chatgpt", "chatgpto1p", "claude", "gemini", "mistral", "grok"],
+      },
+    ],
+    tags: ["AI", "Chat", "Multi Model", "Realtime"],
+  },
+  {
+    id: "ai-prompt-to-image",
+    name: "prompt to image",
+    description: "Ubah deskripsi teks jadi gambar AI. Kasih prompt sebodo-detailnya, hasilnya dikasih sebagai URL gambar.",
+    category: "ai",
+    method: "GET",
+    timeoutMs: 60000,
+    upstreamPath: "/api/ai/prompt-to-image",
+    sankaOnly: true,
+    sanka: {
+      path: "/ai/aiprompttoimg",
+        fixedParams: { "ratio": "1:1" }
+    },
+    params: [
+      {
+        name: "prompt",
+        required: true,
+        type: "string",
+        description: "Deskripsi gambar yang mau dibikin",
+        example: "kucing astronot duduk di bulan",
+      },
+      {
+        name: "ratio",
+        required: false,
+        type: "string",
+        description: "Rasio gambar, contoh 1:1, 16:9",
+        example: "1:1",
+      },
+    ],
+    tags: ["AI", "Image", "Generator", "Text2Img"],
+  },
+  {
+    id: "anime-ppcp",
+    name: "ppcp anime",
+    description: "Gambar pasangan (couple profile picture) anime buat foto profil berpasangan.",
+    category: "anime",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/anime/ppcp",
+    sankaOnly: true,
+    sanka: {
+      path: "/anime/ppcp"
+    },
+    params: [],
+    tags: ["Anime", "PPCP", "Couple", "Image"],
+  },
+  {
+    id: "anime-bluearchive",
+    name: "blue archive character",
+    description: "Info detail karakter Blue Archive: nama, sekolah, klub, sampai tanggal lahirnya.",
+    category: "anime",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/anime/bluearchive",
+    sankaOnly: true,
+    sanka: {
+      path: "/anime/bluearchive"
+    },
+    params: [
+      {
+        name: "char",
+        required: true,
+        type: "string",
+        description: "Nama karakter Blue Archive",
+        example: "Shiroko",
+      },
+    ],
+    tags: ["Anime", "Blue Archive", "Character", "Info"],
+  },
+  {
+    id: "anime-ttsnahida",
+    name: "tts nahida",
+    description: "Bikin suara TTS dengan karakter Nahida (Genshin Impact). Hasilnya audio binary.",
+    category: "anime",
+    method: "GET",
+    timeoutMs: 60000,
+    upstreamPath: "/api/anime/ttsnahida",
+    sankaOnly: true,
+    sanka: {
+      path: "/anime/ttsnahida"
+    },
+    params: [
+      {
+        name: "text",
+        required: true,
+        type: "string",
+        description: "Teks yang mau diubah jadi suara Nahida",
+        example: "halo semuanya",
+      },
+    ],
+    tags: ["Anime", "TTS", "Voice", "Nahida"],
+  },
+  {
+    id: "d-videy",
+    name: "videy downloader",
+    description: "Ekstrak video tanpa watermark dari link Videy.",
+    category: "d",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/d/videy",
+    sankaOnly: true,
+    sanka: {
+      path: "/download/videy"
+    },
+    params: [
+      {
+        name: "url",
+        required: true,
+        type: "string",
+        description: "URL video Videy",
+        example: "https://videy.co/v/2yZ0yZ2u",
+      },
+    ],
+    tags: ["DOWNLOADER", "Videy", "Video"],
+  },
+  {
+    id: "d-ytmp4",
+    name: "youtube mp4",
+    description: "Konversi dan download video YouTube jadi MP4.",
+    category: "d",
+    method: "GET",
+    timeoutMs: 60000,
+    upstreamPath: "/api/d/ytmp4",
+    sankaOnly: true,
+    sanka: {
+      path: "/download/ytmp4"
+    },
+    params: [
+      {
+        name: "url",
+        required: true,
+        type: "string",
+        description: "URL video YouTube",
+        example: "https://youtu.be/dQw4w9WgXcQ",
+      },
+    ],
+    tags: ["DOWNLOADER", "YouTube", "MP4"],
+  },
+  {
+    id: "d-ytmp3",
+    name: "youtube mp3",
+    description: "Konversi dan download audio YouTube jadi MP3.",
+    category: "d",
+    method: "GET",
+    timeoutMs: 60000,
+    upstreamPath: "/api/d/ytmp3",
+    sankaOnly: true,
+    sanka: {
+      path: "/download/ytmp3"
+    },
+    params: [
+      {
+        name: "url",
+        required: true,
+        type: "string",
+        description: "URL video YouTube",
+        example: "https://youtu.be/dQw4w9WgXcQ",
+      },
+    ],
+    tags: ["DOWNLOADER", "YouTube", "MP3"],
+  },
+  {
+    id: "d-aio",
+    name: "aio downloader",
+    description: "All-in-one downloader: deteksi otomatis platform (TikTok, Instagram, Facebook, dll) dari satu URL.",
+    category: "d",
+    method: "GET",
+    timeoutMs: 60000,
+    upstreamPath: "/api/d/aio",
+    sankaOnly: true,
+    sanka: {
+      path: "/download/aio"
+    },
+    params: [
+      {
+        name: "url",
+        required: true,
+        type: "string",
+        description: "URL konten dari platform mana pun yang didukung",
+        example: "https://youtu.be/dQw4w9WgXcQ",
+      },
+    ],
+    tags: ["DOWNLOADER", "AIO", "Multi Platform"],
+  },
+  {
+    id: "d-npmjs",
+    name: "npm package",
+    description: "Link download package npm beserta info versinya.",
+    category: "d",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/d/npmjs",
+    sankaOnly: true,
+    sanka: {
+      path: "/download/npmjs"
+    },
+    params: [
+      {
+        name: "pkg",
+        required: true,
+        type: "string",
+        description: "Nama package npm",
+        example: "express",
+      },
+      {
+        name: "ver",
+        required: false,
+        type: "string",
+        description: "Versi package (opsional, default versi terbaru)",
+        example: "4.18.2",
+      },
+    ],
+    tags: ["DOWNLOADER", "NPM", "Package"],
+  },
+  {
+    id: "d-terabox",
+    name: "terabox downloader",
+    description: "Ekstrak file dari link share Terabox.",
+    category: "d",
+    method: "GET",
+    timeoutMs: 60000,
+    upstreamPath: "/api/d/terabox",
+    sankaOnly: true,
+    sanka: {
+      path: "/download/terabox"
+    },
+    params: [
+      {
+        name: "url",
+        required: true,
+        type: "string",
+        description: "URL share Terabox",
+        example: "https://terabox.com/s/1abc-def",
+      },
+    ],
+    tags: ["DOWNLOADER", "Terabox", "Cloud"],
+  },
+  {
+    id: "d-pinterest",
+    name: "pinterest downloader",
+    description: "Download gambar/video dari pin Pinterest.",
+    category: "d",
+    method: "GET",
+    timeoutMs: 60000,
+    upstreamPath: "/api/d/pinterest",
+    sankaOnly: true,
+    sanka: {
+      path: "/download/pinterest"
+    },
+    params: [
+      {
+        name: "url",
+        required: true,
+        type: "string",
+        description: "URL pin Pinterest",
+        example: "https://id.pinterest.com/pin/1234567890",
+      },
+    ],
+    tags: ["DOWNLOADER", "Pinterest", "Media"],
+  },
+  {
+    id: "r-quotes",
+    name: "random quotes",
+    description: "Quotes random buat caption harian, lengkap dengan sumbernya.",
+    category: "r",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/r/quotes",
+    sankaOnly: true,
+    sanka: {
+      path: "/random/quotes"
+    },
+    params: [],
+    tags: ["Random", "Quotes", "Motivasi"],
+  },
+  {
+    id: "r-cek-nomor",
+    name: "cek nomor indonesia",
+    description: "Cek info nomor HP Indonesia: operator, wilayah, dan format internasionalnya.",
+    category: "r",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/r/cek-nomor",
+    sankaOnly: true,
+    sanka: {
+      path: "/random/cek-nomor"
+    },
+    params: [
+      {
+        name: "nomor",
+        required: true,
+        type: "string",
+        description: "Nomor HP Indonesia (awali 08 atau 62)",
+        example: "081234567890",
+      },
+    ],
+    tags: ["Random", "Nomor", "Info", "Indonesia"],
+  },
+  {
+    id: "r-cek-nomorinter",
+    name: "cek nomor internasional",
+    description: "Validasi info nomor HP internasional: negara, operator, dan jenis nomornya.",
+    category: "r",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/r/cek-nomorinter",
+    sankaOnly: true,
+    sanka: {
+      path: "/random/cek-nomorinter"
+    },
+    params: [
+      {
+        name: "nomor",
+        required: true,
+        type: "string",
+        description: "Nomor HP format internasional",
+        example: "628123456789",
+      },
+    ],
+    tags: ["Random", "Nomor", "Info", "Internasional"],
+  },
+  {
+    id: "s-playstore",
+    name: "playstore search",
+    description: "Cari aplikasi di Google Play Store lengkap dengan rating dan developernya.",
+    category: "s",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/s/playstore",
+    sankaOnly: true,
+    sanka: {
+      path: "/search/playstore",
+        paramMap: { "q": "q" }
+    },
+    params: [
+      {
+        name: "q",
+        required: true,
+        type: "string",
+        description: "Kata kunci pencarian aplikasi",
+        example: "whatsapp",
+      },
+    ],
+    tags: ["Search", "Playstore", "Aplikasi"],
+  },
+  {
+    id: "s-npm",
+    name: "npm search",
+    description: "Cari package di registry npm beserta versi dan deskripsinya.",
+    category: "s",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/s/npm",
+    sankaOnly: true,
+    sanka: {
+      path: "/search/npm"
+    },
+    params: [
+      {
+        name: "q",
+        required: true,
+        type: "string",
+        description: "Kata kunci nama package",
+        example: "express",
+      },
+    ],
+    tags: ["Search", "NPM", "Package"],
+  },
+  {
+    id: "s-douyin",
+    name: "douyin search",
+    description: "Cari video di Douyin (TikTok China) berdasarkan kata kunci.",
+    category: "s",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/s/douyin",
+    sankaOnly: true,
+    sanka: {
+      path: "/search/douyin",
+        paramMap: { "q": "text" }
+    },
+    params: [
+      {
+        name: "q",
+        required: true,
+        type: "string",
+        description: "Kata kunci pencarian",
+        example: "makanan enak",
+      },
+    ],
+    tags: ["Search", "Douyin", "Video"],
+  },
+  {
+    id: "tools-text-to-speech",
+    name: "text to speech",
+    description: "Ubah teks jadi suara narasi. Hasilnya audio binary (mp3).",
+    category: "tools",
+    method: "GET",
+    timeoutMs: 60000,
+    upstreamPath: "/api/tools/text-to-speech",
+    sankaOnly: true,
+    sanka: {
+      path: "/tools/text-to-speech"
+    },
+    params: [
+      {
+        name: "text",
+        required: true,
+        type: "string",
+        description: "Teks yang mau dibacakan",
+        example: "selamat datang di aomi api",
+      },
+    ],
+    tags: ["Tools", "TTS", "Audio", "Voice"],
+  },
+  {
+    id: "tools-tinyurl",
+    name: "shortener tinyurl",
+    description: "Perpendek URL panjang jadi link tinyurl.",
+    category: "tools",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/tools/tinyurl",
+    sankaOnly: true,
+    sanka: {
+      path: "/tools/tinyurl"
+    },
+    params: [
+      {
+        name: "url",
+        required: true,
+        type: "string",
+        description: "URL panjang yang mau dipendekin",
+        example: "https://cyronime.my.id/docs",
+      },
+    ],
+    tags: ["Tools", "Shortener", "URL"],
+  },
+  {
+    id: "tools-jadwal-sholat",
+    name: "jadwal sholat",
+    description: "Jadwal waktu sholat untuk kota-kota di Indonesia.",
+    category: "tools",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/tools/jadwal-sholat",
+    sankaOnly: true,
+    sanka: {
+      path: "/tools/jadwalsholat"
+    },
+    params: [
+      {
+        name: "kota",
+        required: true,
+        type: "string",
+        description: "Nama kota di Indonesia",
+        example: "Jakarta",
+      },
+    ],
+    tags: ["Tools", "Jadwal", "Sholat", "Islam"],
+  },
+  {
+    id: "tools-jadwal-sholat-inter",
+    name: "jadwal sholat internasional",
+    description: "Jadwal waktu sholat untuk kota di seluruh dunia.",
+    category: "tools",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/tools/jadwal-sholat-inter",
+    sankaOnly: true,
+    sanka: {
+      path: "/tools/jadwalsholatinter",
+        fixedParams: { "negara": "malaysia" }
+    },
+    params: [
+      {
+        name: "kota",
+        required: true,
+        type: "string",
+        description: "Nama kota",
+        example: "Kuala Lumpur",
+      },
+      {
+        name: "negara",
+        required: false,
+        type: "string",
+        description: "Nama negara (default: malaysia)",
+        example: "malaysia",
+      },
+    ],
+    tags: ["Tools", "Jadwal", "Sholat", "Internasional"],
+  },
+  {
+    id: "tools-convert-uang",
+    name: "convert uang",
+    description: "Konversi mata uang dengan kurs real-time (contoh USD ke IDR).",
+    category: "tools",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/tools/convert-uang",
+    sankaOnly: true,
+    sanka: {
+      path: "/tools/convert-uang"
+    },
+    params: [
+      {
+        name: "from",
+        required: true,
+        type: "string",
+        description: "Kode mata uang asal (huruf besar), mis. USD",
+        example: "USD",
+      },
+      {
+        name: "to",
+        required: true,
+        type: "string",
+        description: "Kode mata uang tujuan (huruf besar), mis. IDR",
+        example: "IDR",
+      },
+      {
+        name: "amount",
+        required: true,
+        type: "number",
+        description: "Jumlah uang yang mau dikonversi",
+        example: "10",
+      },
+    ],
+    tags: ["Tools", "Currency", "Konversi"],
+  },
+  {
+    id: "tools-pagespeed",
+    name: "pagespeed insight",
+    description: "Analisis kecepatan website ala Google PageSpeed.",
+    category: "tools",
+    method: "GET",
+    timeoutMs: 60000,
+    upstreamPath: "/api/tools/pagespeed",
+    sankaOnly: true,
+    sanka: {
+      path: "/tools/pagespeed"
+    },
+    params: [
+      {
+        name: "url",
+        required: true,
+        type: "string",
+        description: "URL website yang mau dicek",
+        example: "https://cyronime.my.id",
+      },
+    ],
+    tags: ["Tools", "Pagespeed", "Performa", "Audit"],
+  },
+  {
+    id: "tools-webtozip",
+    name: "web to zip",
+    description: "Bikin arsip ZIP dari satu halaman website beserta asetnya.",
+    category: "tools",
+    method: "GET",
+    timeoutMs: 90000,
+    upstreamPath: "/api/tools/webtozip",
+    sankaOnly: true,
+    sanka: {
+      path: "/tools/webtozip"
+    },
+    params: [
+      {
+        name: "url",
+        required: true,
+        type: "string",
+        description: "URL website yang mau diarsip",
+        example: "https://example.com",
+      },
+    ],
+    tags: ["Tools", "Zip", "Archive"],
+  },
+  {
+    id: "tools-traffic",
+    name: "cek traffic web",
+    description: "Perkiraan trafik bulanan sebuah website.",
+    category: "tools",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/tools/traffic",
+    sankaOnly: true,
+    sanka: {
+      path: "/tools/traffic"
+    },
+    params: [
+      {
+        name: "sites",
+        required: true,
+        type: "string",
+        description: "Domain website tanpa https, mis. cyronime.my.id",
+        example: "cyronime.my.id",
+      },
+    ],
+    tags: ["Tools", "Traffic", "Analitik"],
+  },
+  {
+    id: "tools-emojitogif",
+    name: "emoji to gif",
+    description: "Ubah emoji jadi GIF animasi. Hasilnya binary image/gif.",
+    category: "tools",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/tools/emojitogif",
+    sankaOnly: true,
+    sanka: {
+      path: "/tools/emojitogif"
+    },
+    params: [
+      {
+        name: "emoji",
+        required: true,
+        type: "string",
+        description: "Emoji yang mau diubah",
+        example: "😀",
+      },
+    ],
+    tags: ["Tools", "Emoji", "GIF"],
+  },
+  {
+    id: "tools-emojimix",
+    name: "emoji mix",
+    description: "Gabungin dua emoji jadi satu gambar unik ala Google Emoji Kitchen.",
+    category: "tools",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/tools/emojimix",
+    sankaOnly: true,
+    sanka: {
+      path: "/tools/emojimix"
+    },
+    params: [
+      {
+        name: "emoji1",
+        required: true,
+        type: "string",
+        description: "Emoji pertama",
+        example: "😀",
+      },
+      {
+        name: "emoji2",
+        required: true,
+        type: "string",
+        description: "Emoji kedua",
+        example: "😂",
+      },
+    ],
+    tags: ["Tools", "Emoji", "Mix"],
+  },
+  {
+    id: "tools-qrcode",
+    name: "qr code generator",
+    description: "Bikin QR code dari teks atau URL. Hasilnya binary image/png.",
+    category: "tools",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/tools/qrcode",
+    sankaOnly: true,
+    sanka: {
+      path: "/tools/qrcode"
+    },
+    params: [
+      {
+        name: "text",
+        required: true,
+        type: "string",
+        description: "Teks atau URL untuk QR code",
+        example: "https://cyronime.my.id",
+      },
+    ],
+    tags: ["Tools", "QR", "Generator"],
+  },
+  {
+    id: "tools-2fa-generate",
+    name: "2fa code",
+    description: "Bikin kode OTP 2FA dari secret TOTP, cocok buat ngetes authenticator.",
+    category: "tools",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/tools/2fa-generate",
+    sankaOnly: true,
+    sanka: {
+      path: "/tools/2fa/generate"
+    },
+    params: [
+      {
+        name: "secret",
+        required: true,
+        type: "string",
+        description: "Secret base32 dari layanan 2FA",
+        example: "JBSWY3DPEHPK3PXP",
+      },
+    ],
+    tags: ["Tools", "2FA", "OTP", "TOTP"],
+  },
+  {
+    id: "tools-2fa-generator",
+    name: "2fa secret generator",
+    description: "Bikin secret 2FA baru (base32) lengkap dengan QR-nya.",
+    category: "tools",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/tools/2fa-generator",
+    sankaOnly: true,
+    sanka: {
+      path: "/tools/2fa/generator"
+    },
+    params: [
+      {
+        name: "text",
+        required: true,
+        type: "string",
+        description: "Label/akun untuk secret yang digenerate",
+        example: "aomi@example.com",
+      },
+    ],
+    tags: ["Tools", "2FA", "Generator", "Auth"],
+  },
+  {
+    id: "tools-autotranslate",
+    name: "auto translate",
+    description: "Terjemahan otomatis dengan gaya hasil yang lebih natural (mode Faithful/Ghost/Gq).",
+    category: "tools",
+    method: "GET",
+    timeoutMs: 60000,
+    upstreamPath: "/api/tools/autotranslate",
+    sankaOnly: true,
+    sanka: {
+      path: "/tools/autotranslate",
+        fixedParams: { "to": "random", "from": "auto", "mode": "Faithful" }
+    },
+    params: [
+      {
+        name: "text",
+        required: true,
+        type: "string",
+        description: "Teks yang mau diterjemahkan",
+        example: "apa kabar dunia",
+      },
+      {
+        name: "to",
+        required: false,
+        type: "string",
+        description: "Kode bahasa tujuan (default: random)",
+        example: "en",
+      },
+      {
+        name: "from",
+        required: false,
+        type: "string",
+        description: "Kode bahasa asal (default: auto)",
+        example: "auto",
+      },
+      {
+        name: "mode",
+        required: false,
+        type: "string",
+        description: "Gaya terjemahan: Faithful, Ghost, atau Gq",
+        example: "Faithful",
+      },
+    ],
+    tags: ["Tools", "Translate", "AI"],
+  },
+  {
+    id: "tools-iplookup",
+    name: "ip lookup",
+    description: "Cek info alamat IP: lokasi, ISP, sampai ASN-nya.",
+    category: "tools",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/tools/iplookup",
+    sankaOnly: true,
+    sanka: {
+      path: "/tools/iplookup",
+        paramMap: { "ip": "q" }
+    },
+    params: [
+      {
+        name: "ip",
+        required: true,
+        type: "string",
+        description: "Alamat IP yang mau dicek",
+        example: "8.8.8.8",
+      },
+    ],
+    tags: ["Tools", "IP", "Lookup", "Geolocation"],
+  },
+  {
+    id: "stalk-genshin",
+    name: "genshin stalk",
+    description: "Info profil pemain Genshin Impact dari UID-nya.",
+    category: "stalk",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/stalk/genshin",
+    sankaOnly: true,
+    sanka: {
+      path: "/stalk/genshin"
+    },
+    params: [
+      {
+        name: "uid",
+        required: true,
+        type: "string",
+        description: "UID akun Genshin Impact",
+        example: "123456789",
+      },
+    ],
+    tags: ["Stalker", "Genshin", "Game"],
+  },
+  {
+    id: "stalk-ml",
+    name: "mobile legends stalk",
+    description: "Info akun Mobile Legends: nickname, level, dan rank dari ID + server.",
+    category: "stalk",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/stalk/ml",
+    sankaOnly: true,
+    sanka: {
+      path: "/stalk/ml"
+    },
+    params: [
+      {
+        name: "id",
+        required: true,
+        type: "string",
+        description: "ID akun Mobile Legends",
+        example: "123456789",
+      },
+      {
+        name: "server",
+        required: true,
+        type: "string",
+        description: "Kode server akun, mis. 1032 (MV/HK)",
+        example: "1032",
+      },
+    ],
+    tags: ["Stalker", "Mobile Legends", "Game"],
+  },
+  {
+    id: "stalk-minecraft",
+    name: "minecraft stalk",
+    description: "Info profil Minecraft dari username: UUID dan skin.",
+    category: "stalk",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/stalk/minecraft",
+    sankaOnly: true,
+    sanka: {
+      path: "/stalk/minecraft"
+    },
+    params: [
+      {
+        name: "username",
+        required: true,
+        type: "string",
+        description: "Username Minecraft",
+        example: "Notch",
+      },
+    ],
+    tags: ["Stalker", "Minecraft", "Game"],
+  },
+  {
+    id: "stalk-cek-resi",
+    name: "cek resi",
+    description: "Lacak paket dari nomor resi di 23 kurir Indonesia.",
+    category: "stalk",
+    method: "GET",
+    timeoutMs: 60000,
+    upstreamPath: "/api/stalk/cek-resi",
+    sankaOnly: true,
+    sanka: {
+      path: "/stalk/cek-resi"
+    },
+    params: [
+      {
+        name: "resi",
+        required: true,
+        type: "string",
+        description: "Nomor resi pengiriman",
+        example: "JX0067145967",
+      },
+      {
+        name: "kurir",
+        required: true,
+        type: "enum",
+        description: "Kode kurir",
+        example: "tiki",
+        enum: ["shopee-express", "ninja", "lion-parcel", "pos-indonesia", "tiki", "acommerce", "gtl-goto-logistics", "paxel", "sap-express", "indah-logistik-cargo", "lazada-express-lex", "lazada-logistics", "janio-asia", "jet-express", "pcp-express", "pt-ncs", "nss-express", "grab-express", "rcl-red-carpet-logistics", "qrim-express", "ark-xpress", "standard-express-lwe", "luar-negeri-bea-cukai"],
+      },
+    ],
+    tags: ["Stalker", "Resi", "Kurir", "Paket"],
+  },
+  {
+    id: "stalk-whatsapp",
+    name: "whatsapp channel stalk",
+    description: "Info channel WhatsApp: nama, deskripsi, followers, dan link invite-nya.",
+    category: "stalk",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/stalk/whatsapp",
+    sankaOnly: true,
+    sanka: {
+      path: "/stalk/whatsapp"
+    },
+    params: [
+      {
+        name: "url",
+        required: true,
+        type: "string",
+        description: "URL channel WhatsApp",
+        example: "https://whatsapp.com/channel/0029VaQnSDV3WTnHqPTUgt0z",
+      },
+    ],
+    tags: ["Stalker", "WhatsApp", "Channel"],
+  },
+  {
+    id: "m-to-comic",
+    name: "foto to comic",
+    description: "Ubah foto jadi gaya komik. Hasil: URL gambar komik versi kamu.",
+    category: "m",
+    method: "GET",
+    timeoutMs: 90000,
+    upstreamPath: "/api/m/to-comic",
+    sankaOnly: true,
+    sanka: {
+      path: "/imagecreator/to-comic"
+    },
+    params: [
+      {
+        name: "url",
+        required: true,
+        type: "string",
+        description: "URL foto yang mau diubah",
+        example: "https://i.imgur.com/HNbEyUL.jpeg",
+      },
+    ],
+    tags: ["Maker", "Comic", "Image", "Efek"],
+  },
+  {
+    id: "m-bratvideo",
+    name: "brat video",
+    description: "Versi video dari efek brat (teks ala cover album brat). Hasil binary video.",
+    category: "m",
+    method: "GET",
+    timeoutMs: 90000,
+    upstreamPath: "/api/m/bratvideo",
+    sankaOnly: true,
+    sanka: {
+      path: "/imagecreator/bratvideo"
+    },
+    params: [
+      {
+        name: "text",
+        required: true,
+        type: "string",
+        description: "Teks yang mau ditampilkan di video",
+        example: "halo dunia",
+      },
+    ],
+    tags: ["Maker", "Brat", "Video", "Trend"],
+  },
+  {
+    id: "m-remini",
+    name: "remini",
+    description: "Enhance kualitas foto jadi lebih tajam ala aplikasi Remini.",
+    category: "m",
+    method: "GET",
+    timeoutMs: 90000,
+    upstreamPath: "/api/m/remini",
+    sankaOnly: true,
+    sanka: {
+      path: "/imagecreator/remini"
+    },
+    params: [
+      {
+        name: "url",
+        required: true,
+        type: "string",
+        description: "URL foto yang mau di-enhance",
+        example: "https://i.imgur.com/HNbEyUL.jpeg",
+      },
+    ],
+    tags: ["Maker", "Remini", "HD", "Enhance"],
+  },
+  {
+    id: "m-removebg",
+    name: "remove background",
+    description: "Hapus background foto otomatis.",
+    category: "m",
+    method: "GET",
+    timeoutMs: 90000,
+    upstreamPath: "/api/m/removebg",
+    sankaOnly: true,
+    sanka: {
+      path: "/imagecreator/removebg"
+    },
+    params: [
+      {
+        name: "url",
+        required: true,
+        type: "string",
+        description: "URL foto yang mau dihapus backgroundnya",
+        example: "https://i.imgur.com/HNbEyUL.jpeg",
+      },
+    ],
+    tags: ["Maker", "RemoveBG", "Background", "Image"],
+  },
+  {
+    id: "m-upscale",
+    name: "upscale image",
+    description: "Tingkatkan resolusi gambar jadi lebih besar dan jernih.",
+    category: "m",
+    method: "GET",
+    timeoutMs: 90000,
+    upstreamPath: "/api/m/upscale",
+    sankaOnly: true,
+    sanka: {
+      path: "/imagecreator/upscale"
+    },
+    params: [
+      {
+        name: "url",
+        required: true,
+        type: "string",
+        description: "URL gambar yang mau di-upscale",
+        example: "https://i.imgur.com/HNbEyUL.jpeg",
+      },
+    ],
+    tags: ["Maker", "Upscale", "HD", "Image"],
+  },
+  {
+    id: "m-colorize",
+    name: "colorize",
+    description: "Beri warna otomatis pada foto hitam-putih.",
+    category: "m",
+    method: "GET",
+    timeoutMs: 90000,
+    upstreamPath: "/api/m/colorize",
+    sankaOnly: true,
+    sanka: {
+      path: "/imagecreator/colorize"
+    },
+    params: [
+      {
+        name: "url",
+        required: true,
+        type: "string",
+        description: "URL foto hitam-putih",
+        example: "https://i.imgur.com/HNbEyUL.jpeg",
+      },
+    ],
+    tags: ["Maker", "Colorize", "Foto Lama", "Image"],
+  },
+  {
+    id: "m-restore",
+    name: "restore foto",
+    description: "Perbaiki foto lama yang rusak atau buram.",
+    category: "m",
+    method: "GET",
+    timeoutMs: 90000,
+    upstreamPath: "/api/m/restore",
+    sankaOnly: true,
+    sanka: {
+      path: "/imagecreator/restore"
+    },
+    params: [
+      {
+        name: "url",
+        required: true,
+        type: "string",
+        description: "URL foto yang mau direstorasi",
+        example: "https://i.imgur.com/HNbEyUL.jpeg",
+      },
+    ],
+    tags: ["Maker", "Restore", "Foto Lama", "Image"],
+  },
+  {
+    id: "berita-liputan6-search",
+    name: "liputan6 search",
+    description: "Cari artikel di Liputan6 berdasarkan kata kunci.",
+    category: "berita",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/berita/liputan6/search",
+    sankaOnly: true,
+    sanka: {
+      path: "/berita/liputan6/search"
+    },
+    params: [
+      {
+        name: "q",
+        required: true,
+        type: "string",
+        description: "Kata kunci pencarian berita",
+        example: "prabowo",
+      },
+    ],
+    tags: ["Berita", "Liputan6", "Search"],
+  },
+  {
+    id: "berita-liputan6-detail",
+    name: "liputan6 detail",
+    description: "Ambil isi lengkap artikel Liputan6 dari URL-nya.",
+    category: "berita",
+    method: "GET",
+    timeoutMs: 30000,
+    upstreamPath: "/api/berita/liputan6/detail",
+    sankaOnly: true,
+    sanka: {
+      path: "/berita/liputan6/detail"
+    },
+    params: [
+      {
+        name: "url",
+        required: true,
+        type: "string",
+        description: "URL artikel Liputan6",
+        example: "https://www.liputan6.com/xxx",
+      },
+    ],
+    tags: ["Berita", "Liputan6", "Detail"],
+  },
+
 ];

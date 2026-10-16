@@ -245,7 +245,7 @@ export function DocsClient({
       {/* Pop up detail endpoint — tekan GET untuk membuka */}
       {active && (
         <div
-          className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
           role="dialog"
           aria-modal="true"
           aria-label={`Detail endpoint ${active.name}`}
@@ -255,7 +255,7 @@ export function DocsClient({
             onClick={() => setModalId(null)}
             aria-hidden="true"
           />
-          <div className="relative max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-t-2xl border-2 border-line-strong bg-card shadow-note sm:max-h-[88vh] sm:rounded-2xl">
+          <div className="animate-pop relative max-h-[86vh] w-full max-w-2xl overflow-y-auto rounded-2xl border-2 border-line-strong bg-card shadow-note">
             <EndpointDetail
               key={active.id}
               endpoint={active}

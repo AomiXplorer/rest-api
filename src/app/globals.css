@@ -86,6 +86,8 @@
   --font-body: var(--font-dmsans), system-ui, sans-serif;
   --font-hand: var(--font-caveat), cursive;
   --font-code: var(--font-jetbrains), ui-monospace, monospace;
+
+  --animate-pop: pop 0.18s ease-out;
 }
 
 html {
@@ -198,6 +200,18 @@ body {
 }
 .dark .press:hover {
   box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.65);
+}
+
+/* Modal pop-in */
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* Marquee */

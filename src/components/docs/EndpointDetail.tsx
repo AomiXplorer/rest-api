@@ -48,13 +48,15 @@ export function EndpointDetail({
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<ResponseState | null>(null);
 
+  // URL lengkap dengan domain web (bukan cuma path), mengikuti nilai input terkini
   const requestUrl = useMemo(() => {
-    const u = `${localPath(endpoint)}`;
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
     const qs = endpoint.params
-      .map((p) => `${encodeURIComponent(p.name)}=${encodeURIComponent(p.example)}`)
+      .map((p) => `${encodeURIComponent(p.name)}=${encodeURIComponent(values[p.name] ?? "")}`)
+      .filter((kv) => !kv.endsWith("="))
       .join("&");
-    return qs ? `${u}?${qs}` : u;
-  }, [endpoint]);
+    return `${origin}${localPath(endpoint)}${qs ? `?${qs}` : ""}`;
+  }, [endpoint, values]);
 
   async function send(resend = false) {
     if (loading) return;

@@ -13,8 +13,8 @@ function SearchBox({ className = "" }: { className?: string }) {
   return (
     <div className={`relative min-w-0 ${className}`}>
       <Search
-        size={14}
-        className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-faint"
+        size={15}
+        className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint"
       />
       <input
         placeholder="Cari API… (tekan /)"
@@ -27,7 +27,7 @@ function SearchBox({ className = "" }: { className?: string }) {
             router.push("/docs?focus=1");
           }
         }}
-        className="w-full rounded-lg border-2 border-line-strong bg-card py-1.5 pl-8 pr-2 text-xs text-ink placeholder:text-ink-faint focus:border-primary focus:outline-none"
+        className="h-11 w-full rounded-lg border border-line-strong bg-card pl-9 pr-3 text-sm text-ink placeholder:text-ink-faint focus:border-primary focus:outline-none"
       />
     </div>
   );
@@ -63,9 +63,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen">
       {/* ===== Navbar desktop ===== */}
-      <header className="sticky top-0 z-40 hidden h-16 items-center gap-3 border-b-2 border-line-strong bg-card px-6 lg:flex">
+      <header className="sticky top-0 z-40 hidden h-[68px] items-center gap-3 border-b-2 border-line-strong bg-card px-6 lg:flex">
         <Link href="/" aria-label="Cyronime — Beranda">
-          <CyronimeLogo />
+          <CyronimeLogo size={36} />
         </Link>
         <nav className="ml-2 flex items-center gap-1" aria-label="Navigasi utama">
           {NAV.map((n) => (
@@ -75,30 +75,30 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-2.5">
-          <SearchBox className="w-60 xl:w-72" />
+          <SearchBox className="w-64 xl:w-72" />
           <ThemeToggle />
         </div>
       </header>
 
       {/* ===== Navbar mobile ===== */}
       <header className="sticky top-0 z-40 border-b-2 border-line-strong bg-card lg:hidden">
-        <div className="flex h-12 items-center gap-2 px-2.5">
+        <div className="flex h-14 items-center gap-2.5 px-3">
           <Link href="/" aria-label="Cyronime — Beranda" className="shrink-0">
-            <CyronimeMark size={26} className="text-ink" />
+            <CyronimeMark size={32} className="text-ink" />
           </Link>
-          <span className="min-w-0 flex-1 truncate font-display text-sm font-extrabold text-ink">
+          <span className="min-w-0 flex-1 truncate font-display text-[19px] font-extrabold leading-none text-ink">
             Cyronime<span className="text-primary">API</span>
           </span>
           <button
             onClick={() => setOpen(true)}
             aria-label="Buka menu"
-            className="press shrink-0 rounded-lg border-2 border-line-strong bg-card p-2 text-ink"
+            className="press flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-line-strong bg-card text-ink"
           >
-            <Menu size={16} />
+            <Menu size={18} />
           </button>
           <ThemeToggle />
         </div>
-        <div className="px-2.5 pb-2">
+        <div className="px-3 pb-2.5">
           <SearchBox className="w-full" />
         </div>
       </header>

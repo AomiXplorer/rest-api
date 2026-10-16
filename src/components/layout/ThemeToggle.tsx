@@ -28,7 +28,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       onClick={toggle}
       aria-label={dark ? "Ganti ke mode terang" : "Ganti ke mode gelap"}
       title={dark ? "Mode terang" : "Mode gelap"}
-      className={`press inline-flex items-center gap-1.5 rounded-lg border-2 border-line-strong bg-card p-1.5 text-ink hover:bg-card-soft ${className}`}
+      className={`press flex h-10 w-10 items-center justify-center rounded-lg border border-line-strong bg-card text-ink hover:bg-card-soft ${className}`}
     >
       {dark ? <Sun size={16} /> : <Moon size={16} />}
     </button>

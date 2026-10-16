@@ -132,19 +132,19 @@ export function DocsClient({
   return (
     <main className="min-h-[calc(100vh-48px)] flex-1 lg:min-h-screen">
       {/* Bar pencarian + filter kategori */}
-      <div className="sticky top-[90px] z-30 border-b-2 border-dashed border-line-strong bg-bg lg:top-16">
-        <div className="mx-auto max-w-4xl px-5 py-4 sm:px-8">
+      <div className="sticky top-[112px] z-30 border-b-2 border-dashed border-line-strong bg-bg lg:top-[68px]">
+        <div className="mx-auto max-w-4xl px-5 py-3 sm:px-8">
           <div className="relative">
             <Search
               size={15}
-              className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-faint"
+              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint"
             />
             <input
               ref={searchRef}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Cari endpoint, kategori, atau deskripsi… (tekan /)"
-              className="w-full rounded-lg border-2 border-line bg-bg py-2 pl-8 pr-8 text-sm text-ink placeholder:text-ink-faint focus:border-primary focus:outline-none"
+              className="h-11 w-full rounded-lg border border-line bg-bg pl-9 pr-9 text-sm text-ink placeholder:text-ink-faint focus:border-primary focus:outline-none"
             />
           </div>
           <div

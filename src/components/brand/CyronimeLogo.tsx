@@ -75,7 +75,7 @@ export function CyronimeLogo({
     <span className={`inline-flex items-center gap-2 ${className}`}>
       <CyronimeMark size={size} className="shrink-0 text-ink" />
       {withWordmark && (
-        <span className="font-display text-lg font-extrabold tracking-tight text-ink">
+        <span className="font-display text-[19px] font-extrabold leading-none tracking-tight text-ink lg:text-[24px]">
           Cyronime<span className="text-primary">API</span>
         </span>
       )}

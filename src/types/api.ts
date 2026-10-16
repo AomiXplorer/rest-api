@@ -36,6 +36,8 @@ export interface ApiEnvelopeMeta {
   upstream_status?: number;
   time_ms?: number;
   size_bytes?: number;
+  /** Provider fallback yang dipakai bila upstream utama down, mis. "scrapr:snaptik". */
+  fallback?: string;
 }
 
 export interface ApiSuccess<T = unknown> {

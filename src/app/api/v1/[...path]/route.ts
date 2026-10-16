@@ -5,6 +5,7 @@ import { assertSafeUrl } from "@/lib/security/url-guard";
 import { checkRateLimit, getClientId } from "@/lib/security/rate-limit";
 import { validateParams } from "@/lib/validation/validate-params";
 import { jsonErr, jsonOk, ERR } from "@/lib/utils/response";
+import { scrapeFallback } from "@/lib/server/scrapr-fallback";
 import type { EndpointDefinition } from "@/types/api";
 
 /**
@@ -88,6 +89,23 @@ async function respondWithUpstream(
   for (let i = 1; i < candidates.length && isUpstreamServerFailure(result); i++) {
     result = await callUpstream(candidates[i] as EndpointDefinition, values, { method });
   }
+
+  // Tahap terakhir: semua jalur upstream gagal 5xx → coba scraper mandiri (scrapr).
+  // Deadline 40s: sisakan margin respons sebelum maxDuration (60s).
+  if (isUpstreamServerFailure(result) && Date.now() - started < 40000) {
+    const scraped = await scrapeFallback(endpoint.upstreamPath, values, Math.min(started + 40000, Date.now() + 30000));
+    if (scraped && scraped.ok) {
+      return withCors(
+        jsonOk(scraped.data, `Request berhasil via scraper ${scraped.provider} (fallback)`, {
+          path: pathLabel,
+          upstream_status: result.status,
+          fallback: "scrapr:" + scraped.provider,
+          time_ms: Date.now() - started,
+        }),
+      );
+    }
+  }
+
   if (result.tooLarge) {
     return withCors(jsonErr(ERR.UPSTREAM.status, "UPSTREAM_TOO_LARGE", "Response sumber terlalu besar untuk diproses.", undefined, { path: pathLabel, upstream_status: 502, time_ms: Date.now() - started }));
   }

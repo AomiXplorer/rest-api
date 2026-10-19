@@ -195,6 +195,14 @@ export const VERIFIED_IDS: string[] = [
   "tools-qrcode",
   "tools-traffic",
   "tools-webtozip",
+  "tools-am-gen",
+  "tools-am-bulk",
+  "tools-tempmail",
+  "tools-tempmail-inbox",
+  "tools-tempmail-delete",
+  "tools-playstore-home",
+  "tools-playstore-search",
+  "tools-playstore-detail",
 
 
 ];

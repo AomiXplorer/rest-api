@@ -5,6 +5,7 @@ import { callSanka, isSankaConfigured, type SankaTransportResult } from "@/lib/a
 import { scrapeFallback } from "@/lib/server/scrapr-fallback";
 import { nsfwPick, NSFW_CATEGORY_KEYS } from "@/lib/server/providers/nsfw-local";
 import { runMangadex, MangadexInputError } from "@/lib/server/providers/mangadex";
+import { runTool, ToolInputError } from "@/lib/server/providers/tools-scrape";
 import { randomCatImage, randomNekoImage } from "@/lib/server/providers/rand-images";
 import { fetchSfmRandom } from "@/lib/server/providers/sfm-scrape";
 import type { EndpointDefinition } from "@/types/api";
@@ -175,6 +176,21 @@ export async function resolveProvider(
       timeMs: Date.now() - startedAt,
       meta: { path: pathLabel, time_ms: Date.now() - startedAt },
     };
+  }
+
+  // ---- tahap 0c: tools natif (alightmotion/tempmail/playstore) ----
+  if (endpoint.toolOp) {
+    try {
+      const data = await runTool(endpoint.toolOp, values);
+      const t = Date.now() - startedAt;
+      return { kind: "success", provider: "primary", data, timeMs: t, meta: { path: pathLabel, upstream_status: 200, time_ms: t } };
+    } catch (err) {
+      const t = Date.now() - startedAt;
+      if (err instanceof ToolInputError) {
+        return { kind: "error", provider: "primary", status: 400, code: "VALIDATION_ERROR", message: err.message, timeMs: t, meta: { path: pathLabel, time_ms: t } };
+      }
+      return { kind: "error", provider: "primary", status: 502, code: "PROVIDER_ERROR", message: err instanceof Error ? err.message : "Sumber tools sedang tidak dapat dijangkau.", timeMs: t, meta: { path: pathLabel, time_ms: t } };
+    }
   }
 
   // ---- tahap 0a: provider natif MangaDex ----

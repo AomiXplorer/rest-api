@@ -49,6 +49,8 @@ export interface EndpointDefinition {
   nsfwLocal?: string;
   /** Provider natif MangaDex; berisi operasi (search|manga|chapters|chapter|latest). */
   mangadexOp?: string;
+  /** Fallback gambar acak natif saat semua node upstream gagal (cats|neko). */
+  randImgFallback?: string;
   /** Scrape mandiri server-side untuk video random 18+ (3D/SFM). */
   sfmScrape?: boolean;
 }

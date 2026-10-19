@@ -1591,7 +1591,7 @@ export const ENDPOINTS: EndpointDefinition[] = [
         required: true,
         type: "string",
         description: "URL GitHub yang valid",
-        example: "https://gist.github.com/aomi/da38093f1c",
+        example: "https://github.com/Neutron-NERD/simple-qr-generator",
       },
     ],
     tags: ["DOWNLOADER", "GitHub", "Repository", "File"],
@@ -1959,7 +1959,7 @@ export const ENDPOINTS: EndpointDefinition[] = [
   },
   {
     id: "r-cats",
-    name: "random foto kucing",
+    name: "random foto kucing", randImgFallback: "cats",
     description: "Delivers a random image of a cat from an external API.",
     category: "r",
     method: "GET",
@@ -1984,7 +1984,7 @@ export const ENDPOINTS: EndpointDefinition[] = [
   },
   {
     id: "r-neko",
-    name: "random anime neko",
+    name: "random anime neko", randImgFallback: "neko",
     description: "Provides a random image of an anime neko (cat girl) from waifu.pics.",
     category: "r",
     method: "GET",
@@ -4945,7 +4945,7 @@ export const ENDPOINTS: EndpointDefinition[] = [
     upstreamPath: "/api/manga/mangadex-manga",
     mangadexOp: "manga",
     params: [
-      { name: "id", required: true, type: "string", description: "UUID manga MangaDex", example: "f9c33607-9180-4ba6-b85c-e4b5aee0febc" },
+      { name: "id", required: true, type: "string", description: "UUID manga MangaDex", example: "a1c7c817-4e59-43b7-9365-09675a149a6f" },
     ],
     tags: ["Manga", "MangaDex"],
   },
@@ -4976,7 +4976,7 @@ export const ENDPOINTS: EndpointDefinition[] = [
     upstreamPath: "/api/manga/mangadex-chapter",
     mangadexOp: "chapter",
     params: [
-      { name: "id", required: true, type: "string", description: "UUID chapter MangaDex", example: "52d52709-5c71-4c7f-bb82-446c3bd7262f" },
+      { name: "id", required: true, type: "string", description: "UUID chapter MangaDex", example: "1d65c130-72ec-4871-aedb-161616057821" },
     ],
     tags: ["Manga", "MangaDex", "Baca"],
   },

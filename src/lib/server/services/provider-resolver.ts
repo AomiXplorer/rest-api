@@ -5,6 +5,7 @@ import { callSanka, isSankaConfigured, type SankaTransportResult } from "@/lib/a
 import { scrapeFallback } from "@/lib/server/scrapr-fallback";
 import { nsfwPick, NSFW_CATEGORY_KEYS } from "@/lib/server/providers/nsfw-local";
 import { runMangadex, MangadexInputError } from "@/lib/server/providers/mangadex";
+import { randomCatImage, randomNekoImage } from "@/lib/server/providers/rand-images";
 import { fetchSfmRandom } from "@/lib/server/providers/sfm-scrape";
 import type { EndpointDefinition } from "@/types/api";
 
@@ -300,6 +301,22 @@ export async function resolveProvider(
         kind: "success", provider: "scrapr", data: scraped.data, timeMs: Date.now() - startedAt,
         meta: { path: pathLabel, fallback: "scrapr:" + scraped.provider, provider: "scrapr", time_ms: Date.now() - startedAt },
       };
+    }
+  }
+
+  // ---- tahap 4: fallback gambar acak natif (cataas / nekos.best) ----
+  // Hanya untuk endpoint bertanda, dan hanya bila kegagalan sisi server (5xx).
+  if (endpoint.randImgFallback && lastServerFailure) {
+    try {
+      const img = endpoint.randImgFallback === "cats" ? await randomCatImage() : await randomNekoImage();
+      const t = Date.now() - startedAt;
+      return {
+        kind: "success", provider: "scrapr", data: null,
+        binary: { bytes: img.bytes, contentType: img.contentType },
+        timeMs: t, meta: { path: pathLabel, upstream_status: 200, time_ms: t },
+      };
+    } catch {
+      // sumber natif juga gagal — lanjut ke kegagalan asli
     }
   }
 

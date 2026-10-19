@@ -4,6 +4,7 @@ import { callUpstream, UPSTREAM_MAX_BYTES } from "@/lib/server/providers/primary
 import { callSanka, isSankaConfigured, type SankaTransportResult } from "@/lib/api-clients/sanka-client";
 import { scrapeFallback } from "@/lib/server/scrapr-fallback";
 import { nsfwPick, NSFW_CATEGORY_KEYS } from "@/lib/server/providers/nsfw-local";
+import { runMangadex, MangadexInputError } from "@/lib/server/providers/mangadex";
 import { fetchSfmRandom } from "@/lib/server/providers/sfm-scrape";
 import type { EndpointDefinition } from "@/types/api";
 
@@ -173,6 +174,21 @@ export async function resolveProvider(
       timeMs: Date.now() - startedAt,
       meta: { path: pathLabel, time_ms: Date.now() - startedAt },
     };
+  }
+
+  // ---- tahap 0a: provider natif MangaDex ----
+  if (endpoint.mangadexOp) {
+    try {
+      const data = await runMangadex(endpoint.mangadexOp, values);
+      const t = Date.now() - startedAt;
+      return { kind: "success", provider: "primary", data, timeMs: t, meta: { path: pathLabel, upstream_status: 200, time_ms: t } };
+    } catch (err) {
+      const t = Date.now() - startedAt;
+      if (err instanceof MangadexInputError) {
+        return { kind: "error", provider: "primary", status: 400, code: "VALIDATION_ERROR", message: err.message, timeMs: t, meta: { path: pathLabel, time_ms: t } };
+      }
+      return { kind: "error", provider: "primary", status: 502, code: "PROVIDER_ERROR", message: err instanceof Error ? err.message : "MangaDex sedang tidak bisa dijangkau. Coba beberapa saat lagi.", timeMs: t, meta: { path: pathLabel, time_ms: t } };
+    }
   }
 
   // ---- tahap 0b: scrape mandiri video 18+ (sfm) ----

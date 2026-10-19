@@ -2,6 +2,11 @@
 // Diuji 2026-10-15: request valid dikirim ke /api/v1/* dan response diverifikasi (JSON success:true atau gambar binary).
 // Id yang tidak tercantum = endpoint terimplementasi tetapi sumber upstream sedang gagal (503/504) atau route-nya tidak ada (404).
 export const VERIFIED_IDS: string[] = [
+    "manga-mangadex-search",
+    "manga-mangadex-manga",
+    "manga-mangadex-chapters",
+    "manga-mangadex-chapter",
+    "manga-mangadex-latest",
   "nsfw-ass",
   "nsfw-hentaivid", "nsfw-bdsm", "nsfw-cum", "nsfw-gangbang", "nsfw-hentai", "nsfw-kasedaiki", "nsfw-manstrubation", "nsfw-opaianime",
   "primbon-cek-potensi-penyakit",

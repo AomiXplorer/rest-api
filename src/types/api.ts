@@ -47,6 +47,8 @@ export interface EndpointDefinition {
   /** Sumber NSFW lokal self-hosted (data JSON di dalam repo, server-only).
    *  Nilainya kunci kategori tetap yang dilayani endpoint ini, mis. "hentai". */
   nsfwLocal?: string;
+  /** Provider natif MangaDex; berisi operasi (search|manga|chapters|chapter|latest). */
+  mangadexOp?: string;
   /** Scrape mandiri server-side untuk video random 18+ (3D/SFM). */
   sfmScrape?: boolean;
 }

@@ -32,35 +32,70 @@ async function amSendLink(email: string): Promise<void> {
   if (!d || d.ok !== true) throw new Error(d?.error || d?.message || "Sumber verifikasi Alight Motion menolak request.");
 }
 
-/** Tunggu email verifikasi AM di inbox tempmail.ing lalu ekstrak magic link. */
-async function amWaitMagic(address: string, timeoutSec: number): Promise<string> {
+type MailBox = { kind: "tm" | "mailtm"; address: string; token?: string };
+
+/** Tunggu email verifikasi AM di inbox lalu ekstrak magic link. */
+async function amWaitMagic(box: MailBox, timeoutSec: number): Promise<string> {
   const start = Date.now();
   let resent = false;
   while (Date.now() - start < timeoutSec * 1000) {
     await new Promise((r) => setTimeout(r, 3000));
-    const j2 = (await jfetch(TM_BASE + "/api/emails/" + encodeURIComponent(address) + "?_=" + Date.now(), { headers: TM_HEADERS })) as { success?: boolean; emails?: { id: string | number; from_address?: string; subject?: string; text?: string; content?: string }[] };
-    const hit = (j2.emails || []).find((m) =>
-      /alight|sign in/i.test(m.subject || "") || /firebase|alight/i.test(m.from_address || ""));
-    if (hit) {
-      const body = (hit.content || "") + "\n" + (hit.text || "");
-      const urls = body.match(/https?:\/\/[^\s"<>]+/g) || [];
+    let hitBody = "";
+    if (box.kind === "tm") {
+      const j2 = (await jfetch(TM_BASE + "/api/emails/" + encodeURIComponent(box.address) + "?_=" + Date.now(), { headers: TM_HEADERS })) as { success?: boolean; emails?: { id: string | number; from_address?: string; subject?: string; text?: string; content?: string }[] };
+      const hit = (j2.emails || []).find((m) =>
+        /alight|sign in/i.test(m.subject || "") || /firebase|alight/i.test(m.from_address || ""));
+      if (hit) hitBody = (hit.content || "") + "\n" + (hit.text || "");
+    } else if (box.token) {
+      const j2 = (await jfetch("https://api.mail.tm/messages?_=" + Date.now(), { headers: { accept: "application/json", authorization: "Bearer " + box.token } })) as { "hydra:member"?: { id?: string; subject?: string; from?: { address?: string } }[] };
+      const hit = (j2["hydra:member"] || []).find((m) =>
+        /alight|sign in/i.test(m.subject || "") || /firebase|alight/i.test(m.from?.address || ""));
+      if (hit?.id) {
+        const det = (await jfetch("https://api.mail.tm/messages/" + hit.id, { headers: { accept: "application/json", authorization: "Bearer " + box.token } })) as { text?: string; html?: string[] };
+        hitBody = (det.html || []).join("\n") + "\n" + (det.text || "");
+      }
+    }
+    if (hitBody) {
+      const urls = hitBody.match(/https?:\/\/[^\s"<>]+/g) || [];
       const magic = urls.find((u) => /oobCode|signInWithEmailLink|apiKey/.test(u));
       if (magic) return magic.replace(/&amp;/g, "&");
     }
     if (!resent && Date.now() - start > 20000) {
       resent = true;
-      try { await amSendLink(address); } catch { /* biarkan polling lanjut */ }
+      try { await amSendLink(box.address); } catch { /* biarkan polling lanjut */ }
     }
   }
-  throw new Error("Timeout menunggu link verifikasi Alight Motion. Coba lagi beberapa saat lagi.");
+  throw new Error("Timeout menunggu link verifikasi dari Alight Motion. Coba lagi beberapa saat lagi.");
+}
+
+/* mail.tm — cadangan email sementara bila tempmail.ing menolak (mis. blokir IP datacenter) */
+
+async function mailTmAccount(): Promise<MailBox> {
+  const dom = (await jfetch("https://api.mail.tm/domains", { headers: { accept: "application/json" } })) as { "hydra:member"?: { domain?: string }[] };
+  const domain = dom["hydra:member"]?.[0]?.domain;
+  if (!domain) throw new Error("Domain mail.tm tidak tersedia.");
+  const address = "aomi" + Math.random().toString(36).slice(2, 12) + "@" + domain;
+  const password = "AomiPass" + Math.random().toString(36).slice(2, 10);
+  const acc = (await jfetch("https://api.mail.tm/accounts", { method: "POST", headers: { "Content-Type": "application/json", accept: "application/json" }, body: JSON.stringify({ address, password }) })) as Record<string, unknown>;
+  if (!acc || !(acc.id || acc.address)) throw new Error("Pembuatan akun mail.tm gagal.");
+  const tok = (await jfetch("https://api.mail.tm/token", { method: "POST", headers: { "Content-Type": "application/json", accept: "application/json" }, body: JSON.stringify({ address, password }) })) as { token?: string };
+  if (!tok?.token) throw new Error("Login mail.tm gagal.");
+  return { kind: "mailtm", address, token: tok.token };
+}
+
+async function amMailBox(): Promise<MailBox> {
+  try {
+    const box = (await jfetch(TM_BASE + "/api/generate", { method: "POST", headers: TM_HEADERS, body: JSON.stringify({ duration: 10 }) })) as { success?: boolean; email?: { address?: string } };
+    if (box?.success && box.email?.address) return { kind: "tm", address: box.email.address };
+  } catch { /* lanjut ke mail.tm */ }
+  return mailTmAccount();
 }
 
 async function amGenerateOne(): Promise<Record<string, unknown>> {
-  const box = (await jfetch(TM_BASE + "/api/generate", { method: "POST", headers: TM_HEADERS, body: JSON.stringify({ duration: 10 }) })) as { success?: boolean; email?: { address?: string } };
-  if (!box?.success || !box.email?.address) throw new Error("Gagal membuat email sementara untuk verifikasi.");
-  const email = box.email.address;
+  const box = await amMailBox();
+  const email = box.address;
   await amSendLink(email);
-  const magicLink = await amWaitMagic(email, 52);
+  const magicLink = await amWaitMagic(box, 52);
   const verif = (await jfetch(AM_BASE + "/api/verify", {
     method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, link: magicLink }),

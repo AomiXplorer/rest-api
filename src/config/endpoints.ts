@@ -5230,7 +5230,7 @@ export const ENDPOINTS: EndpointDefinition[] = [
         required: true,
         type: "string",
         description: "Kata kunci pencarian",
-        example: "makanan enak",
+        example: "food",
       },
     ],
     tags: ["Search", "Douyin", "Video"],

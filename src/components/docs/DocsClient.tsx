@@ -136,32 +136,37 @@ export function DocsClient({
       {/* Bar pencarian + filter kategori */}
       <div className="sticky top-[112px] z-30 border-b-2 border-dashed border-line-strong bg-bg lg:top-[68px]">
         <div className="mx-auto max-w-4xl px-5 py-3 sm:px-8">
-          <div className="relative">
-            <Search
-              size={15}
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint"
-            />
-            <input
-              ref={searchRef}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Cari endpoint, kategori, atau deskripsi… (tekan /)"
-              className="h-11 w-full rounded-lg border border-line bg-bg pl-9 pr-9 text-sm text-ink placeholder:text-ink-faint focus:border-primary focus:outline-none"
-            />
+          <div className="flex items-center gap-2">
+            <div className="relative min-w-0 flex-1">
+              <Search
+                size={15}
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint"
+              />
+              <input
+                ref={searchRef}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Cari endpoint… (tekan /)"
+                className="h-11 w-full rounded-lg border border-line bg-bg pl-9 pr-3 text-sm text-ink placeholder:text-ink-faint focus:border-primary focus:outline-none"
+              />
+            </div>
+            <button
+              onClick={() => setCurlView((v) => !v)}
+              aria-label="Panel cURL semua fitur"
+              className={`press flex h-11 shrink-0 items-center gap-1.5 rounded-lg border-2 px-3 font-code text-xs font-bold transition-colors ${
+                curlView
+                  ? "border-lemon bg-lemon text-ink shadow-hard-sm"
+                  : "border-lemon bg-card text-ink hover:text-primary"
+              }`}
+            >
+              <Terminal size={14} /> cURL
+            </button>
           </div>
           <div
             ref={pillsRef}
             className="mt-3 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-                <button
-              onClick={() => setCurlView((v) => !v)}
-              className={`press ml-auto shrink-0 rounded-full border-2 px-3 py-1 font-code text-xs font-bold transition-colors ${
-                curlView ? "border-lemon bg-lemon text-ink shadow-hard-sm" : "border-lemon bg-card text-ink-muted hover:text-ink"
-              }`}
-            >
-              <Terminal size={12} className="mr-1 inline" /> cURL
-            </button>
-          {pills.map((p) => (
+              {pills.map((p) => (
               <button
                 key={p.key}
                 data-cat={p.key}

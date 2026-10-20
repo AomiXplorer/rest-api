@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Search, Play, X, CheckCircle2, CircleDashed } from "lucide-react";
+import { Search, Play, X, CheckCircle2, CircleDashed, Terminal } from "lucide-react";
 import type { EndpointDefinition } from "@/types/api";
 import { CATEGORIES, ENDPOINTS } from "@/config/endpoints";
 import { VERIFIED_IDS } from "@/config/verification";
 import { EndpointDetail } from "./EndpointDetail";
+import { CurlPanel } from "./CurlPanel";
 
 function MethodBadge({ method }: { method: string }) {
   const color =
@@ -41,6 +42,7 @@ export function DocsClient({
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string>(initialCategory ?? "all");
   const [modalId, setModalId] = useState<string | null>(initialEndpointId ?? null);
+  const [curlView, setCurlView] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const pillsRef = useRef<HTMLDivElement>(null);
 
@@ -151,7 +153,15 @@ export function DocsClient({
             ref={pillsRef}
             className="mt-3 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            {pills.map((p) => (
+                <button
+              onClick={() => setCurlView((v) => !v)}
+              className={`press ml-auto shrink-0 rounded-full border-2 px-3 py-1 font-code text-xs font-bold transition-colors ${
+                curlView ? "border-lemon bg-lemon text-ink shadow-hard-sm" : "border-lemon bg-card text-ink-muted hover:text-ink"
+              }`}
+            >
+              <Terminal size={12} className="mr-1 inline" /> cURL
+            </button>
+          {pills.map((p) => (
               <button
                 key={p.key}
                 data-cat={p.key}
@@ -185,6 +195,7 @@ export function DocsClient({
             milik website ini.
           </p>
 
+          {curlView ? <CurlPanel onClose={() => setCurlView(false)} /> : null}
           {filtered.length === 0 ? (
             <div className="mt-8 rounded-xl border-2 border-line bg-card p-6 text-center text-sm text-ink-faint">
               Tidak ada endpoint yang cocok dengan{" "}

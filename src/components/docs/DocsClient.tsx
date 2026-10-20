@@ -219,7 +219,7 @@ export function DocsClient({
                       {list.length}
                     </span>
                   </div>
-                  <div className="mt-3 grid grid-cols-1 gap-3">
+                  <div className="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-2">
                     {list.map((e) => (
                       <button
                         key={e.id}
@@ -277,7 +277,7 @@ export function DocsClient({
             onClick={() => setModalId(null)}
             aria-hidden="true"
           />
-          <div className="animate-pop relative max-h-[86vh] w-full max-w-2xl overflow-y-auto rounded-2xl border-2 border-line-strong bg-card shadow-note">
+          <div className="animate-pop relative max-h-[86vh] w-full max-w-2xl overflow-y-auto lg:max-w-4xl rounded-2xl border-2 border-line-strong bg-card shadow-note">
             <EndpointDetail
               key={active.id}
               endpoint={active}

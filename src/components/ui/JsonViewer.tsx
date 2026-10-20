@@ -61,7 +61,7 @@ export function JsonViewer({ value, maxChars = 40000 }: { value: unknown; maxCha
     <pre
       role="region"
       aria-label="Response JSON"
-      className="overflow-auto bg-code p-4 font-code text-[13px] leading-relaxed text-code-text"
+      className="max-h-[420px] overflow-auto bg-code p-4 font-code text-[13px] leading-relaxed text-code-text"
     >
       {lines.map((line, i) => (
         <div key={i} className="whitespace-pre">

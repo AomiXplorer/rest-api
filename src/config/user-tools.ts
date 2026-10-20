@@ -14,6 +14,9 @@ export type ToolParam = {
 
 export type ToolKind = "auto" | "chat" | "am-manual" | "tempmail";
 
+/** Halaman penggunaan khusus (bukan form generik) — lihat src/app/tools/[slug]/page.tsx */
+export type ToolPage = "tiktok" | "ai" | "anime" | "alight-motion";
+
 export type UserTool = {
   slug: string;
   name: string;
@@ -23,6 +26,7 @@ export type UserTool = {
   endpoint: string; // path /api/v1/... (tanpa base)
   params: ToolParam[];
   kind?: ToolKind;
+  page?: ToolPage;
   note?: string; // catatan jujur utk pengguna
 };
 
@@ -39,7 +43,7 @@ export const TOOL_CATEGORIES: { key: string; title: string; icon: string; blurb:
 
 export const USER_TOOLS: UserTool[] = [
   // ===== Downloader =====
-  { slug: "tiktok", name: "TikTok Downloader", desc: "Unduh video TikTok tanpa watermark dari tautannya.", category: "downloader", icon: "music", endpoint: "/api/v1/d/tiktok",
+  { slug: "tiktok", name: "TikTok Downloader", desc: "Unduh video TikTok tanpa watermark dari tautannya.", category: "downloader", icon: "music", endpoint: "/api/v1/d/tiktok", page: "tiktok",
     params: [{ name: "url", label: "Tautan video TikTok", type: "url", required: true, placeholder: "https://vt.tiktok.com/..." }] },
   { slug: "ytmp3", name: "YouTube ke MP3", desc: "Ambil audio (MP3) dari video YouTube.", category: "downloader", icon: "music", endpoint: "/api/v1/d/ytmp3",
     params: [{ name: "url", label: "Tautan video YouTube", type: "url", required: true, placeholder: "https://youtu.be/..." }] },
@@ -55,19 +59,20 @@ export const USER_TOOLS: UserTool[] = [
     params: [{ name: "url", label: "Tautan media (apa saja)", type: "url", required: true, placeholder: "https://..." }] },
 
   // ===== AI =====
-  { slug: "ai-chat", name: "AI Chat", desc: "Ngobrol dengan AI. Tanya apa saja, dari tugas sampai ide konten.", category: "ai", icon: "sparkles", endpoint: "/api/v1/ai/qwq32b", kind: "chat",
+  { slug: "ai-chat", name: "AI Chat", desc: "Ngobrol dengan AI. Tanya apa saja, dari tugas sampai ide konten.", category: "ai", icon: "sparkles", endpoint: "/api/v1/ai/qwq32b", kind: "chat", page: "ai",
     params: [] },
 
   // ===== Anime & Manga =====
+  { slug: "anime", name: "Jelajahi Anime", desc: "Cari anime, lihat info lengkap dan daftar episode langsung dari sumbernya.", category: "anime", icon: "tv", endpoint: "/api/v1/anime/otakudesu/ongoing", page: "anime", params: [] },
   { slug: "manga-search", name: "Cari Manga", desc: "Cari judul manga lengkap dengan sinopsis dan sampul.", category: "anime", icon: "book", endpoint: "/api/v1/manga/mangadex-search",
     params: [{ name: "judul", label: "Judul manga", required: true, placeholder: "one piece" }] },
   { slug: "manga-chapters", name: "Daftar Chapter", desc: "Lihat daftar chapter sebuah manga (pakai ID dari hasil pencarian).", category: "anime", icon: "list", endpoint: "/api/v1/manga/mangadex-chapters",
     params: [{ name: "id", label: "ID manga", required: true, placeholder: "a1c7c817-4e59-43b7-9365-09675a149a6f" }, { name: "lang", label: "Bahasa", placeholder: "id" }] },
 
   // ===== Alight Motion =====
-  { slug: "am-gen", name: "AM Pro Generator (Otomatis)", desc: "Buat akun Alight Motion Pro baru secara otomatis. Proses ±30-60 detik.", category: "alightmotion", icon: "wand", endpoint: "/api/v1/tools/am-gen",
+  { slug: "am-gen", name: "AM Pro Generator (Otomatis)", desc: "Buat akun Alight Motion Pro baru secara otomatis. Proses ±30-60 detik.", category: "alightmotion", icon: "wand", endpoint: "/api/v1/tools/am-gen", page: "alight-motion",
     params: [], note: "Tinggal tekan Generate — email sementara dan verifikasi ditangani sistem." },
-  { slug: "am-manual", name: "AM Pro (Email Sendiri)", desc: "Pakai email milikmu: kirim link verifikasi, buka emailmu, tempel linknya di sini.", category: "alightmotion", icon: "mail", endpoint: "/api/v1/tools/am-send", kind: "am-manual",
+  { slug: "am-manual", name: "AM Pro (Email Sendiri)", desc: "Pakai email milikmu: kirim link verifikasi, buka emailmu, tempel linknya di sini.", category: "alightmotion", icon: "mail", endpoint: "/api/v1/tools/am-send", kind: "am-manual", page: "alight-motion",
     params: [] },
 
   // ===== Primbon =====

@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { USER_TOOLS, getTool } from "@/config/user-tools";
 import { ToolRunner } from "@/components/tools/ToolsUI";
+import { TikTokTool } from "@/components/tools/TikTokTool";
+import { AiChatTool } from "@/components/tools/AiChatTool";
+import { AnimeTool } from "@/components/tools/AnimeTool";
+import { AlightMotionTool } from "@/components/tools/AlightMotionTool";
 
 export function generateStaticParams() {
   return USER_TOOLS.map((t) => ({ slug: t.slug }));
@@ -17,5 +21,18 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const t = getTool(slug);
   if (!t) notFound();
-  return <ToolRunner tool={t} />;
+
+  // Halaman penggunaan khusus: interface yang berbeda sesuai fungsi tool.
+  switch (t.page) {
+    case "tiktok":
+      return <TikTokTool endpoint={t.endpoint} />;
+    case "ai":
+      return <AiChatTool endpoint={t.endpoint} modelName="QwQ 32B" />;
+    case "anime":
+      return <AnimeTool />;
+    case "alight-motion":
+      return <AlightMotionTool />;
+    default:
+      return <ToolRunner tool={t} />;
+  }
 }

@@ -93,6 +93,12 @@ export function ToolsDashboard() {
     });
   }, [query, cat, showFavs, favs]);
 
+  /* Tools unggulan punya halaman penggunaan khusus — tampil beda dari katalog */
+  const FEATURED_SLUGS = ["tiktok", "ai-chat", "anime", "am-gen"];
+  const featured = FEATURED_SLUGS.map((sl) => USER_TOOLS.find((t) => t.slug === sl)).filter(Boolean) as UserTool[];
+  const isFiltering = Boolean(query.trim()) || cat !== "all" || showFavs;
+  const gridTools = isFiltering ? filtered : filtered.filter((t) => !FEATURED_SLUGS.includes(t.slug));
+
   return (
     <div className="min-h-[calc(100vh-48px)] flex-1 lg:flex lg:min-h-screen">
       {/* Sidebar desktop */}
@@ -102,9 +108,9 @@ export function ToolsDashboard() {
         {/* Hero */}
         <section className="rounded-2xl border-2 border-line-strong bg-card p-5 shadow-note sm:p-7">
           <div className="tape-left" />
-          <h1 className="font-display text-2xl font-extrabold text-ink sm:text-3xl">Aomi Tools</h1>
-          <p className="mt-2 max-w-xl leading-relaxed text-ink-muted">
-            Semua tools favoritmu, dalam satu tempat. Download media, jelajahi manga, ngobrol dengan AI, dan coba berbagai tools — tanpa konfigurasi rumit.
+          <h1 className="font-display text-xl font-extrabold text-ink sm:text-2xl">Tools yang langsung bisa kamu gunakan.</h1>
+          <p className="mt-1.5 max-w-xl leading-relaxed text-ink-muted">
+            Download media, jelajahi anime, gunakan AI, dan buat berbagai hal langsung dari Aomi.
           </p>
           <div className="relative mt-4 max-w-xl">
             <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint" />
@@ -115,6 +121,28 @@ export function ToolsDashboard() {
               className="h-12 w-full rounded-lg border border-line bg-bg pl-10 pr-3 text-sm text-ink placeholder:text-ink-faint focus:border-primary focus:outline-none"
             />
           </div>
+        </section>
+
+        {/* Tools unggulan — layout beda dari kartu katalog */}
+        <section className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {featured.map((t) => (
+            <article key={t.slug} className="relative overflow-hidden rounded-xl border-2 border-line-strong bg-card p-4 shadow-note">
+              <div className="tape-left" />
+              <div className="flex items-start gap-3">
+                <span className="rounded-lg border-2 border-line bg-sky p-2.5 text-primary"><ToolIcon icon={t.icon} size={20} /></span>
+                <div className="min-w-0 flex-1">
+                  <h2 className="font-display text-base font-extrabold text-ink">{t.name}</h2>
+                  <p className="mt-0.5 text-sm leading-snug text-ink-muted">{t.desc}</p>
+                </div>
+              </div>
+              <Link
+                href={`/tools/${t.slug}`}
+                className="press mt-3.5 inline-flex items-center justify-center gap-1.5 rounded-lg border-2 border-line-strong bg-primary px-4 py-2 font-display text-sm font-bold text-onprimary shadow-hard-sm hover:bg-primary/90"
+              >
+                <Play size={14} /> Buka
+              </Link>
+            </article>
+          ))}
         </section>
 
         {/* Kategori chips */}
@@ -137,13 +165,17 @@ export function ToolsDashboard() {
         </div>
 
         {/* Grid tools */}
-        {filtered.length === 0 ? (
+        <h2 className="mt-6 flex items-center gap-2 font-display text-base font-extrabold text-ink">
+          <span className="rounded-lg border-2 border-line bg-sticky p-1 text-sticky-ink shadow-hard-sm"><ToolIcon icon="wand" size={14} /></span>
+          {isFiltering ? (showFavs ? "Favoritmu" : cat === "all" ? "Hasil pencarian" : TOOL_CATEGORIES.find((c) => c.key === cat)?.title ?? "Tools") : "Tools lainnya"}
+        </h2>
+        {gridTools.length === 0 && filtered.length === 0 ? (
           <div className="mt-8 rounded-xl border-2 border-line bg-card p-8 text-center text-sm text-ink-faint">
             Tidak ada tools yang cocok dengan <span className="text-ink-muted">&ldquo;{query || "pilihan ini"}&rdquo;</span>.
           </div>
         ) : (
-          <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((t) => (
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {gridTools.map((t) => (
               <article key={t.slug} className="flex flex-col rounded-xl border-2 border-line-strong bg-card p-4 shadow-note">
                 <div className="flex items-start justify-between gap-2">
                   <span className="rounded-lg border-2 border-line bg-sky p-2 text-primary">

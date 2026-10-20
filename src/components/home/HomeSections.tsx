@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  Wand2,
   ArrowRight,
   ArrowUpRight,
   BookOpen,
@@ -120,6 +121,12 @@ export function Hero() {
           </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
+            <Link
+              href="/tools"
+              className="press inline-flex items-center gap-2 rounded-xl border-2 border-line-strong bg-lemon px-5 py-2.5 font-display text-sm font-bold text-ink shadow-hard"
+            >
+              <Wand2 size={15} /> Aomi Tools
+            </Link>
             <Link
               href="/docs"
               className="press inline-flex items-center gap-2 rounded-xl border-2 border-line-strong bg-primary px-5 py-2.5 font-display text-sm font-bold text-onprimary shadow-hard"

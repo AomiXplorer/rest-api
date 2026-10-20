@@ -195,6 +195,8 @@ export const VERIFIED_IDS: string[] = [
   "tools-qrcode",
   "tools-traffic",
   "tools-webtozip",
+  "tools-am-send",
+  "tools-am-verify",
   "tools-am-gen",
   "tools-am-bulk",
   "tools-tempmail",

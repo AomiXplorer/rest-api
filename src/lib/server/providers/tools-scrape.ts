@@ -167,6 +167,23 @@ function parseDetailHtml(html: string, pkg: string): Record<string, unknown> {
 
 export async function runTool(op: string, values: Record<string, string>): Promise<unknown> {
   switch (op) {
+    case "am-send": {
+      const email = (values.email || "").trim().toLowerCase();
+      if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email)) throw new ToolInputError('Parameter "email" harus berupa alamat email yang valid.');
+      await amSendLink(email);
+      return { status: true, email, message: "Link verifikasi Alight Motion terkirim ke email kamu. Buka email tersebut, salin link pada tombolnya, lalu panggil endpoint am-verify dengan email dan link itu.", author: WM };
+    }
+    case "am-verify": {
+      const email = (values.email || "").trim().toLowerCase();
+      const link = (values.link || "").trim();
+      if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email)) throw new ToolInputError('Parameter "email" harus berupa alamat email yang valid.');
+      if (!/^https:\/\//.test(link) || link.length > 2000) throw new ToolInputError('Parameter "link" harus berupa URL https lengkap dari email verifikasi Alight Motion.');
+      const verif = (await jfetch(AM_BASE + "/api/verify", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, link }),
+      })) as { orderId?: string; uid?: string; isNewUser?: boolean };
+      return { status: true, email, orderId: verif.orderId ?? null, uid: verif.uid ?? null, isNewUser: verif.isNewUser ?? true, author: WM };
+    }
     case "am-gen":
       return amGenerateOne();
     case "am-bulk": {

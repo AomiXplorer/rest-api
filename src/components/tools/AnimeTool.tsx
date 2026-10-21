@@ -1,25 +1,21 @@
 "use client";
 
 /**
- * Jelajahi Anime — platform eksplorasi (bukan daftar endpoint).
- * Semua data nyata dari provider via proxy. Provider sedang down?
- * Ditampilkan apa adanya, tanpa data dummy.
- * Pemutaran langsung tidak tersedia (endpoint hanya memberi info & tautan),
- * jadi tidak ada tombol "Tonton Sekarang" palsu.
+ * Jelajahi Anime — platform eksplorasi anime.
+ * Data nyata dari provider via proxy; provider down ditampilkan apa adanya.
+ * Tidak ada tombol play palsu: endpoint hanya menyediakan info & tautan.
  */
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, BookOpen, Clock, ImageOff, Loader2, RefreshCw, Search, Tv, ChevronLeft } from "lucide-react";
+import { ArrowLeft, BookOpen, Clock, ImageOff, Loader2, RefreshCw, Search, Tv, ChevronLeft, ChevronRight } from "lucide-react";
 
 type Provider = {
   key: string;
   label: string;
-  /** endpoint list "terbaru/populer" (bisa null kalau provider tidak punya) */
   latest?: string;
   search?: { endpoint: string; param: string };
   detail?: { endpoint: string; param: string };
-  note?: string;
 };
 
 const PROVIDERS: Provider[] = [
@@ -180,7 +176,6 @@ export function AnimeTool() {
 
   const openDetail = async (item: Item) => {
     if (!prov.detail || !item.link) {
-      // tidak ada sumber detail untuk provider/ini → tampilkan yang ada
       setDetail({ item, status: "ok", data: item.raw });
       return;
     }
@@ -191,48 +186,44 @@ export function AnimeTool() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-5 py-6 sm:px-8">
-      <div className="flex items-center justify-between gap-2">
-        <Link href="/tools" className="press inline-flex items-center gap-1.5 rounded-lg border-2 border-line-strong bg-card px-3 py-2 font-code text-xs font-bold text-ink-muted hover:text-ink">
-          <ArrowLeft size={14} /> Kembali
-        </Link>
-      </div>
+    <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 lg:py-10">
+      <Link href="/tools" className="inline-flex items-center gap-1.5 rounded-md py-1.5 pr-2 text-sm font-medium text-ink-muted transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
+        <ArrowLeft size={15} /> Semua tools
+      </Link>
 
-      {/* Header anime */}
-      <section className="mt-4 rounded-2xl border-2 border-line-strong bg-card p-5 shadow-note sm:p-6">
-        <div className="tape-left" />
-        <div className="flex items-center gap-3">
-          <span className="rounded-lg border-2 border-line bg-sky p-2.5 text-primary"><Tv size={22} /></span>
-          <div className="min-w-0">
-            <h1 className="font-display text-xl font-extrabold text-ink sm:text-2xl">Jelajahi Anime</h1>
-            <p className="text-sm text-ink-muted">Cari anime, lihat info & daftar episode langsung dari sumber. Info detail & episode mengikuti data yang tersedia.</p>
+      {/* Header + pencarian */}
+      <section className="mt-5">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h1 className="font-display text-2xl font-bold tracking-tight text-ink">Jelajahi Anime</h1>
+            <p className="mt-1 text-sm text-ink-muted">Cari judul, lihat info & daftar episode langsung dari sumbernya.</p>
           </div>
+          <form onSubmit={doSearch} className="flex w-full gap-2 sm:max-w-sm">
+            <div className="relative flex-1">
+              <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint" />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={`Cari di ${prov.label}…`}
+                className="h-10 w-full rounded-lg border border-line bg-card pl-9 pr-3 text-sm text-ink outline-none placeholder:text-ink-faint focus:border-primary focus:ring-2 focus:ring-primary/20"
+                aria-label="Cari anime"
+              />
+            </div>
+            <button type="submit" disabled={searching || !query.trim()} className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-lg bg-primary px-3.5 text-sm font-semibold text-onprimary transition-all hover:bg-primary/90 active:scale-[0.98] disabled:opacity-50">
+              {searching ? <Loader2 size={14} className="animate-spin" /> : <Search size={14} />}
+            </button>
+          </form>
         </div>
 
-        {/* Pencarian */}
-        <form onSubmit={doSearch} className="mt-5 flex flex-col gap-2 sm:flex-row">
-          <div className="relative flex-1">
-            <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint" />
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={`Cari judul anime di ${prov.label}…`}
-              className="h-12 w-full rounded-lg border-2 border-line bg-bg pl-10 pr-3 text-sm text-ink placeholder:text-ink-faint focus:border-primary focus:outline-none"
-              aria-label="Cari anime"
-            />
-          </div>
-          <button type="submit" disabled={searching || !query.trim()} className="press inline-flex h-12 items-center justify-center gap-2 rounded-lg border-2 border-line-strong bg-primary px-5 font-display text-sm font-bold text-onprimary shadow-hard-sm hover:bg-primary/90 disabled:opacity-55">
-            {searching ? <Loader2 size={15} className="animate-spin" /> : <Search size={15} />} Cari
-          </button>
-        </form>
-
-        {/* Chip provider */}
-        <div className="mt-3 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {/* Provider tabs */}
+        <div className="mt-5 flex gap-0.5 overflow-x-auto rounded-lg bg-card-soft p-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {PROVIDERS.map((p) => (
             <button
               key={p.key}
               onClick={() => { setProv(p); setDetail(null); setQuery(""); }}
-              className={`press shrink-0 rounded-full border-2 px-3 py-1 font-code text-xs font-bold ${p.key === prov.key ? "border-primary bg-primary text-onprimary shadow-hard-sm" : "border-line-strong bg-card text-ink-muted hover:text-ink"}`}
+              className={`shrink-0 rounded-md px-3 py-1.5 text-[13px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
+                p.key === prov.key ? "bg-card text-ink tools-shadow" : "text-ink-muted hover:text-ink"
+              }`}
             >
               {p.label}
             </button>
@@ -242,89 +233,91 @@ export function AnimeTool() {
 
       {/* Detail anime */}
       {detail ? (
-        <section className="mt-5 rounded-2xl border-2 border-line-strong bg-card p-4 shadow-note sm:p-5">
-          <button onClick={() => setDetail(null)} className="press inline-flex items-center gap-1.5 rounded-lg border-2 border-line-strong bg-card px-3 py-1.5 font-code text-xs font-bold text-ink-muted hover:text-ink">
-            <ChevronLeft size={13} /> Kembali ke daftar
+        <section className="tools-rise mt-6">
+          <button onClick={() => setDetail(null)} className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-ink-muted transition-colors hover:bg-card-soft hover:text-primary">
+            <ChevronLeft size={14} /> Kembali ke daftar
           </button>
 
           {detail.status === "loading" ? (
-            <div className="mt-6 flex items-center justify-center gap-2 py-10 text-sm text-ink-muted"><Loader2 size={16} className="animate-spin text-primary" /> Mengambil detail…</div>
+            <div className="mt-6 flex items-center justify-center gap-2 rounded-xl border border-line bg-card py-16 text-sm text-ink-muted">
+              <Loader2 size={16} className="animate-spin text-primary" /> Mengambil detail…
+            </div>
           ) : detail.status === "down" || detail.status === "error" ? (
-            <div className="mt-4 rounded-lg border-2 border-dashed border-line bg-card-soft px-3 py-4 text-sm text-ink-muted">
-              {detail.status === "down" ? "Provider sedang tidak tersedia, coba lagi nanti." : "Gagal mengambil detail."}
-              {detail.message ? <span className="block font-code text-[11px] text-ink-faint">{detail.message}</span> : null}
+            <div className="mt-6 rounded-xl border border-dashed border-line px-4 py-10 text-center">
+              <p className="text-sm font-semibold text-ink">{detail.status === "down" ? "Provider sedang tidak tersedia" : "Gagal mengambil detail"}</p>
+              <p className="mt-1 text-sm text-ink-muted">Coba lagi beberapa saat.</p>
+              {detail.message ? <p className="mt-1 font-code text-[11px] text-ink-faint">{detail.message}</p> : null}
             </div>
           ) : (
-            <div className="mt-4">
+            <div className="mt-4 rounded-xl border border-line bg-card p-5 tools-shadow sm:p-6">
               <DetailBody item={detail.item} data={detail.data} />
             </div>
           )}
         </section>
       ) : (
-        <>
-          {/* Daftar */}
-          <div className="mt-6">
-            <h2 className="flex items-center gap-2 font-display text-base font-extrabold text-ink">
-              <Clock size={15} className="text-primary" />
-              {query.trim() ? `Hasil pencarian "${query.trim()}"` : `Sedang tayang / terbaru — ${prov.label}`}
-            </h2>
+        <section className="mt-6" aria-label="Daftar anime">
+          <h2 className="flex items-center gap-2 text-sm font-semibold text-ink">
+            <Clock size={14} className="text-ink-faint" />
+            {query.trim() ? `Hasil pencarian "${query.trim()}"` : `Sedang tayang / terbaru — ${prov.label}`}
+          </h2>
 
-            {listStatus === "loading" ? (
-              <div className="mt-4 flex items-center justify-center gap-2 rounded-xl border-2 border-line bg-card py-10 text-sm text-ink-muted">
-                <Loader2 size={16} className="animate-spin text-primary" /> Memuat daftar anime…
-              </div>
-            ) : listStatus === "down" ? (
-              <div className="mt-4 rounded-xl border-2 border-dashed border-line bg-card-soft px-4 py-8 text-center">
-                <ImageOff size={22} className="mx-auto text-ink-faint" />
-                <p className="mt-2 font-display text-sm font-bold text-ink">Provider sedang tidak tersedia</p>
-                <p className="mx-auto mt-1 max-w-md text-sm text-ink-muted">
-                  Sumber {prov.label} sedang tidak bisa dihubungi. {listMsg ? <span className="block font-code text-[11px] text-ink-faint">{listMsg}</span> : null}
-                </p>
-                <button onClick={() => loadLatest(prov)} className="press mt-3 inline-flex items-center gap-1.5 rounded-lg border-2 border-line-strong bg-card px-3 py-1.5 font-code text-xs font-bold text-ink-muted hover:text-ink">
-                  <RefreshCw size={12} /> Coba lagi
+          {listStatus === "loading" ? (
+            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+              {Array.from({ length: 10 }).map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="aspect-[3/4] rounded-lg bg-card-soft" />
+                  <div className="mt-2 h-3 w-3/4 rounded bg-card-soft" />
+                </div>
+              ))}
+            </div>
+          ) : listStatus === "down" ? (
+            <div className="mt-4 rounded-xl border border-dashed border-line px-4 py-12 text-center">
+              <ImageOff size={22} className="mx-auto text-ink-faint" />
+              <p className="mt-3 text-sm font-semibold text-ink">Provider sedang tidak tersedia</p>
+              <p className="mx-auto mt-1 max-w-md text-sm text-ink-muted">
+                Sumber {prov.label} sedang tidak bisa dihubungi. Coba lagi nanti atau pilih provider lain.
+              </p>
+              <button onClick={() => loadLatest(prov)} className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-line bg-card px-3.5 py-2 text-xs font-medium text-ink transition-colors hover:border-primary/50 hover:text-primary">
+                <RefreshCw size={13} /> Coba lagi
+              </button>
+            </div>
+          ) : listStatus === "error" ? (
+            <div className="mt-4 rounded-xl border border-dashed border-line px-4 py-12 text-center">
+              <p className="text-sm font-semibold text-ink">Gagal memuat daftar</p>
+              <p className="mt-1 text-sm text-ink-muted">{listMsg}</p>
+              <button onClick={() => loadLatest(prov)} className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-line bg-card px-3.5 py-2 text-xs font-medium text-ink transition-colors hover:border-primary/50 hover:text-primary">
+                <RefreshCw size={13} /> Coba lagi
+              </button>
+            </div>
+          ) : listItems.length === 0 ? (
+            <div className="mt-4 rounded-xl border border-dashed border-line px-4 py-12 text-center">
+              <BookOpen size={22} className="mx-auto text-ink-faint" />
+              <p className="mt-3 text-sm font-semibold text-ink">Belum ada data dari {prov.label}</p>
+              <p className="mt-1 text-sm text-ink-muted">Coba cari judul lewat pencarian, atau pilih provider lain.</p>
+            </div>
+          ) : (
+            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+              {listItems.map((it, i) => (
+                <button key={i} onClick={() => openDetail(it)} className="group text-left focus-visible:outline-none">
+                  <div className="aspect-[3/4] w-full overflow-hidden rounded-lg border border-line bg-card-soft">
+                    {it.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={it.image} alt={it.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-ink-faint"><ImageOff size={20} /></div>
+                    )}
+                  </div>
+                  <p className="mt-2 line-clamp-2 text-[13px] font-medium leading-snug text-ink transition-colors group-hover:text-primary">{it.title}</p>
+                  {it.badges.length > 0 ? (
+                    <p className="mt-0.5 truncate text-[11px] text-ink-faint">{it.badges.join(" · ")}</p>
+                  ) : null}
                 </button>
-              </div>
-            ) : listStatus === "error" ? (
-              <div className="mt-4 rounded-xl border-2 border-dashed border-line bg-card-soft px-4 py-8 text-center text-sm text-ink-muted">
-                Gagal memuat daftar. {listMsg}
-                <button onClick={() => loadLatest(prov)} className="press mt-3 block rounded-lg border-2 border-line-strong bg-card px-3 py-1.5 font-code text-xs font-bold text-ink-muted hover:text-ink">Coba lagi</button>
-              </div>
-            ) : listItems.length === 0 ? (
-              <div className="mt-4 rounded-xl border-2 border-dashed border-line bg-card-soft px-4 py-8 text-center">
-                <BookOpen size={22} className="mx-auto text-ink-faint" />
-                <p className="mt-2 font-display text-sm font-bold text-ink">Belum ada data dari {prov.label}</p>
-                <p className="mt-1 text-sm text-ink-muted">Coba cari judul lewat pencarian, atau pilih provider lain.</p>
-              </div>
-            ) : (
-              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-                {listItems.map((it, i) => (
-                  <button key={i} onClick={() => openDetail(it)} className="press group overflow-hidden rounded-xl border-2 border-line-strong bg-card text-left shadow-note hover:border-primary">
-                    <div className="aspect-[3/4] w-full overflow-hidden bg-code">
-                      {it.image ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={it.image} alt={it.title} loading="lazy" className="h-full w-full object-cover transition-transform group-hover:scale-105" />
-                      ) : (
-                        <div className="flex h-full items-center justify-center text-ink-faint"><ImageOff size={22} /></div>
-                      )}
-                    </div>
-                    <div className="p-2.5">
-                      <p className="line-clamp-2 font-display text-[13px] font-bold text-ink">{it.title}</p>
-                      {it.badges.length > 0 ? (
-                        <div className="mt-1 flex flex-wrap gap-1">
-                          {it.badges.map((b, j) => (
-                            <span key={j} className="rounded-full border border-line bg-card-soft px-1.5 py-0.5 font-code text-[10px] font-bold text-ink-muted">{b}</span>
-                          ))}
-                        </div>
-                      ) : null}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </>
+              ))}
+            </div>
+          )}
+        </section>
       )}
-    </div>
+    </main>
   );
 }
 
@@ -347,7 +340,6 @@ function DetailBody({ item, data }: { item: Item; data: unknown }) {
     return [];
   })();
 
-  /* episode: array dalam data yang isinya punya judul/episode + link */
   const episodes = ((): { label: string; link?: string }[] => {
     const candidates: unknown[] = [];
     for (const k of ["episodes", "episodeList", "episode_list", "list", "downloads", "links"]) {
@@ -367,7 +359,6 @@ function DetailBody({ item, data }: { item: Item; data: unknown }) {
     return out;
   })();
 
-  /* info kunci sederhana */
   const infoKeys = ["status", "type", "year", "tahun", "season", "studio", "rating", "score", "total_episodes", "totalEpisodes", "duration", "durasi", "release", "day", "hari", "updated", "uploaded", "author"];
   const infos = Object.entries(obj)
     .filter(([k, v]) => infoKeys.includes(k) && (typeof v === "string" || typeof v === "number") && String(v).trim().length > 0)
@@ -375,27 +366,27 @@ function DetailBody({ item, data }: { item: Item; data: unknown }) {
 
   return (
     <div>
-      <div className="flex flex-col gap-4 sm:flex-row">
+      <div className="flex flex-col gap-5 sm:flex-row">
         {image ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={image} alt={title} className="w-32 shrink-0 self-start rounded-xl border-2 border-line bg-code object-cover sm:w-40" />
+          <img src={image} alt={title} className="w-32 shrink-0 self-start rounded-lg border border-line object-cover sm:w-40" />
         ) : null}
         <div className="min-w-0 flex-1">
-          <h2 className="font-display text-lg font-extrabold text-ink sm:text-xl">{title}</h2>
+          <h2 className="font-display text-lg font-bold tracking-tight text-ink sm:text-xl">{title}</h2>
           {infos.length > 0 ? (
-            <dl className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+            <dl className="mt-2.5 flex flex-wrap gap-x-5 gap-y-1.5">
               {infos.map(([k, v]) => (
-                <div key={k} className="text-sm">
-                  <dt className="inline font-code text-[10px] uppercase text-ink-faint">{k.replace(/_/g, " ")}:{" "}</dt>
-                  <dd className="inline font-bold text-ink">{String(v)}</dd>
+                <div key={k} className="text-[13px]">
+                  <dt className="text-[11px] uppercase tracking-wide text-ink-faint">{k.replace(/_/g, " ")}</dt>
+                  <dd className="font-medium text-ink">{String(v)}</dd>
                 </div>
               ))}
             </dl>
           ) : null}
           {genres.length > 0 ? (
-            <div className="mt-2 flex flex-wrap gap-1">
+            <div className="mt-2.5 flex flex-wrap gap-1.5">
               {genres.map((g, i) => (
-                <span key={i} className="rounded-full border-2 border-line bg-card-soft px-2 py-0.5 font-code text-[10px] font-bold text-ink-muted">{g}</span>
+                <span key={i} className="rounded-full bg-card-soft px-2.5 py-0.5 text-[11px] font-medium text-ink-muted">{g}</span>
               ))}
             </div>
           ) : null}
@@ -404,23 +395,24 @@ function DetailBody({ item, data }: { item: Item; data: unknown }) {
       </div>
 
       {episodes.length > 0 ? (
-        <div className="mt-5">
-          <h3 className="font-display text-sm font-extrabold text-ink">Episode / tautan</h3>
-          <div className="mt-2 grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+        <div className="mt-6">
+          <h3 className="text-sm font-semibold text-ink">Episode / tautan</h3>
+          <div className="mt-2.5 grid grid-cols-1 gap-1.5 sm:grid-cols-2">
             {episodes.map((ep, i) => (
               ep.link ? (
-                <a key={i} href={ep.link} target="_blank" rel="noopener noreferrer" className="press truncate rounded-lg border-2 border-line bg-card-soft px-3 py-2 font-code text-xs font-bold text-ink hover:border-primary">
-                  {ep.label}
+                <a key={i} href={ep.link} target="_blank" rel="noopener noreferrer" className="group flex items-center justify-between gap-2 truncate rounded-lg border border-line bg-card-soft px-3.5 py-2.5 text-[13px] font-medium text-ink transition-colors hover:border-primary/50 hover:text-primary">
+                  <span className="truncate">{ep.label}</span>
+                  <ChevronRight size={14} className="shrink-0 text-ink-faint transition-transform group-hover:translate-x-0.5" />
                 </a>
               ) : (
-                <span key={i} className="truncate rounded-lg border-2 border-dashed border-line px-3 py-2 font-code text-xs text-ink-muted">{ep.label}</span>
+                <span key={i} className="truncate rounded-lg border border-dashed border-line px-3.5 py-2.5 text-[13px] text-ink-muted">{ep.label}</span>
               )
             ))}
           </div>
-          <p className="mt-2 font-code text-[10px] text-ink-faint">Tautan dibuka di tab baru mengikuti sumber aslinya.</p>
+          <p className="mt-2 text-[11px] text-ink-faint">Tautan dibuka di tab baru mengikuti sumber aslinya.</p>
         </div>
       ) : (
-        <p className="mt-4 rounded-lg border-2 border-dashed border-line bg-card-soft px-3 py-2 text-sm text-ink-muted">
+        <p className="mt-5 rounded-lg bg-card-soft px-3.5 py-2.5 text-sm text-ink-muted">
           Info lengkap mengikuti data yang tersedia dari provider ini. Pemutaran langsung belum tersedia di Aomi.
         </p>
       )}

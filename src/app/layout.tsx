@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, DM_Sans, JetBrains_Mono, Caveat } from "next/font/google";
 import "./globals.css";
-import { AppShell } from "@/components/layout/AppShell";
 import { APP_NAME, SITE_URL } from "@/lib/constants";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -91,7 +90,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="id" suppressHydrationWarning className={`${jakarta.variable} ${dmSans.variable} ${jetbrains.variable} ${caveat.variable}`}>
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-        <AppShell>{children}</AppShell>
+        {children}
       </body>
     </html>
   );

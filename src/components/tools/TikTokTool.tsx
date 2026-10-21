@@ -1,16 +1,16 @@
 "use client";
 
 /**
- * TikTok Downloader — halaman penggunaan tool downloader sungguhan.
- * Bukan katalog API: input URL utama, preview media asli dari provider,
- * pilihan unduhan hanya yang benar-benar tersedia di respons.
+ * TikTok Downloader — halaman penggunaan tool downloader.
+ * Fokus satu tugas: masukkan tautan → proses → pakai hasilnya.
+ * Preview media asli dari provider; tombol unduhan hanya format yang tersedia.
  */
 
 import { useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft, Download, Link2, Loader2, Music, RefreshCw, Trash2, ExternalLink,
-  Play, Heart, MessageCircle, Share2, Eye, Music2,
+  Play, Heart, MessageCircle, Share2, Eye, Music2, ArrowRight,
 } from "lucide-react";
 
 type TikTokData = {
@@ -85,6 +85,7 @@ export function TikTokTool({ endpoint }: { endpoint: string }) {
       return;
     }
     setPhase("working"); setData(null); setErrMsg("");
+    setVideoFailed(false); setCoverFailed(false); setAudioFailed(false);
     try {
       const res = await fetch(`${endpoint}?url=${encodeURIComponent(u)}`, { headers: { accept: "application/json" } });
       const j = await res.json().catch(() => null);
@@ -135,193 +136,191 @@ export function TikTokTool({ endpoint }: { endpoint: string }) {
   ].filter(Boolean) as { icon: React.ComponentType<{ size?: number; className?: string }>; v: string }[];
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-5 py-6 sm:px-8">
-      <div className="flex items-center justify-between gap-2">
-        <Link href="/tools" className="press inline-flex items-center gap-1.5 rounded-lg border-2 border-line-strong bg-card px-3 py-2 font-code text-xs font-bold text-ink-muted hover:text-ink">
-          <ArrowLeft size={14} /> Kembali
-        </Link>
-      </div>
+    <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-6 sm:px-6 lg:py-10">
+      <Link href="/tools" className="inline-flex items-center gap-1.5 rounded-md py-1.5 pr-2 text-sm font-medium text-ink-muted transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
+        <ArrowLeft size={15} /> Semua tools
+      </Link>
 
-      {/* Panel utama downloader */}
-      <section className="mt-4 rounded-2xl border-2 border-line-strong bg-card p-5 shadow-note sm:p-6">
-        <div className="tape-left" />
-        <div className="flex items-center gap-3">
-          <span className="rounded-lg border-2 border-line bg-sky p-2.5 text-primary"><Music2 size={22} /></span>
-          <div className="min-w-0">
-            <h1 className="font-display text-xl font-extrabold text-ink sm:text-2xl">TikTok Downloader</h1>
-            <p className="text-sm text-ink-muted">Tempel tautan video TikTok, ambil videonya tanpa watermark.</p>
-          </div>
-        </div>
+      {/* Panel utama: satu tugas */}
+      <section className="mx-auto mt-6 max-w-xl text-center">
+        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-sky text-primary">
+          <Music2 size={24} />
+        </span>
+        <h1 className="mt-4 font-display text-2xl font-bold tracking-tight text-ink">TikTok Downloader</h1>
+        <p className="mt-1.5 text-sm leading-relaxed text-ink-muted">
+          Unduh video TikTok dari tautannya — tanpa watermark, langsung pakai.
+        </p>
 
-        <div className="mt-5 flex flex-col gap-2 sm:flex-row">
+        <div className="mt-6 flex flex-col gap-2 sm:flex-row">
           <input
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") process(); }}
             inputMode="url"
             placeholder="https://vt.tiktok.com/…"
-            className="h-13 min-h-12 flex-1 rounded-lg border-2 border-line bg-bg px-3.5 text-sm text-ink placeholder:text-ink-faint focus:border-primary focus:outline-none"
+            className="h-12 flex-1 rounded-lg border border-line bg-card px-3.5 text-sm text-ink outline-none placeholder:text-ink-faint focus:border-primary focus:ring-2 focus:ring-primary/20"
             aria-label="Tautan video TikTok"
             disabled={phase === "working"}
           />
           <button
             onClick={process}
             disabled={phase === "working"}
-            className="press inline-flex h-12 items-center justify-center gap-2 rounded-lg border-2 border-line-strong bg-primary px-5 font-display text-sm font-bold text-onprimary shadow-hard-sm hover:bg-primary/90 disabled:opacity-55"
+            className="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-lg bg-primary px-5 text-sm font-semibold text-onprimary transition-all hover:bg-primary/90 active:scale-[0.98] disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
           >
             {phase === "working" ? <Loader2 size={15} className="animate-spin" /> : <Download size={15} />}
-            {phase === "working" ? "Memproses…" : "Ambil Video"}
+            {phase === "working" ? "Memproses…" : "Proses Video"}
           </button>
         </div>
-        <p className="mt-2 font-code text-[11px] text-ink-faint">
-          Cara pakai: buka TikTok → bagikan video → salin tautan → tempel di atas → Ambil Video.
+        <p className="mt-2.5 text-xs text-ink-faint">
+          Buka TikTok → bagikan video → salin tautan → tempel di atas.
         </p>
+      </section>
 
-        {/* Status */}
+      {/* Status */}
+      <section className="mx-auto mt-5 max-w-xl">
         {phase === "working" && (
-          <div className="mt-4 flex items-center gap-2 rounded-lg border-2 border-dashed border-line bg-card-soft px-3 py-2.5 text-sm text-ink-muted">
+          <div className="tools-rise flex items-center justify-center gap-2 rounded-lg border border-line bg-card px-4 py-3 text-sm text-ink-muted">
             <Loader2 size={15} className="animate-spin text-primary" /> Sedang memproses video, biasanya beberapa detik…
           </div>
         )}
         {phase === "error" && (
-          <div className="mt-4 rounded-lg border-2 border-dashed border-line bg-card-soft px-3 py-3">
-            <p className="text-sm font-bold text-ink">
+          <div className="tools-rise rounded-lg border border-danger/30 bg-danger/5 px-4 py-3.5" role="alert">
+            <p className="text-sm font-semibold text-danger">
               {errKind === "invalid" ? "Tautan tidak valid" : errKind === "empty" ? "Video tidak ditemukan" : errKind === "provider" ? "Provider tidak tersedia" : errKind === "network" ? "Koneksi bermasalah" : "Terjadi kesalahan"}
             </p>
-            <p className="mt-1 text-sm text-ink-muted">{errMsg}</p>
-            <button onClick={() => setPhase("idle")} className="press mt-2 inline-flex items-center gap-1.5 rounded-lg border-2 border-line-strong bg-card px-3 py-1.5 font-code text-xs font-bold text-ink-muted hover:text-ink">
+            <p className="mt-0.5 text-sm text-ink-muted">{errMsg}</p>
+            <button onClick={() => setPhase("idle")} className="mt-2.5 inline-flex items-center gap-1.5 rounded-md text-xs font-semibold text-primary hover:text-primary/80">
               <RefreshCw size={12} /> Coba lagi
             </button>
           </div>
         )}
       </section>
 
-      {/* Hasil */}
+      {/* Hasil: media di kiri, detail + unduhan di kanan */}
       {phase === "done" && data && (
-        <section className="mt-5 rounded-2xl border-2 border-line-strong bg-card p-4 shadow-note sm:p-5">
-          {/* Preview — kalau media tak bisa diputar di browser, fallback ke sampul/placeholder jujur */}
-          {(data.no_watermark_link || data.no_watermark_link_hd || data.aweme_link) && !videoFailed ? (
-            <div className="mx-auto max-w-[min(100%,420px)] overflow-hidden rounded-xl border-2 border-line bg-code">
-              <video
-                src={data.no_watermark_link || data.no_watermark_link_hd || data.aweme_link}
-                poster={data.cover_link || data.origin_cover || undefined}
-                controls
-                playsInline
-                preload="metadata"
-                onError={() => setVideoFailed(true)}
-                className="max-h-[72vh] w-full"
-              />
-            </div>
-          ) : (data.no_watermark_link || data.no_watermark_link_hd || data.aweme_link) && videoFailed ? (
-            data.cover_link && !coverFailed ? (
-              <figure className="mx-auto max-w-[min(100%,420px)]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={data.cover_link} alt="Sampul video" onError={() => setCoverFailed(true)} className="max-h-[52vh] w-full rounded-xl border-2 border-line bg-code object-contain" />
-                <figcaption className="mt-2 rounded-lg border-2 border-dashed border-line bg-card-soft px-3 py-2 text-xs text-ink-muted">
-                  Sumber media tidak mengizinkan pemutaran langsung di browser, jadi ini sampul asli videonya. Video tetap bisa diunduh lewat tombol di bawah.
-                </figcaption>
-              </figure>
-            ) : (
-              <div className="mx-auto max-w-[min(100%,420px)] rounded-xl border-2 border-dashed border-line bg-card-soft px-4 py-8 text-center">
-                <Play size={22} className="mx-auto text-ink-faint" />
-                <p className="mt-2 font-display text-sm font-bold text-ink">Preview tidak bisa diputar di browser</p>
-                <p className="mt-1 text-sm text-ink-muted">Sumber media tidak mengizinkan pemutaran langsung. Video tetap bisa diunduh lewat tombol di bawah, atau buka hasilnya di tab baru.</p>
-              </div>
-            )
-          ) : slides.length > 0 ? (
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {slides.slice(0, 12).map((s, i) => (
+        <section className="tools-rise mx-auto mt-6 max-w-4xl">
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,380px)_1fr]">
+            {/* Media */}
+            <div>
+              {(data.no_watermark_link || data.no_watermark_link_hd || data.aweme_link) && !videoFailed ? (
+                <div className="overflow-hidden rounded-xl bg-code">
+                  <video
+                    src={data.no_watermark_link || data.no_watermark_link_hd || data.aweme_link}
+                    poster={data.cover_link || data.origin_cover || undefined}
+                    controls
+                    playsInline
+                    preload="metadata"
+                    onError={() => setVideoFailed(true)}
+                    className="max-h-[70vh] w-full"
+                  />
+                </div>
+              ) : (data.no_watermark_link || data.no_watermark_link_hd || data.aweme_link) && videoFailed ? (
+                data.cover_link && !coverFailed ? (
+                  <figure className="overflow-hidden rounded-xl bg-code">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={data.cover_link} alt="Sampul video" onError={() => setCoverFailed(true)} className="max-h-[60vh] w-full object-contain" />
+                    <figcaption className="px-3 py-2 text-[11px] text-ink-faint">
+                      Sumber tidak mengizinkan pemutaran langsung — ini sampul asli videonya. Unduh lewat tombol di samping.
+                    </figcaption>
+                  </figure>
+                ) : (
+                  <div className="flex aspect-[3/4] max-h-[60vh] flex-col items-center justify-center rounded-xl border border-dashed border-line px-6 text-center">
+                    <Play size={22} className="text-ink-faint" />
+                    <p className="mt-2 text-sm font-semibold text-ink">Preview tidak bisa diputar</p>
+                    <p className="mt-1 text-xs leading-relaxed text-ink-muted">Sumber media tidak mengizinkan pemutaran langsung di browser. Video tetap bisa diunduh.</p>
+                  </div>
+                )
+              ) : slides.length > 0 ? (
+                <div className="grid grid-cols-2 gap-1.5 rounded-xl bg-code p-2">
+                  {slides.slice(0, 8).map((s, i) => (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img key={i} src={s} alt={`Slide ${i + 1}`} loading="lazy" className="w-full rounded-md object-cover" />
+                  ))}
+                </div>
+              ) : data.cover_link && !coverFailed ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <a key={i} href={s} target="_blank" rel="noopener noreferrer" className="block overflow-hidden rounded-lg border-2 border-line bg-code">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={s} alt={`Slide ${i + 1}`} loading="lazy" className="w-full object-cover" />
-                </a>
-              ))}
-            </div>
-          ) : data.cover_link && !coverFailed ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={data.cover_link} alt="Sampul video" onError={() => setCoverFailed(true)} className="mx-auto max-h-[60vh] rounded-xl border-2 border-line bg-code object-contain" />
-          ) : null}
-
-          {/* Info video */}
-          <div className="mt-4">
-            {data.text ? <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink">{data.text}</p> : null}
-            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-muted">
-              {data.author_nickname ? (
-                <span className="font-bold text-ink">
-                  {data.author_unique_id ? `@${data.author_unique_id}` : data.author_nickname}
-                </span>
+                <img src={data.cover_link} alt="Sampul video" onError={() => setCoverFailed(true)} className="max-h-[60vh] w-full rounded-xl bg-code object-contain" />
               ) : null}
-              {fmtDuration(data.duration) ? <span className="font-code text-xs">{fmtDuration(data.duration)}</span> : null}
             </div>
-            {stats.length > 0 && (
-              <div className="mt-2 flex flex-wrap gap-2">
-                {stats.map(({ icon: I, v }, i) => (
-                  <span key={i} className="inline-flex items-center gap-1 rounded-full border-2 border-line bg-card-soft px-2.5 py-0.5 font-code text-[11px] font-bold text-ink-muted">
-                    <I size={11} /> {v}
-                  </span>
-                ))}
+
+            {/* Detail + unduhan */}
+            <div className="flex flex-col rounded-xl border border-line bg-card p-5 tools-shadow">
+              {data.text ? <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink">{data.text}</p> : <p className="text-sm font-medium text-ink">Video TikTok</p>}
+              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+                {data.author_nickname ? (
+                  <span className="font-semibold text-ink">{data.author_unique_id ? `@${data.author_unique_id}` : data.author_nickname}</span>
+                ) : null}
+                {fmtDuration(data.duration) ? <span className="text-xs text-ink-muted">{fmtDuration(data.duration)}</span> : null}
               </div>
-            )}
-          </div>
+              {stats.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-3">
+                  {stats.map(({ icon: I, v }, i) => (
+                    <span key={i} className="inline-flex items-center gap-1 text-xs text-ink-muted">
+                      <I size={13} /> {v}
+                    </span>
+                  ))}
+                </div>
+              )}
 
-          {/* Audio */}
-          {data.music_link && !audioFailed ? (
-            <div className="mt-4 rounded-xl border-2 border-line bg-code p-3">
-              <p className="mb-1.5 flex items-center gap-1.5 font-code text-[11px] font-bold uppercase text-ink-faint"><Music size={11} /> Suara asli</p>
-              <audio src={data.music_link} controls preload="metadata" onError={() => setAudioFailed(true)} className="w-full" />
-            </div>
-          ) : null}
+              {/* Audio */}
+              {data.music_link && !audioFailed ? (
+                <div className="mt-4 rounded-lg bg-card-soft p-3">
+                  <p className="mb-1.5 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-faint"><Music size={11} /> Suara asli</p>
+                  <audio src={data.music_link} controls preload="metadata" onError={() => setAudioFailed(true)} className="w-full" />
+                </div>
+              ) : null}
 
-          {/* Tombol unduhan — hanya format yang benar-benar ada */}
-          {downloads.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-2">
-              {downloads.map((d) => (
-                <a
-                  key={d.label}
-                  href={d.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`press inline-flex items-center gap-1.5 rounded-lg border-2 px-4 py-2.5 font-display text-sm font-bold shadow-hard-sm ${
-                    d.primary ? "border-line-strong bg-primary text-onprimary hover:bg-primary/90" : "border-line-strong bg-lemon text-ink hover:bg-lemon/70"
-                  }`}
-                >
-                  <Download size={14} /> {d.label}
-                </a>
-              ))}
-            </div>
-          )}
-          {slides.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-2">
-              {slides.map((s, i) => (
-                <a key={i} href={s} target="_blank" rel="noopener noreferrer" className="press inline-flex items-center gap-1.5 rounded-lg border-2 border-line-strong bg-lemon px-3 py-2 font-code text-xs font-bold text-ink shadow-hard-sm hover:bg-lemon/70">
-                  <Download size={12} /> Slide {i + 1}
-                </a>
-              ))}
-            </div>
-          )}
+              {/* Tombol unduhan — hanya format yang benar-benar ada */}
+              {downloads.length > 0 && (
+                <div className="mt-5 flex flex-col gap-2">
+                  {downloads.map((d) => (
+                    <a
+                      key={d.label}
+                      href={d.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all active:scale-[0.98] ${
+                        d.primary ? "bg-primary text-onprimary hover:bg-primary/90" : "border border-line bg-card text-ink hover:border-primary/50 hover:text-primary"
+                      }`}
+                    >
+                      <Download size={15} /> {d.label} <ArrowRight size={14} className="opacity-60" />
+                    </a>
+                  ))}
+                </div>
+              )}
+              {slides.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {slides.map((s, i) => (
+                    <a key={i} href={s} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-card px-3 py-1.5 text-xs font-medium text-ink transition-colors hover:border-primary/50 hover:text-primary">
+                      <Download size={12} /> Slide {i + 1}
+                    </a>
+                  ))}
+                </div>
+              )}
 
-          {/* Aksi tambahan */}
-          <div className="mt-5 flex flex-wrap gap-2 border-t-2 border-dashed border-line pt-4">
-            <button onClick={reset} className="press inline-flex items-center gap-1.5 rounded-lg border-2 border-line-strong bg-card px-3 py-2 font-code text-xs font-bold text-ink-muted hover:text-ink">
-              <Play size={12} /> Proses video lain
-            </button>
-            {data.original ? (
-              <button onClick={() => copy(data.original!, "src")} className="press inline-flex items-center gap-1.5 rounded-lg border-2 border-line-strong bg-card px-3 py-2 font-code text-xs font-bold text-ink-muted hover:text-ink">
-                <Link2 size={12} /> {copied === "src" ? "Tersalin!" : "Salin tautan sumber"}
-              </button>
-            ) : null}
-            {data.original ? (
-              <a href={data.original} target="_blank" rel="noopener noreferrer" className="press inline-flex items-center gap-1.5 rounded-lg border-2 border-line-strong bg-card px-3 py-2 font-code text-xs font-bold text-ink-muted hover:text-ink">
-                <ExternalLink size={12} /> Buka di TikTok
-              </a>
-            ) : null}
-            <button onClick={() => { setData(null); setPhase("idle"); }} className="press inline-flex items-center gap-1.5 rounded-lg border-2 border-line-strong bg-card px-3 py-2 font-code text-xs font-bold text-ink-muted hover:text-ink">
-              <Trash2 size={12} /> Hapus hasil
-            </button>
-          </div>
+              {/* Aksi tambahan */}
+              <div className="mt-4 flex flex-wrap gap-0.5 border-t border-line pt-3">
+                <button onClick={reset} className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-ink-muted transition-colors hover:bg-card-soft hover:text-primary">
+                  <Play size={12} /> Proses video lain
+                </button>
+                  {data.original ? (
+                    <button onClick={() => copy(data.original!, "src")} className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-ink-muted transition-colors hover:bg-card-soft hover:text-primary">
+                      <Link2 size={12} /> {copied === "src" ? "Tersalin" : "Salin tautan sumber"}
+                    </button>
+                  ) : null}
+                  {data.original ? (
+                    <a href={data.original} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-ink-muted transition-colors hover:bg-card-soft hover:text-primary">
+                      <ExternalLink size={12} /> Buka di TikTok
+                    </a>
+                  ) : null}
+                  <button onClick={() => { setData(null); setPhase("idle"); }} className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-ink-muted transition-colors hover:bg-card-soft hover:text-danger">
+                    <Trash2 size={12} /> Hapus hasil
+                  </button>
+                </div>
+              </div>
+            </div>
         </section>
       )}
-    </div>
+    </main>
   );
 }

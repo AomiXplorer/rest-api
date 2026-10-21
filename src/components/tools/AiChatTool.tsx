@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * AI Chat — interface percakapan sungguhan (bukan form API).
- * Respons tidak streaming: jawaban tampil setelah provider selesai memproses.
+ * AI Chat — interface percakapan modern, identitas sendiri.
+ * Respons tidak streaming: jawaban tampil utuh setelah provider selesai.
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -66,39 +66,45 @@ export function AiChatTool({ endpoint, modelName }: { endpoint: string; modelNam
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-5 py-6 sm:px-8">
+    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 py-6 sm:px-6">
       {/* Header chat */}
       <div className="flex items-center justify-between gap-2">
-        <Link href="/tools" className="press inline-flex items-center gap-1.5 rounded-lg border-2 border-line-strong bg-card px-3 py-2 font-code text-xs font-bold text-ink-muted hover:text-ink">
-          <ArrowLeft size={14} /> Kembali
+        <Link href="/tools" className="inline-flex items-center gap-1.5 rounded-md py-1.5 pr-2 text-sm font-medium text-ink-muted transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
+          <ArrowLeft size={15} /> Semua tools
         </Link>
-        <div className="flex items-center gap-2">
-          {modelName ? <span className="hidden font-code text-[11px] text-ink-faint sm:block">Model: {modelName}</span> : null}
-          <button onClick={newChat} disabled={msgs.length === 0 && !error} className="press inline-flex items-center gap-1.5 rounded-lg border-2 border-line-strong bg-card px-3 py-2 font-code text-xs font-bold text-ink-muted hover:text-ink disabled:opacity-50">
+        <div className="flex items-center gap-1">
+          {modelName ? <span className="hidden rounded-full bg-card-soft px-2.5 py-1 font-code text-[11px] text-ink-muted sm:block">{modelName}</span> : null}
+          <button onClick={newChat} disabled={msgs.length === 0 && !error} className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-ink-muted transition-colors hover:bg-card-soft hover:text-ink disabled:opacity-40">
             <RotateCcw size={13} /> Chat baru
           </button>
         </div>
       </div>
 
-      <section className="mt-4 flex flex-1 flex-col overflow-hidden rounded-2xl border-2 border-line-strong bg-card shadow-note">
-        <div className="flex items-center gap-2.5 border-b-2 border-dashed border-line px-4 py-3">
-          <span className="rounded-lg border-2 border-line bg-sky p-1.5 text-primary"><Sparkles size={16} /></span>
+      {/* Area percakapan */}
+      <section className="mt-4 flex min-h-[60vh] flex-1 flex-col overflow-hidden rounded-xl border border-line bg-card tools-shadow">
+        <div className="flex items-center gap-2.5 border-b border-line px-4 py-3">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky text-primary"><Sparkles size={16} /></span>
           <div className="min-w-0">
-            <h1 className="font-display text-base font-extrabold text-ink">AI Chat</h1>
+            <h1 className="text-sm font-semibold text-ink">AI Chat</h1>
             <p className="truncate text-xs text-ink-muted">Tanya apa saja — dari tugas sampai ide konten.</p>
           </div>
         </div>
 
-        {/* Area percakapan */}
-        <div ref={scrollRef} className="min-h-[46vh] flex-1 space-y-3 overflow-y-auto bg-card-soft px-4 py-4">
+        <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto bg-bg px-4 py-5">
           {msgs.length === 0 && !busy ? (
-            <div className="flex h-full flex-col items-center justify-center gap-2 py-10 text-center">
-              <span className="rounded-lg border-2 border-line bg-card p-3 text-primary shadow-hard-sm"><Sparkles size={22} /></span>
-              <p className="font-display text-base font-bold text-ink">Mau nanya apa hari ini?</p>
-              <p className="max-w-sm text-sm text-ink-muted">Tulis pesanmu di bawah. Jawaban muncul setelah AI selesai berpikir — model ini suka mikir dulu, sabar sebentar ya.</p>
-              <div className="mt-2 flex flex-wrap justify-center gap-1.5">
+            <div className="flex h-full flex-col items-center justify-center gap-3 py-14 text-center">
+              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky text-primary">
+                <Sparkles size={22} />
+              </span>
+              <div>
+                <p className="font-display text-base font-semibold text-ink">Mau nanya apa hari ini?</p>
+                <p className="mx-auto mt-1 max-w-sm text-sm leading-relaxed text-ink-muted">
+                  Jawaban muncul utuh setelah AI selesai berpikir — model ini suka mikir dulu, sabar sebentar ya.
+                </p>
+              </div>
+              <div className="mt-1 flex flex-wrap justify-center gap-1.5">
                 {["Jelaskan apa itu API dengan bahasa santai", "Buat caption Instagram lucu", "Bikin ide konten TikTok tentang kucing"].map((s) => (
-                  <button key={s} onClick={() => setInput(s)} className="press rounded-full border-2 border-line bg-card px-3 py-1 font-code text-[11px] font-bold text-ink-muted hover:text-ink">
+                  <button key={s} onClick={() => setInput(s)} className="rounded-full border border-line bg-card px-3 py-1.5 text-xs text-ink-muted transition-colors hover:border-primary/50 hover:text-primary">
                     {s}
                   </button>
                 ))}
@@ -107,14 +113,14 @@ export function AiChatTool({ endpoint, modelName }: { endpoint: string; modelNam
           ) : null}
 
           {msgs.map((m, i) => (
-            <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-              <div className={`group max-w-[85%] rounded-xl border-2 px-3.5 py-2.5 text-sm leading-relaxed ${
-                m.role === "user" ? "border-primary bg-primary text-onprimary" : "border-line bg-card text-ink"
+            <div key={i} className={`tools-rise flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div className={`group max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                m.role === "user" ? "rounded-br-md bg-primary text-onprimary" : "rounded-bl-md border border-line bg-card text-ink"
               }`}>
                 <p className="whitespace-pre-wrap break-words">{m.text}</p>
                 {m.role === "ai" ? (
-                  <button onClick={() => copy(m.text, i)} className="mt-1 inline-flex items-center gap-1 font-code text-[10px] font-bold text-ink-faint opacity-0 transition-opacity group-hover:opacity-100">
-                    {copiedIdx === i ? <><Check size={11} /> Tersalin</> : <><Copy size={11} /> Salin jawaban</>}
+                  <button onClick={() => copy(m.text, i)} className="mt-1 inline-flex items-center gap-1 text-[11px] font-medium text-ink-faint transition-colors hover:text-primary">
+                    {copiedIdx === i ? <><Check size={11} /> Tersalin</> : <><Copy size={11} /> Salin</>}
                   </button>
                 ) : null}
               </div>
@@ -123,16 +129,18 @@ export function AiChatTool({ endpoint, modelName }: { endpoint: string; modelNam
 
           {busy ? (
             <div className="flex justify-start">
-              <div className="flex items-center gap-2 rounded-xl border-2 border-line bg-card px-3.5 py-2.5 text-sm text-ink-muted">
-                <Loader2 size={14} className="animate-spin text-primary" /> AI sedang berpikir…
+              <div className="flex items-center gap-1.5 rounded-2xl rounded-bl-md border border-line bg-card px-4 py-3">
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary [animation-delay:0ms]" />
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary [animation-delay:150ms]" />
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary [animation-delay:300ms]" />
               </div>
             </div>
           ) : null}
 
           {error ? (
             <div className="flex justify-start">
-              <div className="flex items-start gap-2 rounded-xl border-2 border-dashed border-line bg-card px-3.5 py-2.5 text-sm text-ink">
-                <TriangleAlert size={14} className="mt-0.5 shrink-0 text-ink-faint" />
+              <div className="flex items-start gap-2 rounded-2xl rounded-bl-md border border-danger/30 bg-danger/5 px-4 py-2.5 text-sm text-danger">
+                <TriangleAlert size={14} className="mt-0.5 shrink-0" />
                 <span>{error}</span>
               </div>
             </div>
@@ -140,25 +148,29 @@ export function AiChatTool({ endpoint, modelName }: { endpoint: string; modelNam
         </div>
 
         {/* Input */}
-        <div className="border-t-2 border-dashed border-line px-4 py-3">
+        <div className="border-t border-line px-4 py-3.5">
           <div className="flex gap-2">
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
               placeholder="Tulis pesanmu di sini…"
-              className="h-12 flex-1 rounded-lg border-2 border-line bg-bg px-3.5 text-sm text-ink placeholder:text-ink-faint focus:border-primary focus:outline-none"
+              className="h-11 flex-1 rounded-full border border-line bg-bg px-4 text-sm text-ink outline-none placeholder:text-ink-faint focus:border-primary focus:ring-2 focus:ring-primary/20"
               disabled={busy}
               aria-label="Pesan untuk AI"
             />
-            <button onClick={send} disabled={busy || !input.trim()} className="press inline-flex h-12 items-center gap-2 rounded-lg border-2 border-line-strong bg-primary px-4 font-display text-sm font-bold text-onprimary shadow-hard-sm hover:bg-primary/90 disabled:opacity-55">
-              {busy ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
-              Kirim
+            <button
+              onClick={send}
+              disabled={busy || !input.trim()}
+              aria-label="Kirim pesan"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-onprimary transition-all hover:bg-primary/90 active:scale-95 disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+            >
+              {busy ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
             </button>
           </div>
-          <p className="mt-1.5 font-code text-[10px] text-ink-faint">Jawaban muncul utuh setelah selesai diproses (tidak streaming).</p>
+          <p className="mt-2 text-center text-[11px] text-ink-faint">Jawaban muncul utuh setelah selesai diproses (tidak streaming).</p>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

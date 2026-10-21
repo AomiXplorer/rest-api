@@ -288,3 +288,102 @@ button:disabled:hover {
 *::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/* ============================================
+   AOMI TOOLS — DESIGN SYSTEM TERPISAH
+   Aktif hanya di dalam .tools-layout (halaman /tools).
+   Dokumentasi (Cartoon Book) tidak terpengaruh sama sekali.
+   Clean editorial: surface polos, border tipis, teal selektif.
+   ============================================ */
+.tools-layout {
+  --c-bg: #f7f7f5;
+  --c-surface: #ffffff;
+  --c-card: #ffffff;
+  --c-card-soft: #f1f2f0;
+  --c-line: #e5e7eb;
+  --c-line-strong: #d7dade;
+  --c-ink: #202124;
+  --c-ink-muted: #70757d;
+  --c-ink-faint: #9aa0a6;
+  --c-primary: #287f80;
+  --c-primary-soft: #5aa8a9;
+  --c-onprimary: #ffffff;
+  --c-lemon: #8a6d1f;
+  --c-mint: #1f7a4d;
+  --c-danger: #dc2626;
+  --c-get: #287f80;
+  --c-wa: #1fa855;
+  --c-sticky: #f1e9c8;
+  --c-sticky-ink: #5b5227;
+  --c-sky: #eaf4f4;
+  --c-lav: #eef0f5;
+  --c-mintp: #e8f2ea;
+  --c-code: #15181d;
+  --c-code-text: #e7e9ed;
+  --c-tape: transparent;
+  --c-rule: transparent;
+  --c-shadow: rgba(16, 24, 40, 0.06);
+  background-color: var(--c-bg);
+  background-image: none;
+  color: var(--c-ink);
+  color-scheme: light;
+}
+
+.dark .tools-layout {
+  --c-bg: #111318;
+  --c-surface: #191c23;
+  --c-card: #191c23;
+  --c-card-soft: #20242e;
+  --c-line: #2a2e37;
+  --c-line-strong: #3a3f4a;
+  --c-ink: #f4f4f5;
+  --c-ink-muted: #a1a5ae;
+  --c-ink-faint: #6e7480;
+  --c-primary: #57c5c4;
+  --c-primary-soft: #6ececd;
+  --c-onprimary: #0f2223;
+  --c-lemon: #e0c46a;
+  --c-mint: #57b489;
+  --c-danger: #f07a6a;
+  --c-get: #57c5c4;
+  --c-sticky: #2b2817;
+  --c-sticky-ink: #e0c46a;
+  --c-sky: #1a2b2c;
+  --c-lav: #232733;
+  --c-mintp: #1b2b21;
+  --c-code: #0c0e12;
+  --c-code-text: #dde1e8;
+  --c-shadow: rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+}
+
+/* Bayangan lembut khas tools — bukan hard shadow kertas */
+.tools-shadow {
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.04),
+    0 6px 20px rgba(16, 24, 40, 0.05);
+}
+.dark .tools-layout .tools-shadow {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.4),
+    0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Animasi ringan khusus tools */
+@keyframes tools-drawer-in {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+.tools-drawer { animation: tools-drawer-in 0.22s ease-out; }
+
+@keyframes tools-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.tools-fade { animation: tools-fade 0.18s ease-out; }
+
+@keyframes tools-rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.tools-rise { animation: tools-rise 0.2s ease-out; }

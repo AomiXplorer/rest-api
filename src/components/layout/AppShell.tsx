@@ -2,18 +2,23 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { House, FileText, Send } from "lucide-react";
+import { House, FileText, Send, Wrench } from "lucide-react";
 import { APP_NAME, OWNER_WHATSAPP } from "@/lib/constants";
 import { CyronimeLogo, CyronimeMark } from "@/components/brand/CyronimeLogo";
 
 /**
  * Chrome situs dokumentasi & beranda — mengikuti referensi:
- * navbar sticky tipis (avatar + brand + 1 tombol kontekstual) dan
+ * navbar sticky tipis (avatar + brand + link ringkas + 1 tombol kontekstual) dan
  * footer sederhana (Contact + copyright + tagline). Tema gelap tunggal.
  */
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const onDocs = pathname.startsWith("/docs");
+
+  const ghost =
+    "inline-flex h-9 items-center gap-1.5 rounded-lg px-3 text-[13px] font-medium text-ink-muted transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40";
+  const solid =
+    "inline-flex h-9 items-center gap-1.5 rounded-lg border border-line bg-bg px-3.5 text-[13px] font-medium text-ink-muted transition-colors hover:border-primary/40 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40";
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -23,21 +28,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Link href="/" aria-label="Cyronime — Beranda" className="flex items-center gap-2.5">
             <CyronimeLogo size={34} />
           </Link>
-          {onDocs ? (
-            <Link
-              href="/"
-              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-line bg-bg px-3.5 text-[13px] font-medium text-ink-muted transition-colors hover:border-primary/40 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-            >
-              <House size={14} /> Beranda
+          <nav className="flex items-center gap-1.5 sm:gap-2" aria-label="Navigasi utama">
+            <Link href="/tools" className={ghost}>
+              <Wrench size={14} className="text-ink-faint" /> Aomi Tools
             </Link>
-          ) : (
-            <Link
-              href="/docs"
-              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-line bg-bg px-3.5 text-[13px] font-medium text-ink-muted transition-colors hover:border-primary/40 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-            >
-              <FileText size={14} /> Docs
-            </Link>
-          )}
+            {onDocs ? (
+              <Link href="/" className={solid}>
+                <House size={14} /> Beranda
+              </Link>
+            ) : (
+              <Link href="/docs" className={solid}>
+                <FileText size={14} /> Docs
+              </Link>
+            )}
+          </nav>
         </div>
       </header>
 
@@ -47,7 +51,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* ===== Footer ===== */}
       <footer className="mt-16 border-t border-line px-4 py-8 sm:px-6">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 text-center">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-2">
             <a
               href={OWNER_WHATSAPP}
               target="_blank"
@@ -56,6 +60,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             >
               <Send size={13} /> Contact
             </a>
+            <Link
+              href="/tools"
+              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-line bg-card px-3.5 text-[13px] font-medium text-ink-muted transition-colors hover:border-primary/40 hover:text-ink"
+            >
+              <Wrench size={13} /> Aomi Tools
+            </Link>
             <Link
               href="/docs"
               className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-line bg-card px-3.5 text-[13px] font-medium text-ink-muted transition-colors hover:border-primary/40 hover:text-ink"

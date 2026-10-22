@@ -8,10 +8,6 @@ import { VERIFIED_IDS } from "@/config/verification";
 import { EndpointDetail } from "./EndpointDetail";
 import { CurlPanel } from "./CurlPanel";
 
-function localPath(e: EndpointDefinition) {
-  return `/api/v1${e.upstreamPath.replace(/^\/api/, "")}`;
-}
-
 /* Badge metode: chip mono kecil */
 function MethodBadge({ method }: { method: string }) {
   return (
@@ -226,9 +222,9 @@ export function DocsClient({
                       >
                         <div className="flex items-center gap-2.5">
                           <MethodBadge method={e.method} />
-                          <code className="min-w-0 flex-1 truncate font-code text-[13px] font-semibold text-ink sm:text-sm">
-                            {localPath(e)}
-                          </code>
+                          <span className="min-w-0 flex-1 truncate text-[13px] font-semibold capitalize text-ink sm:text-sm">
+                            {e.name}
+                          </span>
                           <StatusBadge verified={verified.has(e.id)} />
                           <span className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-lg bg-primary px-3 font-code text-[11px] font-bold text-onprimary transition-transform group-hover:scale-[1.02]">
                             <Play size={11} /> {e.method}

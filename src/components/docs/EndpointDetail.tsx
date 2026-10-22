@@ -158,10 +158,13 @@ export function EndpointDetail({
             <span className="shrink-0 rounded bg-primary px-1.5 py-0.5 font-code text-[10px] font-bold text-onprimary">
               {endpoint.method}
             </span>
-            <h2 className="min-w-0 break-all font-code text-base font-semibold text-ink">
-              {localPath(endpoint)}
+            <h2 className="min-w-0 break-all font-display text-lg font-bold capitalize text-ink">
+              {endpoint.name}
             </h2>
           </div>
+          <code className="mt-1 block truncate font-code text-[12px] text-ink-faint" title={localPath(endpoint)}>
+            {localPath(endpoint)}
+          </code>
           <p className="mt-1.5 text-[13px] leading-relaxed text-ink-muted">{endpoint.description}</p>
           {variant === "page" ? (
             <p className="mt-2 inline-flex items-center gap-1.5 text-[11px] text-ink-faint">

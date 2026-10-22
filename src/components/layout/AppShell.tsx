@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { House, FileText, Send, Wrench } from "lucide-react";
+import { House, FileText, Send } from "lucide-react";
 import { APP_NAME, OWNER_WHATSAPP } from "@/lib/constants";
 import { CyronimeLogo, CyronimeMark } from "@/components/brand/CyronimeLogo";
 
@@ -15,8 +15,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const onDocs = pathname.startsWith("/docs");
 
-  const ghost =
-    "inline-flex h-9 items-center gap-1.5 rounded-lg px-3 text-[13px] font-medium text-ink-muted transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40";
   const solid =
     "inline-flex h-9 items-center gap-1.5 rounded-lg border border-line bg-bg px-3.5 text-[13px] font-medium text-ink-muted transition-colors hover:border-primary/40 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40";
 
@@ -28,10 +26,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Link href="/" aria-label="Cyronime — Beranda" className="flex items-center gap-2.5">
             <CyronimeLogo size={34} />
           </Link>
-          <nav className="flex items-center gap-1.5 sm:gap-2" aria-label="Navigasi utama">
-            <Link href="/tools" className={ghost}>
-              <Wrench size={14} className="text-ink-faint" /> Aomi Tools
-            </Link>
+          <nav className="flex items-center gap-2" aria-label="Navigasi utama">
             {onDocs ? (
               <Link href="/" className={solid}>
                 <House size={14} /> Beranda
@@ -60,12 +55,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             >
               <Send size={13} /> Contact
             </a>
-            <Link
-              href="/tools"
-              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-line bg-card px-3.5 text-[13px] font-medium text-ink-muted transition-colors hover:border-primary/40 hover:text-ink"
-            >
-              <Wrench size={13} /> Aomi Tools
-            </Link>
             <Link
               href="/docs"
               className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-line bg-card px-3.5 text-[13px] font-medium text-ink-muted transition-colors hover:border-primary/40 hover:text-ink"

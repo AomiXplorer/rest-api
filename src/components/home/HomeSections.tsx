@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   Rocket, BarChart3, Zap, LockOpen, ShieldCheck, FlaskConical,
   Globe, BatteryCharging, MonitorSmartphone, Activity,
+  Wrench,
 } from "lucide-react";
 import { CATEGORIES, ENDPOINTS } from "@/config/endpoints";
 import { VERIFIED_IDS } from "@/config/verification";
@@ -46,6 +47,12 @@ export function Hero() {
             >
               <BarChart3 size={15} /> Lihat statistik
             </a>
+            <Link
+              href="/tools"
+              className="inline-flex h-11 items-center gap-2 rounded-lg border border-line bg-card px-5 text-sm font-semibold text-ink transition-colors hover:border-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+            >
+              <Wrench size={15} /> Aomi Tools
+            </Link>
           </div>
         </div>
 

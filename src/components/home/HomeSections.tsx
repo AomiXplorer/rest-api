@@ -49,13 +49,16 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Kanan: ilustrasi */}
-        <div className="order-1 lg:order-2">
+        {/* Kanan: maskot — artwork monokrom asli */}
+        <div className="order-1 flex justify-center lg:order-2 lg:justify-end">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/brand/hero.png"
-            alt="Ilustrasi Cyronime"
-            className="mx-auto aspect-[4/3] w-full max-w-[520px] rounded-[20px] border border-line object-cover"
+            src="/images/mascot/mascot-original.jpg"
+            alt="Maskot Cyronime — karakter anime monokrom berkacamata bulat"
+            width={567}
+            height={680}
+            className="w-full max-w-[300px] rounded-xl border border-line object-cover sm:max-w-[340px] lg:max-w-[400px]"
+            style={{ aspectRatio: "567 / 680" }}
           />
         </div>
       </div>

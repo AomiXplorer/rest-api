@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Ikon maskot Cyronime — siluet rambut acak dan kacamata bulat besar, monokrom">
+  <title>Ikon Maskot Cyronime</title>
+  <!-- Tile gelap: identitas monokrom -->
+  <rect width="64" height="64" rx="14" fill="#0b0b0d"/>
+  <!-- Bahu / pakaian gelap -->
+  <path d="M7,64 C9,54 20,47.5 32,47.5 C44,47.5 55,54 57,64 Z" fill="#1c1c1f"/>
+  <!-- Wajah -->
+  <ellipse cx="32" cy="36" rx="11.2" ry="13" fill="#a3a3a7"/>
+  <!-- Mata samar di balik lensa -->
+  <ellipse cx="24.5" cy="36.6" rx="2.4" ry="2.9" fill="#141416"/>
+  <ellipse cx="39.5" cy="36.6" rx="2.4" ry="2.9" fill="#141416"/>
+  <!-- Rambut terang acak: siluet besar dengan poni runcing turun ke pelipis -->
+  <path d="M12.5,47.5 C8.5,27 13.5,9 26,6.5 C31.5,5.2 38.5,6 43.5,9.5 C50.5,14 55.5,26 51.5,47.5 L46.5,44.5 C47.6,37.5 46.3,31.5 42.8,27.5 L45.5,21.5 L39.2,26.2 L38.2,18 L33.5,25.4 L28,17.6 L27.2,26.2 L21,22.6 L19.2,28.2 C16.6,32.4 15.8,38.5 17.2,44.5 Z" fill="#d9d9dd"/>
+  <!-- Poni tipis menyilang dahi -->
+  <path d="M20.5,31.5 C24,27.8 30,26.4 36,27.4 C39.6,28 42.4,29.6 44,31.8 C40.6,30.2 36.4,29.6 32,30 C27.4,30.4 23.4,31.2 20.5,31.5 Z" fill="#ececef"/>
+  <!-- Kacamata bulat besar: rim terang -->
+  <circle cx="24.5" cy="36.5" r="7.6" fill="#101013" stroke="#f2f2f5" stroke-width="2.5"/>
+  <circle cx="39.5" cy="36.5" r="7.6" fill="#101013" stroke="#f2f2f5" stroke-width="2.5"/>
+  <!-- Jembatan & gagang -->
+  <path d="M31.9,35.2 C32.4,33.9 31.6,33.9 32.1,35.2 M17.1,35.4 L11.5,33.2 M46.9,35.4 L52.5,33.2" stroke="#f2f2f5" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- Kilau lensa -->
+  <path d="M20.2,33.4 A5.6,5.6 0 0 1 24.6,30.2" stroke="#ffffff" stroke-width="1.9" fill="none" stroke-linecap="round" opacity="0.95"/>
+  <path d="M35.2,33.4 A5.6,5.6 0 0 1 39.6,30.2" stroke="#ffffff" stroke-width="1.9" fill="none" stroke-linecap="round" opacity="0.95"/>
+  <path d="M26.6,41.2 A5.6,5.6 0 0 0 28.4,43.4" stroke="#ffffff" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.8"/>
+  <path d="M41.6,41.2 A5.6,5.6 0 0 0 43.4,43.4" stroke="#ffffff" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.8"/>
+</svg>

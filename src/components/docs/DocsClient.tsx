@@ -195,12 +195,19 @@ export function DocsClient({
 
           {/* Daftar endpoint per kategori */}
           {filtered.length === 0 ? (
-            <div className="mt-8 rounded-xl border border-dashed border-line px-6 py-14 text-center">
-              <Search size={20} className="mx-auto text-ink-faint" />
-              <p className="mt-3 text-sm text-ink-muted">
+            <div className="mt-10 flex flex-col items-center rounded-xl border border-dashed border-line px-6 py-12 text-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/mascot/mascot-icon.svg"
+                alt=""
+                aria-hidden="true"
+                className="h-16 w-16 rounded-[28%] opacity-70"
+              />
+              <p className="mt-4 text-sm text-ink-muted">
                 Tidak ada endpoint yang cocok dengan{" "}
                 <span className="font-semibold text-ink">&ldquo;{query || "pilihan ini"}&rdquo;</span>.
               </p>
+              <p className="mt-1 text-xs text-ink-faint">Coba kata kunci lain, atau reset filternya.</p>
             </div>
           ) : (
             [...byCategory.entries()].map(([key, list]) => {

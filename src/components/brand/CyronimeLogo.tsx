@@ -1,15 +1,15 @@
-/* Brand mark Cyronime — avatar bulat (brand/avatar.png).
-   Mengikuti bahasa visual referensi: logo = avatar bulat + wordmark. */
+/* Brand mark Cyronime — ikon maskot vektor (images/mascot/mascot-icon.svg).
+   Siluet rambut acak + kacamata bulat, monokrom; identitas dari maskot resmi. */
 
 export function CyronimeMark({ size = 36, className = "" }: { size?: number; className?: string }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src="/brand/avatar.png"
-      alt="Logo Cyronime"
+      src="/images/mascot/mascot-icon.svg"
+      alt="Maskot Cyronime"
       width={size}
       height={size}
-      className={`shrink-0 rounded-full object-cover ${className}`}
+      className={`shrink-0 rounded-[28%] object-cover ${className}`}
       style={{ width: size, height: size }}
     />
   );

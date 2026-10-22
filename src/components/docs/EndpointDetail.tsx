@@ -1,10 +1,21 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { RotateCcw, Loader2, AlertTriangle, CheckCircle2, CircleDashed, Clock, HardDrive, Send, Link2, SlidersHorizontal, X } from "lucide-react";
+import {
+  RotateCcw, Loader2, AlertTriangle, CheckCircle2, Clock, HardDrive,
+  Send, Link2, SlidersHorizontal, X, Terminal,
+} from "lucide-react";
 import type { EndpointDefinition, ApiResponse } from "@/types/api";
 import { CopyButton } from "@/components/ui/CopyButton";
 import { JsonViewer } from "@/components/ui/JsonViewer";
+
+/**
+ * Detail endpoint — modal Try API mengikuti referensi:
+ * badge metode + path, form parameter bertumpuk (wajib/opsional + helper),
+ * tombol full-width "Kirim request", panel "</> Response" + salin.
+ * Fitur lama yang tetap dipertahankan: toggle GET/POST, contoh cURL,
+ * response gambar/video, status HTTP + waktu + ukuran.
+ */
 
 interface ResponseState {
   status: number;
@@ -15,14 +26,6 @@ interface ResponseState {
   contentType: string;
   error?: string;
 }
-
-const sampleResponse = {
-  success: true,
-  author: "RendyZ",
-  data: { result: "…isi hasil sesuai endpoint…" },
-  message: "Request berhasil",
-  meta: { upstream_status: 200, time_ms: 750 },
-};
 
 function localPath(e: EndpointDefinition) {
   return `/api/v1${e.upstreamPath.replace(/^\/api/, "")}`;
@@ -67,7 +70,7 @@ export function EndpointDetail({
     return `${origin}${localPath(endpoint)}${qs ? `?${qs}` : ""}`;
   }, [endpoint, values]);
 
-  /* Body JSON untuk contoh POST: parameter terisi -> nilai, kosong -> contoh dari skema */
+  /* Body JSON untuk contoh POST */
   const postBody = useMemo(() => {
     const body: Record<string, string> = {};
     for (const p of endpoint.params) {
@@ -146,296 +149,228 @@ export function EndpointDetail({
     }
   }
 
-  const modal = variant === "modal";
-
   return (
-    <article className={modal ? "" : "px-4 py-5 sm:px-6 lg:px-10"}>
-      <div
-        className={
-          modal
-            ? "overflow-hidden rounded-2xl border-2 border-line-strong bg-card shadow-note"
-            : "mx-auto max-w-4xl overflow-hidden rounded-2xl border-2 border-line-strong bg-card shadow-note"
-        }
-      >
-        {/* Header band — sticky-note yellow */}
-        <header className="relative bg-sticky p-4 pr-12 sm:p-5 sm:pr-12">
-          {modal && onClose && (
-            <button
-              onClick={onClose}
-              aria-label="Tutup"
-              className="press absolute right-3 top-3 z-10 rounded-lg border-2 border-sticky-ink/30 bg-sticky p-1.5 text-sticky-ink hover:bg-sticky/80"
-            >
-              <X size={16} />
-            </button>
-          )}
+    <article className="flex flex-col">
+      {/* ===== Header ===== */}
+      <header className="flex items-start gap-3 border-b border-line p-5">
+        <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2.5">
-            <span className="rounded border-2 border-sticky-ink px-1.5 py-0.5 font-code text-[11px] font-bold text-sticky-ink">
+            <span className="shrink-0 rounded bg-primary px-1.5 py-0.5 font-code text-[10px] font-bold text-onprimary">
               {endpoint.method}
             </span>
-            <h1 className="font-display text-xl font-extrabold text-sticky-ink md:text-2xl">{endpoint.name}</h1>
-            {verified ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-mint/50 bg-mint/10 px-2 py-0.5 font-code text-[11px] font-semibold text-mint">
-                <CheckCircle2 size={11} /> Terverifikasi
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1 rounded-full border border-line bg-card px-2 py-0.5 font-code text-[11px] text-ink-faint">
-                <CircleDashed size={11} /> Belum terverifikasi
-              </span>
-            )}
+            <h2 className="min-w-0 break-all font-code text-base font-semibold text-ink">
+              {localPath(endpoint)}
+            </h2>
           </div>
-          <p className="mt-2 max-w-3xl leading-relaxed text-sticky-ink/80">{endpoint.description}</p>
-        </header>
+          <p className="mt-1.5 text-[13px] leading-relaxed text-ink-muted">{endpoint.description}</p>
+          {variant === "page" ? (
+            <p className="mt-2 inline-flex items-center gap-1.5 text-[11px] text-ink-faint">
+              <span className={`inline-block h-1.5 w-1.5 rounded-full ${verified ? "bg-mint" : "bg-ink-faint"}`} />
+              {verified ? "active" : "beta"}
+            </p>
+          ) : null}
+        </div>
+        {variant === "modal" && onClose && (
+          <button
+            onClick={onClose}
+            aria-label="Tutup"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-ink-muted transition-colors hover:bg-card-soft hover:text-ink"
+          >
+            <X size={16} />
+          </button>
+        )}
+      </header>
 
-        <div className="p-4 sm:p-6">
-          {/* Endpoint box */}
-          <section>
+      <div className="p-5">
+        {/* ===== Parameter ===== */}
+        {endpoint.params.length > 0 ? (
+          <section aria-label="Parameter">
+            <div className="flex items-center gap-2">
+              <SlidersHorizontal size={14} className="text-ink-muted" />
+              <h3 className="text-sm font-semibold text-ink">Parameter</h3>
+              <span className="rounded bg-surface px-1.5 py-0.5 font-code text-[11px] text-ink-muted">
+                {endpoint.params.length}
+              </span>
+            </div>
+
+            <div className="mt-4 flex flex-col gap-4">
+              {endpoint.params.map((p) => (
+                <label key={p.name} className="flex flex-col gap-1.5">
+                  <span className="flex flex-wrap items-center gap-2">
+                    <span className="font-code text-sm font-semibold text-ink">{p.name}</span>
+                    {p.required ? (
+                      <span className="text-[11px] font-semibold text-lemon">wajib</span>
+                    ) : (
+                      <span className="text-[11px] text-ink-faint">opsional</span>
+                    )}
+                    <span className="font-code text-[10px] uppercase tracking-wide text-ink-faint">
+                      {p.enum ? `enum (${p.enum.length} opsi)` : p.type}
+                    </span>
+                  </span>
+                  {p.description ? (
+                    <span className="text-xs leading-relaxed text-ink-muted">{p.description}</span>
+                  ) : null}
+                  {p.enum ? (
+                    <select
+                      value={values[p.name] ?? ""}
+                      onChange={(e) => setValues((v) => ({ ...v, [p.name]: e.target.value }))}
+                      className="h-10 rounded-lg border border-line bg-bg px-3 text-sm text-ink outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    >
+                      {p.required ? null : <option value="">Pilih {p.name}…</option>}
+                      {p.enum.map((o) => (
+                        <option key={o} value={o}>{o}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      value={values[p.name] ?? ""}
+                      onChange={(e) => setValues((v) => ({ ...v, [p.name]: e.target.value }))}
+                      placeholder={p.example ? `Contoh: ${p.example}` : `Isi ${p.name}…`}
+                      inputMode={p.type === "integer" || p.type === "number" ? "numeric" : undefined}
+                      className="h-10 rounded-lg border border-line bg-bg px-3 text-sm text-ink outline-none placeholder:text-ink-faint focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    />
+                  )}
+                </label>
+              ))}
+            </div>
+          </section>
+        ) : (
+          <p className="rounded-lg bg-card-soft px-3.5 py-2.5 text-[13px] text-ink-muted">
+            Endpoint ini tidak butuh parameter — langsung kirim request.
+          </p>
+        )}
+
+        {/* ===== Contoh request (cURL) — bisa dilipat ===== */}
+        <details className="group mt-5 rounded-lg border border-line bg-bg">
+          <summary className="flex cursor-pointer list-none items-center gap-2 px-3.5 py-2.5 text-[13px] font-medium text-ink-muted transition-colors hover:text-ink [&::-webkit-details-marker]:hidden">
+            <Terminal size={13} /> Contoh request (cURL)
+          </summary>
+          <div className="border-t border-line p-3.5">
             <div className="flex items-center justify-between gap-2">
-              <span className="flex items-center gap-1.5 font-code text-xs font-semibold text-ink-faint">
-                <Link2 size={13} /> endpoint lokal
+              <span className="font-code text-[11px] text-ink-faint">
+                {postMode ? "POST (body JSON)" : "GET (query)"}
+              </span>
+              <CopyButton
+                text={postMode
+                  ? `curl -X POST -H "Content-Type: application/json" -d '${postBody}' "${requestUrl}"`
+                  : `curl "${requestUrl}"`}
+                label="Salin"
+              />
+            </div>
+            <pre className="mt-2 overflow-x-auto rounded-lg bg-code px-3 py-2.5 font-code text-[12px] leading-relaxed text-code-text">
+              <code>{postMode
+                ? `curl -X POST -H "Content-Type: application/json" -d '${postBody}' "${requestUrl}"`
+                : `curl "${requestUrl}"`}</code>
+            </pre>
+            <div className="mt-2 flex items-center justify-between gap-2">
+              <span className="font-code text-[11px] text-ink-faint">
+                <Link2 size={11} className="mr-1 inline" /> URL lengkap
               </span>
               <CopyButton text={requestUrl} label="Salin URL" />
             </div>
-            <div className="mt-2 flex items-center gap-2 overflow-x-auto rounded-lg border-2 border-line-strong bg-code px-3 py-2.5">
-              <span className="shrink-0 rounded bg-mint/20 px-1.5 py-0.5 font-code text-xs font-bold text-[var(--c-hl-key)]">
-                {endpoint.method}
-              </span>
-              <code className="whitespace-nowrap font-code text-sm text-[var(--c-hl-str)]">
-                {localPath(endpoint)}
-              </code>
-            </div>
-            {endpoint.tags.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-1.5">
-                {endpoint.tags.map((t) => (
-                  <span key={t} className="rounded-md border border-line bg-card-soft px-1.5 py-0.5 font-code text-[10px] text-ink-faint">
-                    {t}
-                  </span>
-                ))}
-              </div>
-            )}
-          </section>
+            <pre className="mt-1.5 overflow-x-auto whitespace-pre-wrap break-all rounded-lg bg-code px-3 py-2.5 font-code text-[12px] leading-relaxed text-code-text">
+              <code>{requestUrl}</code>
+            </pre>
+          </div>
+        </details>
+      </div>
 
-          {/* Parameters */}
-          {endpoint.params.length > 0 && (
-            <section className="mt-6">
-              <h2 className="flex items-center gap-1.5 font-display text-base font-bold text-ink">
-                <SlidersHorizontal size={15} className="text-primary" /> Parameter
-              </h2>
-              <div className="mt-3 overflow-x-auto rounded-xl border-2 border-line">
-                <table className="w-full min-w-[560px] border-collapse text-sm">
-                  <thead>
-                    <tr className="border-b-2 border-line bg-surface text-left font-code text-[11px] uppercase tracking-wide text-ink-faint">
-                      <th className="px-3 py-2 font-medium">Nama</th>
-                      <th className="px-3 py-2 font-medium">Tipe</th>
-                      <th className="px-3 py-2 font-medium">Wajib</th>
-                      <th className="px-3 py-2 font-medium">Deskripsi</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {endpoint.params.map((p) => (
-                      <tr key={p.name} className="border-b border-line last:border-0">
-                        <td className="px-3 py-2 font-code font-semibold text-lemon">{p.name}</td>
-                        <td className="px-3 py-2 font-code text-xs text-ink-muted">
-                          {p.enum ? `enum (${p.enum.length} opsi)` : p.type}
-                        </td>
-                        <td className="px-3 py-2">
-                          {p.required ? (
-                            <span className="font-code text-xs font-semibold text-primary">wajib</span>
-                          ) : (
-                            <span className="font-code text-xs text-ink-faint">opsional</span>
-                          )}
-                        </td>
-                        <td className="px-3 py-2 text-ink-muted">
-                          {p.description || <span className="text-ink-faint">—</span>}
-                          {p.enum && (
-                            <span className="mt-1 block font-code text-[10px] text-ink-faint">
-                              opsi: {p.enum.slice(0, 6).join(", ")}
-                              {p.enum.length > 6 ? `, …` : ""}
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-          )}
-
-          {/* Contoh request / response */}
-          <section className="mt-6 space-y-4">
-            <div>
-              <div className="flex items-center justify-between gap-2">
-                <span className="font-display text-sm font-bold text-ink">
-                  Contoh Request <span className="text-ink-faint">(GET)</span>
-                </span>
-                <CopyButton text={`curl "${requestUrl}"`} label="Salin" />
-              </div>
-              <pre className="mt-2 overflow-x-auto rounded-lg border-2 border-line bg-code px-3 py-2.5 font-code text-[12px] leading-relaxed text-code-text">
-                <code>{`curl "${requestUrl}"`}</code>
-              </pre>
-              <div className="mt-3 flex items-center justify-between gap-2">
-                <span className="font-display text-sm font-bold text-ink">
-                  Alternatif POST <span className="text-ink-faint">(body JSON)</span>
-                </span>
-                <CopyButton text={`curl -X POST -H "Content-Type: application/json" -d '${postBody}' "${requestUrl}"`} label="Salin" />
-              </div>
-              <pre className="mt-2 overflow-x-auto rounded-lg border-2 border-line bg-code px-3 py-2.5 font-code text-[12px] leading-relaxed text-code-text">
-                <code>{`curl -X POST -H "Content-Type: application/json" -d '${postBody}' "${requestUrl}"`}</code>
-              </pre>
-            </div>
-            <div>
-              <span className="font-display text-sm font-bold text-ink">Contoh Response</span>
-              <div className="mt-2 overflow-hidden rounded-lg border-2 border-line">
-                <JsonViewer value={sampleResponse} />
-              </div>
-            </div>
-          </section>
-
-          {/* Try API */}
-          <section className="mt-6">
-            <h2 className="font-display text-base font-bold text-ink">Try API</h2>
-            <p className="mt-1 text-sm text-ink-muted">
-              Request dikirim nyata ke backend lokal. Endpoint ini hanya operasi baca (GET) — aman
-              untuk dicoba.
-            </p>
-
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            <div className="min-w-0">
-            {endpoint.params.length > 0 && (
-              <div className="mt-3 grid grid-cols-1 gap-3 rounded-xl border-2 border-line bg-card-soft p-4 sm:grid-cols-2">
-                {endpoint.params.map((p) => (
-                  <label key={p.name} className="flex flex-col gap-1.5">
-                    <span className="flex items-center gap-1.5 font-code text-xs text-ink-muted">
-                      {p.name}
-                      {p.required && <span className="font-bold text-danger">*</span>}
-                      <span className="text-ink-faint">({p.enum ? "enum" : p.type})</span>
-                    </span>
-                    {p.enum ? (
-                      <select
-                        value={values[p.name] ?? ""}
-                        onChange={(e) => setValues((v) => ({ ...v, [p.name]: e.target.value }))}
-                        className="rounded-lg border-2 border-line bg-bg px-2.5 py-2 text-sm text-ink focus:border-primary focus:outline-none"
-                      >
-                        {p.enum.map((o) => (
-                          <option key={o} value={o}>{o}</option>
-                        ))}
-                      </select>
-                    ) : (
-                      <input
-                        value={values[p.name] ?? ""}
-                        onChange={(e) => setValues((v) => ({ ...v, [p.name]: e.target.value }))}
-                        inputMode={p.type === "integer" || p.type === "number" ? "numeric" : undefined}
-                        className="rounded-lg border-2 border-line bg-bg px-2.5 py-2 text-sm text-ink focus:border-primary focus:outline-none"
-                      />
-                    )}
-                  </label>
-                ))}
-              </div>
-            )}
-
-            <div className="mt-4 flex flex-wrap items-center gap-2.5">
-              <button
-                type="button"
-                onClick={() => setPostMode((m) => !m)}
-                title="Ganti metode kirim: GET (query) atau POST (body JSON)"
-                className="press inline-flex items-center gap-1.5 rounded-lg border-2 border-line-strong bg-card px-3 py-2.5 font-code text-[11px] font-bold text-ink-muted"
-              >
-                {postMode ? "POST" : "GET"}
-                <span className="text-ink-faint">↔</span>
-              </button>
-              <button
-                onClick={() => send()}
-                disabled={loading}
-                aria-busy={loading}
-                className="press inline-flex items-center gap-2 rounded-lg border-2 border-line-strong bg-primary px-4 py-2.5 font-display text-sm font-bold text-onprimary shadow-hard-sm disabled:cursor-not-allowed disabled:opacity-55"
-              >
-                {loading ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
-                {loading ? "Mengirim…" : postMode ? "Kirim (POST)" : "Kirim (GET)"}
-              </button>
-              {response && (
-                <button
-                  onClick={() => send(true)}
-                  disabled={loading}
-                  className="press inline-flex items-center gap-1.5 rounded-lg border-2 border-line-strong bg-card px-3 py-2 font-display text-xs font-bold text-ink-muted disabled:opacity-55"
-                >
-                  <RotateCcw size={13} /> Kirim ulang
-                </button>
-              )}
-            </div>
-
-            </div>
-            <div className="min-w-0">
-            {response ? (
-              <div role="status" aria-live="polite">
-                <div className="flex flex-wrap items-center justify-between gap-2 rounded-t-xl border-2 border-b-0 border-line bg-card-soft px-4 py-2.5">
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-code text-xs">
-                    <span
-                      className={`flex items-center gap-1.5 font-semibold ${
-                        response.status >= 200 && response.status < 300 ? "text-mint" : "text-danger"
-                      }`}
-                    >
-                      {response.status >= 200 && response.status < 300 ? <CheckCircle2 size={13} /> : <AlertTriangle size={13} />}
-                      HTTP {response.status}
-                    </span>
-                    <span className="flex items-center gap-1 text-ink-faint">
-                      <Clock size={12} /> {response.timeMs} ms
-                    </span>
-                    {response.sizeBytes > 0 && (
-                      <span className="flex items-center gap-1 text-ink-faint">
-                        <HardDrive size={12} /> {(response.sizeBytes / 1024).toFixed(1)} KB
-                      </span>
-                    )}
-                  </div>
-                  <CopyButton text={response.raw} label="Salin Response" />
-                </div>
-
-                <div className="rounded-b-xl border-2 border-line">
-                  {response.error && (
-                    <div role="alert" className="border-b-2 border-line bg-danger/10 px-4 py-2.5 font-code text-sm text-danger">
-                      {response.error}
-                    </div>
-                  )}
-                  {response.contentType.startsWith("image/") && response.status < 300 ? (
-                    <div className="flex justify-center bg-code p-4">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={response.raw}
-                        alt="Response gambar dari endpoint"
-                        className="max-h-96 max-w-full rounded-lg border-2 border-line object-contain"
-                      />
-                    </div>
-                  ) : response.contentType.startsWith("video/") && response.status < 300 ? (
-                    <div className="flex justify-center bg-code p-4">
-                      <video
-                        src={response.raw}
-                        controls
-                        preload="metadata"
-                        className="max-h-96 max-w-full rounded-lg border-2 border-line"
-                      >
-                        Browser Anda tidak mendukung pemutar video.
-                      </video>
-                    </div>
-                  ) : response.contentType.startsWith("audio/") && response.status < 300 ? (
-                    <div className="bg-code p-4">
-                      <audio src={response.raw} controls preload="metadata" className="w-full">
-                        Browser Anda tidak mendukung pemutar audio.
-                      </audio>
-                    </div>
-                  ) : (
-                    <JsonViewer value={response.body} />
-                  )}
-                </div>
-              </div>
-            ) : (
-              <div className="flex h-full min-h-40 items-center justify-center rounded-xl border-2 border-dashed border-line bg-card-soft px-4 py-8 text-center font-code text-xs text-ink-faint">
-                Belum ada response. Isi parameter lalu tekan Kirim.
-              </div>
-            )}
-            </div>
-            </div>
-          </section>
+      {/* ===== Kirim request ===== */}
+      <div className="flex flex-col gap-2 border-t border-line p-5">
+        <button
+          onClick={() => send()}
+          disabled={loading}
+          aria-busy={loading}
+          className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-onprimary transition-all hover:bg-primary-soft active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+        >
+          {loading ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
+          {loading ? "Mengirim…" : postMode ? "Kirim request (POST)" : "Kirim request"}
+        </button>
+        <div className="flex items-center justify-between gap-2">
+          <button
+            type="button"
+            onClick={() => setPostMode((m) => !m)}
+            title="Ganti metode kirim: GET (query) atau POST (body JSON)"
+            className="rounded-md px-2 py-1 font-code text-[11px] font-semibold text-ink-faint transition-colors hover:text-ink"
+          >
+            Metode: {postMode ? "POST" : "GET"} <span aria-hidden>↔</span>
+          </button>
+          {response ? (
+            <button
+              onClick={() => send(true)}
+              disabled={loading}
+              className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-[11px] font-semibold text-ink-faint transition-colors hover:text-ink"
+            >
+              <RotateCcw size={12} /> Kirim ulang
+            </button>
+          ) : null}
         </div>
       </div>
+
+      {/* ===== Response ===== */}
+      {response ? (
+        <section className="animate-fade-in border-t border-line p-5" role="status" aria-live="polite">
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="font-code text-sm font-semibold text-ink">&lt;/&gt; Response</h3>
+            <CopyButton text={response.raw} label="Copy" />
+          </div>
+
+          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 font-code text-[11px]">
+            <span
+              className={`flex items-center gap-1.5 font-semibold ${
+                response.status >= 200 && response.status < 300 ? "text-mint" : "text-danger"
+              }`}
+            >
+              {response.status >= 200 && response.status < 300 ? <CheckCircle2 size={12} /> : <AlertTriangle size={12} />}
+              HTTP {response.status}
+            </span>
+            <span className="flex items-center gap-1 text-ink-faint">
+              <Clock size={11} /> {response.timeMs} ms
+            </span>
+            {response.sizeBytes > 0 ? (
+              <span className="flex items-center gap-1 text-ink-faint">
+                <HardDrive size={11} /> {(response.sizeBytes / 1024).toFixed(1)} KB
+              </span>
+            ) : null}
+          </div>
+
+          {response.error ? (
+            <div
+              role="alert"
+              className="mt-3 rounded-lg border border-danger/30 bg-danger/10 px-3.5 py-3 font-code text-xs leading-relaxed text-danger"
+            >
+              {response.error}
+            </div>
+          ) : null}
+
+          <div className="mt-3">
+            {response.contentType.startsWith("image/") && response.status < 300 ? (
+              <div className="flex justify-center rounded-lg bg-code p-4">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={response.raw}
+                  alt="Response gambar dari endpoint"
+                  className="max-h-80 max-w-full rounded-lg object-contain"
+                />
+              </div>
+            ) : response.contentType.startsWith("video/") && response.status < 300 ? (
+              <div className="flex justify-center rounded-lg bg-code p-4">
+                <video src={response.raw} controls preload="metadata" className="max-h-80 max-w-full rounded-lg">
+                  Browser Anda tidak mendukung pemutar video.
+                </video>
+              </div>
+            ) : response.body !== null && response.body !== undefined ? (
+              <div className="overflow-hidden rounded-lg border border-line">
+                <JsonViewer value={response.body} />
+              </div>
+            ) : (
+              <pre className="overflow-x-auto rounded-lg border border-line bg-code px-3.5 py-3 font-code text-[12px] leading-relaxed text-code-text">
+                <code>{response.raw || "(respons kosong)"}</code>
+              </pre>
+            )}
+          </div>
+        </section>
+      ) : null}
     </article>
   );
 }

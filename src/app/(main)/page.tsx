@@ -1,29 +1,13 @@
-import {
-  Hero,
-  Marquee,
-  SampleCode,
-  CategoryGrid,
-  Faq,
-  CtaCard,
-  ContactNote,
-} from "@/components/home/HomeSections";
-import { StickyFooter } from "@/components/home/StickyFooter";
-import { ServerStats } from "@/components/home/ServerStats";
+import { Hero, Stats, VisitorInfo, Features, Cta } from "@/components/home/HomeSections";
 
 export default function HomePage() {
   return (
-    <main>
+    <main className="flex-1">
       <Hero />
-      <ServerStats />
-      <Marquee />
-      <SampleCode />
-      <CategoryGrid />
-      <Faq />
-      <CtaCard />
-      <ContactNote />
-      {/* ruang untuk footer marquee yang menempel di bawah */}
-      <div className="h-11" />
-      <StickyFooter />
+      <Stats />
+      <VisitorInfo />
+      <Features />
+      <Cta />
     </main>
   );
 }

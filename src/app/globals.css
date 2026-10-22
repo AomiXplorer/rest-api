@@ -1,79 +1,44 @@
 @import "tailwindcss";
 
 /* ============================================
-   AOMI API — CARTOON BOOK DESIGN SYSTEM
-   Light "Paper" (default) + Dark "Midnight Sketchbook"
+   CYRONIME — DARK CLEAN DESIGN SYSTEM
+   Mengikuti bahasa visual referensi (APIii Xrina):
+   charcoal gelap, permukaan kartu lembut, aksen sky-blue
+   selektif, radius besar, tanpa dekorasi.
    ============================================ */
 :root {
-  --c-bg: #fff9ed; /* kertas ivory bersih */
-  --c-surface: #f6eedd; /* paper dalam, sedikit lebih dalam dari bg */
-  --c-card: #fffcf5; /* kertas kartu */
-  --c-card-soft: #fff6e8;
-  --c-line: #ede5d4; /* garis buku lembut */
-  --c-line-strong: #d8cba8; /* border tegas */
-  --c-ink: #202b40; /* ink navy */
-  --c-ink-muted: #64666c;
-  --c-ink-faint: #7d7a74;
-  --c-primary: #287f80; /* pencil teal */
-  --c-primary-soft: #57b9b8;
-  --c-onprimary: #ffffff;
-  --c-lemon: #b8860b;
-  --c-mint: #2e7d5b;
-  --c-danger: #c0563f;
-  --c-get: #287f80;
-  --c-wa: #1fa855;
-  --c-sticky: #f6df83; /* sticky note kuning — terukur, tidak berlebihan */
-  --c-sticky-ink: #3a3222;
-  --c-sky: #cde5f2; /* stiker biru */
-  --c-lav: #e4d9f3; /* stiker lavender */
-  --c-mintp: #d5ebd9; /* stiker mint */
-  --c-code: #202b40; /* panel teknis navy */
-  --c-code-text: #f4ebdd;
-  --c-tape: rgba(205, 229, 242, 0.75); /* selotip */
-  --c-rule: rgba(32, 43, 64, 0.05); /* garis buku */
-  --c-shadow: rgba(32, 43, 64, 0.16); /* bayangan kertas */
-  /* syntax highlight panel kode (panel navy di kedua tema) */
-  --c-hl-key: #7fd4c4;
-  --c-hl-str: #ffd98a;
-  --c-hl-num: #9cc3e8;
-  --c-hl-punct: #8fa0b8;
-  color-scheme: light;
-}
-
-.dark {
-  /* Midnight Sketchbook: navy gelap nyaman, teks krem, teal terbaca,
-     garis buku & surface redup — struktur visual sama dengan mode terang */
-  --c-bg: #151923;
-  --c-surface: #1c2230;
-  --c-card: #1e2532;
-  --c-card-soft: #242c3c;
-  --c-line: #252b36;
-  --c-line-strong: #394253;
-  --c-ink: #f4ebdd;
-  --c-ink-muted: #b5b6bd;
-  --c-ink-faint: #8b8e96;
-  --c-primary: #57c5c4;
-  --c-primary-soft: #69d2ce;
-  --c-onprimary: #15252d;
-  --c-lemon: #f0d060;
-  --c-mint: #57b489;
-  --c-danger: #e5735d;
-  --c-get: #57c5c4;
+  --c-bg: #111216; /* charcoal halaman */
+  --c-surface: #15171c; /* permukaan sedikit lebih dalam */
+  --c-card: #1a1d23; /* kartu / panel */
+  --c-card-soft: #20242c; /* kartu terangkat / hover */
+  --c-line: #2a2f36; /* border tipis */
+  --c-line-strong: #363b45;
+  --c-ink: #f5f6f7; /* teks utama putih bersih */
+  --c-ink-muted: #9aa3ad; /* teks sekunder */
+  --c-ink-faint: #6e7681; /* teks redup */
+  --c-primary: #7dd3fc; /* sky blue aksen */
+  --c-primary-soft: #9ddcf9;
+  --c-onprimary: #0c1216; /* teks di atas aksen */
+  --c-lemon: #f59e0b; /* badge wajib / highlight */
+  --c-mint: #4ade80; /* status aktif */
+  --c-danger: #f87171;
+  --c-get: #7dd3fc;
   --c-wa: #3bc56e;
-  --c-sticky: #e8c95c;
-  --c-sticky-ink: #2e2410;
-  --c-sky: #24455a;
-  --c-lav: #33294d;
-  --c-mintp: #1e3a2c;
-  --c-code: #10151e;
-  --c-code-text: #dce3ee;
-  --c-tape: rgba(120, 160, 185, 0.4);
-  --c-rule: rgba(244, 235, 221, 0.04);
-  --c-shadow: rgba(0, 0, 0, 0.24);
-  --c-hl-key: #8adfd0;
-  --c-hl-str: #ffd98a;
-  --c-hl-num: #9fc9ea;
-  --c-hl-punct: #77869e;
+  --c-sticky: #23262b;
+  --c-sticky-ink: #9aa3ad;
+  --c-sky: #1d2730; /* chip biru gelap */
+  --c-lav: #232733;
+  --c-mintp: #1b2b21;
+  --c-code: #0c0e11; /* panel teknis */
+  --c-code-text: #e7e9ed;
+  --c-tape: transparent;
+  --c-rule: transparent;
+  --c-shadow: rgba(0, 0, 0, 0.4);
+  /* syntax highlight panel kode */
+  --c-hl-key: #7dd3fc;
+  --c-hl-str: #fbbf24;
+  --c-hl-num: #a5b4fc;
+  --c-hl-punct: #64748b;
   color-scheme: dark;
 }
 
@@ -106,10 +71,10 @@
 
   --font-display: var(--font-jakarta), system-ui, sans-serif;
   --font-body: var(--font-dmsans), system-ui, sans-serif;
-  --font-hand: var(--font-caveat), "Segoe Print", cursive;
   --font-code: var(--font-jetbrains), ui-monospace, monospace;
 
   --animate-pop: pop 0.18s ease-out;
+  --animate-fade-in: fade-in 0.2s ease-out;
 }
 
 html {
@@ -123,40 +88,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Kertas bergaris — satu background CSS, nol elemen DOM tambahan */
-body {
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent 35px,
-    var(--c-rule) 35px,
-    var(--c-rule) 36px
-  );
-  background-attachment: local;
-}
-
-/* Garis margin vertikal khas buku */
-main {
-  position: relative;
-}
-main::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: clamp(0.5rem, 3vw, 3rem);
-  width: 1.5px;
-  background: color-mix(in srgb, var(--c-danger) 22%, transparent);
-  pointer-events: none;
-  z-index: 0;
-}
-@media (max-width: 640px) {
-  main::before {
-    display: none;
-  }
-}
-
-/* Modal pop-in */
+/* Modal pop-in + fade */
 @keyframes pop {
   from {
     opacity: 0;
@@ -167,73 +99,21 @@ main::before {
     transform: translateY(0) scale(1);
   }
 }
-
-/* Bayangan kertas — lembut, tidak besar */
-.shadow-note {
-  box-shadow: 0 1px 2px var(--c-shadow), 0 8px 20px -12px var(--c-shadow);
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
-.dark .shadow-note {
-  box-shadow: 0 1px 2px var(--c-shadow), 0 10px 24px -14px var(--c-shadow);
-}
-.shadow-hard {
-  box-shadow: 3px 3px 0 rgba(32, 43, 64, 0.7);
-}
-.dark .shadow-hard {
-  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.66);
-}
-.shadow-hard-sm {
-  box-shadow: 2px 2px 0 rgba(32, 43, 64, 0.7);
-}
-.dark .shadow-hard-sm {
-  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.66);
+.animate-fade-in {
+  animation: fade-in 0.18s ease-out;
 }
 
+/* Interaksi halus */
 .press {
-  transition: transform 0.14s ease, box-shadow 0.14s ease, background-color 0.14s ease,
-    border-color 0.14s ease;
-}
-.press:hover {
-  transform: translateY(-1px);
+  transition: transform 0.14s ease, background-color 0.14s ease, border-color 0.14s ease,
+    color 0.14s ease;
 }
 .press:active {
   transform: translateY(1px);
-}
-
-/* Selotip untuk sticky note */
-.tape {
-  position: absolute;
-  top: -9px;
-  left: 50%;
-  transform: translateX(-50%) rotate(-2deg);
-  width: 64px;
-  height: 18px;
-  background: var(--c-tape);
-  border-radius: 2px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
-}
-.tape-left {
-  position: absolute;
-  top: -9px;
-  left: 14px;
-  transform: rotate(-4deg);
-  width: 58px;
-  height: 18px;
-  background: var(--c-tape);
-  border-radius: 2px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
-}
-
-/* Marquee */
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-.animate-marquee {
-  animation: marquee 36s linear infinite;
 }
 
 ::selection {
@@ -241,7 +121,7 @@ main::before {
   color: var(--color-onprimary);
 }
 
-/* Fokus keyboard terlihat di semua tema — ring ganda, tidak hanya warna */
+/* Fokus keyboard terlihat — ring aksen */
 :focus-visible {
   outline: 2px solid var(--c-primary);
   outline-offset: 2px;
@@ -275,14 +155,14 @@ button:disabled:hover {
 /* Scrollbars */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--color-line) transparent;
+  scrollbar-color: var(--color-line-strong) transparent;
 }
 *::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 *::-webkit-scrollbar-thumb {
-  background: var(--color-line);
+  background: var(--color-line-strong);
   border-radius: 4px;
 }
 *::-webkit-scrollbar-track {

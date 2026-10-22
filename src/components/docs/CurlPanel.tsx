@@ -61,10 +61,10 @@ function CopyBtn({ text, label }: { text: string; label: string }) {
         setDone(true);
         setTimeout(() => setDone(false), 1500);
       }}
-      className="inline-flex shrink-0 items-center gap-1 rounded-md border-2 border-line-strong bg-accent px-2 py-1 font-code text-[11px] font-semibold text-ink transition hover:bg-lemon/60"
+      className="inline-flex shrink-0 items-center gap-1 rounded-md border border-line bg-card px-2 py-1 font-code text-[11px] font-semibold text-ink-muted transition-colors hover:border-primary/40 hover:text-ink"
       aria-label={label}
     >
-      {done ? <Check size={13} className="text-green-600" /> : <Copy size={13} />}
+      {done ? <Check size={13} className="text-mint" /> : <Copy size={13} />}
       {done ? "Tersalin!" : label}
     </button>
   );
@@ -85,12 +85,11 @@ export function CurlPanel({ onClose }: { onClose?: () => void }) {
 
   return (
     <div className="space-y-4">
-      <div className="relative rounded-xl border-2 border-line-strong bg-card p-4 shadow-note">
-        <div className="tape-left" />
+      <div className="relative rounded-xl border border-line bg-card p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="flex items-center gap-2 font-display text-base font-bold text-ink">
-              <Terminal size={18} className="text-primary" /> cURL Semua Fitur — siap Termux
+            <p className="flex items-center gap-2 text-base font-semibold text-ink">
+              <Terminal size={16} className="text-primary" /> cURL Semua Fitur — siap Termux
             </p>
             <p className="mt-1 text-sm text-ink-muted">
               {ENDPOINTS.length} endpoint. Salin script di bawah, simpan sebagai{" "}
@@ -103,14 +102,14 @@ export function CurlPanel({ onClose }: { onClose?: () => void }) {
             {onClose ? (
               <button
                 onClick={onClose}
-                className="rounded-md border-2 border-line-strong bg-secondary px-2 py-1 font-code text-[11px] font-semibold text-ink hover:bg-accent"
+                className="rounded-md border border-line bg-card px-2 py-1 font-code text-[11px] font-semibold text-ink-muted transition-colors hover:text-ink"
               >
                 Tutup
               </button>
             ) : null}
           </div>
         </div>
-        <pre className="mt-3 max-h-52 overflow-auto rounded-md border-2 border-line bg-muted p-3 font-code text-[11px] leading-relaxed text-ink">
+        <pre className="mt-3 max-h-52 overflow-auto rounded-lg bg-code p-3 font-code text-[11px] leading-relaxed text-code-text">
           {script.split("\n").slice(0, 18).join("\n")}
           {"\n... (lengkap di tombol Salin)"}
         </pre>
@@ -120,13 +119,13 @@ export function CurlPanel({ onClose }: { onClose?: () => void }) {
         const title = CATEGORIES.find((c) => c.key === cat)?.title ?? cat;
         const isOpen = open === cat;
         return (
-          <div key={cat} className="rounded-xl border-2 border-line-strong bg-card p-3 shadow-note">
+          <div key={cat} className="rounded-xl border border-line bg-card p-3">
             <button
               onClick={() => setOpen(isOpen ? null : cat)}
               className="flex w-full items-center justify-between gap-2 px-1 py-1 text-left"
               aria-expanded={isOpen}
             >
-              <span className="font-display text-sm font-bold text-ink">
+              <span className="text-sm font-semibold text-ink">
                 {title} <span className="text-ink-faint">({list.length})</span>
               </span>
               <ChevronDown size={16} className={`shrink-0 text-ink-muted transition ${isOpen ? "rotate-180" : ""}`} />
@@ -134,7 +133,7 @@ export function CurlPanel({ onClose }: { onClose?: () => void }) {
             {isOpen ? (
               <ul className="mt-2 space-y-2">
                 {list.map((e) => (
-                  <li key={e.id} className="rounded-md border-2 border-line bg-muted p-2">
+                  <li key={e.id} className="rounded-lg bg-card-soft p-2.5">
                     <div className="flex items-center justify-between gap-2">
                       <p className="truncate font-code text-[12px] font-semibold text-ink">
                         {featureName(e)}
